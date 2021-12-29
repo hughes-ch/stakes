@@ -1,0 +1,13 @@
+{
+  "name": "stakes",
+  "packageManager": "yarn@3.1.1",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "host": "yarn workspace client start"
+  },
+  "devDependencies": {
+    "truffle": "^5.4.26"
+  }
+}

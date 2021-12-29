@@ -1,0 +1,22 @@
+/**
+ *   Tests for the Karma contract
+ *
+ *   :copyright: Copyright (c) 2021 Chris Hughes
+ *   :license: MIT License
+ */
+const Karma = artifacts.require("Karma");
+
+let karmaInstance
+
+contract('Karma', (accounts) => {
+  beforeEach(async () => {
+    karmaInstance = await Karma.new();
+  });
+  
+  it('should be purchase-able by the user', async () => {
+    const amountToBuy = 100;
+    await karmaInstance.buyKarma({from: accounts[0], value: amountToBuy});
+    const balance = await karmaInstance.balanceOf(accounts[0]);
+    expect(balance.toNumber()).to.equal(amountToBuy);
+  });
+});
