@@ -14,9 +14,8 @@ contract('Karma', (accounts) => {
   });
   
   it('should be purchase-able by the user', async () => {
-    const amountToBuy = 100;
-    await karmaInstance.buyKarma({from: accounts[0], value: amountToBuy});
-    const balance = await karmaInstance.balanceOf(accounts[0]);
-    expect(balance.toNumber()).to.equal(amountToBuy);
+    expect(false).to.equal(true);
   });
+
+  // Update these tests
 });

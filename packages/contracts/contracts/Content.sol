@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "./Karma.sol";
 
 /// @title User generated NFT which can be shared and bought
 /// @author Chris Hughes
@@ -11,7 +12,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 contract Content is ERC721Enumerable {
     using Counters for Counters.Counter;
     Counters.Counter private tokenIds;
-    ERC20 private karma; 
+    Karma private karma; 
     
     /// @notice Maintains state of a single NFT
     struct ContentNft {
@@ -25,7 +26,7 @@ contract Content is ERC721Enumerable {
 
     /// @notice Constructor
     /// @param _karma Address to the Karma contract
-    constructor(ERC20 _karma) ERC721("Content", "CTNT") {
+    constructor(Karma _karma) ERC721("Content", "CTNT") {
         karma = _karma;
     }
     

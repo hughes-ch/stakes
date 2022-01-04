@@ -5,9 +5,13 @@
     "truffle": "^5.4.26"
   },
   "scripts": {
-    "test": "yarn run truffle test"
+    "build": "yarn run truffle compile",
+    "test": "NODE_PATH=/home/chris/.nvm/versions/node/v16.11.0/lib/node_modules yarn run truffle test"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.4.1"
+    "@opengsn/contracts": "^2.2.4",
+    "@opengsn/provider": "^2.2.4",
+    "@openzeppelin/contracts": "^4.4.1",
+    "@truffle/hdwallet-provider": "^2.0.0"
   }
 }

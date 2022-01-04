@@ -6,14 +6,18 @@
  */
 const Content = artifacts.require("Content");
 const Karma = artifacts.require("Karma");
+const KarmaPaymaster = artifacts.require("KarmaPaymaster");
 
 let contentInstance;
 let karmaInstance
+let paymasterInstance;
 
 contract('Content', (accounts) => {
   beforeEach(async () => {
     karmaInstance = await Karma.new();
+    paymasterInstance = await KarmaPaymaster.new(karmaInstance.address);
     contentInstance = await Content.new(karmaInstance.address);
+    karmaInstance.setMinter(paymasterInstance.address);
   });
   
   it('should publish new NFTs', async () => {
@@ -44,7 +48,10 @@ contract('Content', (accounts) => {
     
     let isErrorEncountered = false;
     try {
-      await contentInstance.publish(contentTxt, contentPrice, {from: accounts[0]})
+      await contentInstance.publish(
+        contentTxt,
+        contentPrice,
+        {from: accounts[0]});
     } catch (err) {
       isErrorEncountered = true;
     }
@@ -64,7 +71,7 @@ contract('Content', (accounts) => {
   it('should accumulate karma', async () => {
     const holdingAccount = accounts[0];
     const sendingAccount = accounts[1];
-    await karmaInstance.buyKarma({from: sendingAccount, value: 100000});
+    await paymasterInstance.buyKarma({from: sendingAccount, value: 1000});
 
     const contentTxt = 'Hello world!';
     const contentPrice = 500;
