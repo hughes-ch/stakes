@@ -41,7 +41,7 @@ contract Content is BaseRelayRecipient, ERC721Enumerable {
     public
     returns (uint256)
     {
-        require(bytes(_txt).length > 0);
+        require(bytes(_txt).length > 0, "Cannot publish empty content");
 
         tokenIds.increment();
 
@@ -65,7 +65,7 @@ contract Content is BaseRelayRecipient, ERC721Enumerable {
         returns (string memory, uint, uint, address)
     {
         ContentNft memory nft = content[_tokenId];
-        require(bytes(nft.txt).length > 0);
+        require(bytes(nft.txt).length > 0, "Invalid tokenId provided");
         return (nft.txt, nft.price, nft.karma, nft.creator);
     }
 
@@ -83,8 +83,25 @@ contract Content is BaseRelayRecipient, ERC721Enumerable {
     /// @param _amount The new price
     /// @dev Only the owner of the token may call this function
     function setPrice(uint256 _tokenId, uint256 _amount) public {
-        require(ownerOf(_tokenId) == _msgSender());
+        require(
+            ownerOf(_tokenId) == _msgSender(),
+            "Only the owner can set the price of content"
+        );
+        
         content[_tokenId].price = _amount;
+    }
+
+    /// @notice Transfers content to the msg sender
+    /// @param _tokenId The ID of the NFT
+    function buyContent(uint256 _tokenId) public {
+        require(
+            bytes(content[_tokenId].txt).length > 0,
+            "Invalid tokenId provided"
+        );
+
+        address ownerAddress = ownerOf(_tokenId);
+        karma.transferFrom(_msgSender(), ownerAddress, content[_tokenId].price);
+        safeTransferFrom(ownerAddress, _msgSender(), _tokenId);
     }
 
     /// @notice Returns the version of the recipient

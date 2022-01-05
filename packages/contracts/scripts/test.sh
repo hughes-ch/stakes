@@ -9,6 +9,7 @@ GSN_DIR=build/gsn/
 HOST=127.0.0.1
 PORT=9545
 
+# Discover tests
 echo Discovering tests...
 TESTS=`find . -name '*.test.js'`
 echo Found tests:
@@ -18,6 +19,7 @@ do
 done
 echo ''
 
+# Find tests with "it.only" mocha feature and only run that unit module
 EXCLUSIVE_TESTS=`grep -l 'it.only' ${TESTS}`
 if [ -n "$EXCLUSIVE_TESTS" ]
 then
@@ -25,8 +27,14 @@ then
     TESTS=$EXCLUSIVE_TESTS
 fi
 
+# Compile and check results
 yarn truffle compile
+if [ $? -ne 0 ]
+then
+    exit 1
+fi
 
+# Execute each test
 for TEST in $TESTS
 do
     echo Starting $TEST...
