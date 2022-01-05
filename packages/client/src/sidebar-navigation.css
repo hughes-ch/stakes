@@ -1,0 +1,12 @@
+/**
+ *   Styles for the SidebarNavigation component
+ *
+ *   :copyright: Copyright (c) 2022 Chris Hughes
+ *   :license: MIT License
+ */
+.sidebar-navigation a {
+    color: var(--light-text-color);
+    display: block;
+    margin: 0.5rem;
+    text-decoration: none;
+}
