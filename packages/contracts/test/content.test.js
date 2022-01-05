@@ -4,6 +4,11 @@
  *   :copyright: Copyright (c) 2021 Chris Hughes
  *   :license: MIT License
  */
+const { clearAccounts,
+        forwarder,
+        getErrorType,
+        giveSomeKarmaTo,
+        wrapProvider } = require('./utilities');
 const Content = artifacts.require("Content");
 const Karma = artifacts.require("Karma");
 const KarmaPaymaster = artifacts.require("KarmaPaymaster");
@@ -11,15 +16,42 @@ const KarmaPaymaster = artifacts.require("KarmaPaymaster");
 let contentInstance;
 let karmaInstance
 let paymasterInstance;
+const origProvider = web3.currentProvider;
 
 contract('Content', (accounts) => {
+  /**
+   * Initial setup and teardown
+   */
   beforeEach(async () => {
-    karmaInstance = await Karma.new();
-    paymasterInstance = await KarmaPaymaster.new(karmaInstance.address);
-    contentInstance = await Content.new(karmaInstance.address);
-    karmaInstance.setMinter(paymasterInstance.address);
+    karmaInstance = await Karma.deployed();
+    paymasterInstance = await KarmaPaymaster.deployed();
+    contentInstance = await Content.new(karmaInstance.address, forwarder());
+
+    const relayProvider = await wrapProvider(
+      origProvider,
+      paymasterInstance.address
+    );
+    Content.setProvider(relayProvider);
+
+    const promises = [];
+    for (let ii = 0; ii < 3; ii++) {
+      promises.push(giveSomeKarmaTo(
+        accounts[ii],
+        paymasterInstance,
+        karmaInstance
+      ));
+    }
+    return Promise.all(promises);
   });
-  
+
+  afterEach(async () => {
+    Content.setProvider(origProvider);
+    return clearAccounts(accounts, karmaInstance, paymasterInstance);
+  });
+
+  /**
+   * Unit tests
+   */
   it('should publish new NFTs', async () => {
     const contentTxt = 'Hello world!';
     const contentPrice = 50000;
@@ -45,36 +77,24 @@ contract('Content', (accounts) => {
   it('should reject empty content when minting NFTs', async () => {
     const contentTxt = '';
     const contentPrice = 50000;
-    
-    let isErrorEncountered = false;
-    try {
-      await contentInstance.publish(
-        contentTxt,
-        contentPrice,
-        {from: accounts[0]});
-    } catch (err) {
-      isErrorEncountered = true;
-    }
-    expect(isErrorEncountered).to.equal(true);
+
+    expect(await getErrorType(
+      contentInstance.publish(contentTxt, contentPrice, {from: accounts[0]})
+    )).not.to.be.null;
   });
 
   it('should reject empty content when fetching NFTs', async () => {
-    let isErrorEncountered = false;
-    try {
-      await contentInstance.getContentNft(10);
-    } catch (err) {
-      isErrorEncountered = true;
-    }
-    expect(isErrorEncountered).to.equal(true);
+    expect(await getErrorType(
+      contentInstance.getContentNft(10)
+    )).not.to.be.null;
   });
 
   it('should accumulate karma', async () => {
     const holdingAccount = accounts[0];
     const sendingAccount = accounts[1];
-    await paymasterInstance.buyKarma({from: sendingAccount, value: 1000});
 
     const contentTxt = 'Hello world!';
-    const contentPrice = 500;
+    const contentPrice = web3.utils.toWei('5000', 'gwei');
     const response = await contentInstance.publish(
       contentTxt,
       contentPrice,
@@ -82,7 +102,7 @@ contract('Content', (accounts) => {
     );
     
     const tokenId = response.receipt.logs[0].args.tokenId;
-    const amountToAdd = 1;
+    const amountToAdd = web3.utils.toWei('5', 'gwei');
     const priorKarmaBalance = await karmaInstance.balanceOf(holdingAccount);
     await karmaInstance.increaseAllowance(
       contentInstance.address,
@@ -97,23 +117,23 @@ contract('Content', (accounts) => {
     );
     
     const afterKarmaBalance = await karmaInstance.balanceOf(holdingAccount);
-    expect(afterKarmaBalance - priorKarmaBalance).to.equal(amountToAdd);
+    expect(afterKarmaBalance - priorKarmaBalance)
+      .to.be.closeTo(
+        Number(amountToAdd),
+        Number(web3.utils.toWei('1', 'gwei'))
+      );
 
     const { 0: txt,
             1: price,
             2: karma,
             3: creator } = await contentInstance.getContentNft(tokenId);
-    expect(karma.toNumber()).to.equal(amountToAdd);
+    expect(karma.toString()).to.equal(amountToAdd);
   });
 
   it('should reject adding content to a garbage NFT', async () => {
-    let wasErrorEncountered = false;
-    try {
-      await contentInstance.addKarmaTo(address(100), 100);
-    } catch (err) {
-      wasErrorEncountered = true;
-    }
-    expect(wasErrorEncountered).to.equal(true);
+    expect(await getErrorType(
+      contentInstance.addKarmaTo(100, 100)
+    )).not.to.be.null;
   });
 
   it('can update the price of a token', async () => {
@@ -146,16 +166,34 @@ contract('Content', (accounts) => {
       {from: ownerAccount}
     );
 
-    let wasErrorEncountered = false;
-    try {
-      const tokenId = response.receipt.logs[0].args.tokenId;
-      const newAmount = oldAmount * 2;
-      await contentInstance.setPrice(tokenId, newAmount, {from: otherAccount});
-      
-    } catch (err) {
-      wasErrorEncountered = true;
-    }
+    const tokenId = response.receipt.logs[0].args.tokenId;
+    const newAmount = oldAmount * 2;
+    expect(await getErrorType(
+      contentInstance.setPrice(tokenId, newAmount, {from: otherAccount})
+    )).not.to.be.null;
+  });
+
+  it('will not do stuff unless you have karma', async () => {
+    const contentTxt = 'Hello world!';
+    const contentPrice = 50000;
+    expect(await getErrorType(
+      contentInstance.publish(contentTxt, contentPrice, {from: accounts[7]})
+    )).not.to.be.null;
+  });
+
+  it('should cost money to publish', async () => {
+    const account = accounts[0];
+    const balanceBefore = await karmaInstance.balanceOf(account);
+
+    const contentTxt = 'Hello world!';
+    const contentPrice = web3.utils.toWei('5000', 'gwei');
+    const response = await contentInstance.publish(
+      contentTxt,
+      contentPrice,
+      {from: account}
+    );
     
-    expect(wasErrorEncountered).to.equal(true);
+    const balanceAfter = await karmaInstance.balanceOf(account);
+    expect(balanceBefore > balanceAfter).to.be.true;
   });
 });

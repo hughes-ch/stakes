@@ -2,11 +2,12 @@
   "name": "@stakes/contracts",
   "packageManager": "yarn@3.1.1",
   "devDependencies": {
+    "chai": "^4.3.4",
     "truffle": "^5.4.26"
   },
   "scripts": {
     "build": "yarn run truffle compile",
-    "test": "NODE_PATH=/home/chris/.nvm/versions/node/v16.11.0/lib/node_modules yarn run truffle test"
+    "test": "bash scripts/test.sh"
   },
   "dependencies": {
     "@opengsn/contracts": "^2.2.4",

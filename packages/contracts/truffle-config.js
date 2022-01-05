@@ -1,30 +1,3 @@
-const { RelayProvider } = require('@opengsn/provider');
-const Web3 = require('web3');
-
-function createTestProvider() {
-  const providerConfig = {
-    paymasterAddress: require('./build/gsn/Paymaster').address,
-  };
-
-  const host = 'http://127.0.0.1:9545';
-  const origProvider = new Web3.providers.HttpProvider(host);
-  const web3 = new Web3(origProvider);
-  let relayProvider = RelayProvider.newProvider({
-    provider: origProvider,
-    config: providerConfig,
-  });
-
-  relayProvider.init().then(
-    (provider) => {
-      console.log(`Dependencies: ${Object.keys(provider.relayClient.dependencies)}`);
-    }).catch((err) => {
-      console.log(`Error found: ${err}`);
-    });
-  
-  console.log(`Provider: ${relayProvider}`);
-  return relayProvider;
-}
-
 module.exports = {
   compilers: {
     solc: {
@@ -32,31 +5,14 @@ module.exports = {
       docker: true,
     },
   },
-  // networks: {
-  //   test: {
-  //     provider: async function() {
-  //       const providerConfig = {
-  //         paymasterAddress: require('./build/gsn/Paymaster').address,
-  //       };
-
-  //       const host = 'http://127.0.0.1:9545';
-  //       const origProvider = new Web3.providers.HttpProvider(host);
-  //       const web3 = new Web3(origProvider);
-        
-  //       let relayProvider;
-  //       const promise = RelayProvider.newProvider({
-  //         provider: origProvider,
-  //         config: providerConfig,
-  //       }).init().then((provider) => {
-  //         relayprovider = provider;
-  //       });
-
-  //       Promise.all([promise]);
-  //       return relayProvider;
-  //     },
-  //     network_id: "*",
-  //   },
-  // },
+  networks: {
+    test: {
+      host: "127.0.0.1",
+      port: 9545,
+      migrateNone: true,
+      network_id: "*",
+    },
+  },
   // Uncommenting the defaults below 
   // provides for an easier quick-start with Ganache.
   // You can also follow this format for other networks;

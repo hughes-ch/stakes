@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
+import "@opengsn/contracts/src/BaseRelayRecipient.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -9,7 +10,7 @@ import "./Karma.sol";
 /// @title User generated NFT which can be shared and bought
 /// @author Chris Hughes
 /// @dev Find more information here: https://github.com/hughes-ch/stakes
-contract Content is ERC721Enumerable {
+contract Content is BaseRelayRecipient, ERC721Enumerable {
     using Counters for Counters.Counter;
     Counters.Counter private tokenIds;
     Karma private karma; 
@@ -26,8 +27,11 @@ contract Content is ERC721Enumerable {
 
     /// @notice Constructor
     /// @param _karma Address to the Karma contract
-    constructor(Karma _karma) ERC721("Content", "CTNT") {
+    /// @param _trustedForwarder GSN trusted forwarder
+    constructor(Karma _karma, address _trustedForwarder)
+        ERC721("Content", "CTNT") {
         karma = _karma;
+        _setTrustedForwarder(_trustedForwarder);
     }
     
     /// @notice Creates a new NFT
@@ -42,12 +46,12 @@ contract Content is ERC721Enumerable {
         tokenIds.increment();
 
         uint256 itemId = tokenIds.current();
-        _safeMint(msg.sender, itemId);
+        _safeMint(_msgSender(), itemId);
         content[itemId] = ContentNft({
             txt: _txt,
             price: _price,
             karma: 0,
-            creator: msg.sender
+            creator: _msgSender()
         });
         return itemId;
     }
@@ -70,7 +74,7 @@ contract Content is ERC721Enumerable {
     /// @param _amount The amount of Karma to transfer
     function addKarmaTo(uint256 _tokenId, uint256 _amount) public {
         address ownerAddress = ownerOf(_tokenId);
-        karma.transferFrom(msg.sender, ownerAddress, _amount);
+        karma.transferFrom(_msgSender(), ownerAddress, _amount);
         content[_tokenId].karma += _amount;
     }
 
@@ -79,7 +83,30 @@ contract Content is ERC721Enumerable {
     /// @param _amount The new price
     /// @dev Only the owner of the token may call this function
     function setPrice(uint256 _tokenId, uint256 _amount) public {
-        require(ownerOf(_tokenId) == msg.sender);
+        require(ownerOf(_tokenId) == _msgSender());
         content[_tokenId].price = _amount;
+    }
+
+    /// @notice Returns the version of the recipient
+    function versionRecipient()
+    external
+    override
+    view
+    returns (string memory) {
+        return "2.2.4";
+    }
+
+    /// @notice Function to retrieve forwarder
+    /// @dev Needed here because both base classes define it
+    function _msgSender() internal view override(Context, BaseRelayRecipient)
+        returns (address) {
+        return BaseRelayRecipient._msgSender();
+    }
+
+    /// @notice Function to retrieve data from forwarder
+    /// @dev Needed here because both base classes define it
+    function _msgData() internal view override(Context, BaseRelayRecipient)
+        returns (bytes memory) {
+        return BaseRelayRecipient._msgData();
     }
 }
