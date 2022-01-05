@@ -140,7 +140,7 @@ contract KarmaPaymaster is BasePaymaster {
         );
 
         uint256 refund = tokenPrecharge - ethActualCharge;
-        karma.burn(payer, ethActualCharge);
+        karma.burn(address(this), ethActualCharge);
         karma.transfer(payer, refund);
         emit TokensCharged(
             payer, ethActualCharge,

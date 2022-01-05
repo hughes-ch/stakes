@@ -18,6 +18,13 @@ do
 done
 echo ''
 
+EXCLUSIVE_TESTS=`grep -l 'it.only' ${TESTS}`
+if [ -n "$EXCLUSIVE_TESTS" ]
+then
+    echo "    ... but only executing '${EXCLUSIVE_TESTS}'"
+    TESTS=$EXCLUSIVE_TESTS
+fi
+
 yarn truffle compile
 
 for TEST in $TESTS

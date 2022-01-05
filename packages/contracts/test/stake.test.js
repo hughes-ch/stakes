@@ -82,4 +82,30 @@ contract('Stake', (accounts) => {
       await getErrorType(instance.stakeUser(accounts[1], {from: accounts[0]}))
     ).not.to.be.null;
   });
+
+  it('should charge correctly for a stake', async () => {
+    const myAccount = accounts[0];
+    await giveSomeKarmaTo(myAccount, paymasterInstance, karmaInstance);
+    const balanceBefore = await karmaInstance.balanceOf(myAccount);
+    const response = await instance.stakeUser(
+      accounts[1], { from: myAccount }
+    );
+
+    // Account for additional transfer that happens behind the scenes
+    // in the relayHub. This needs to be paid for by the client.
+    const gasForTransfer = await karmaInstance.transfer.estimateGas(
+      paymasterInstance.address, 100
+    );
+
+    const costInGas = response.receipt.gasUsed + gasForTransfer;
+    const costOfGas = await web3.eth.getGasPrice();
+    const costInEth = costInGas * costOfGas;
+    const balanceAfter = await karmaInstance.balanceOf(myAccount);
+    const difference = balanceBefore - balanceAfter;
+
+    // Note that 1 KARMA === 1 wei
+    // Since calculation of gas is an estimate, just make sure we're in the
+    // right ballpark...
+    expect(difference).to.be.closeTo(costInEth, difference * 0.1);
+  });
 });
