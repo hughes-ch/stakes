@@ -8,10 +8,12 @@ import { BrowserRouter as Router } from "react-router-dom";
 import SidebarNavigation from './sidebar-navigation';
 import {render, screen} from '@testing-library/react';
 
-it('renders without exploding', () => {
-  render(
-    <Router>
-      <SidebarNavigation/>
-    </Router>
-  );
+describe('The SidebarNavigation component', () => {
+  it('renders without exploding', () => {
+    render(
+      <Router>
+        <SidebarNavigation/>
+      </Router>
+    );
+  });
 });

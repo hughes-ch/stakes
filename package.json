@@ -5,9 +5,14 @@
     "packages/*"
   ],
   "scripts": {
-    "host": "yarn workspace client start"
+    "host": "bash scripts/host.sh"
   },
   "devDependencies": {
     "truffle": "^5.4.26"
+  },
+  "dependencies": {
+    "@stakes/client": "workspace:^",
+    "bn.js": "^5.2.0",
+    "workspace": "^0.0.1-preview.1"
   }
 }
