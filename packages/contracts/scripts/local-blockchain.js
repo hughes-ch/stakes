@@ -7,8 +7,6 @@
 const truffleSettings = require('../truffle-config');
 const { spawn, spawnSync } = require('child_process');
 
-let truffleDev;
-
 /**
  * Sleeps for number of millis
  *
@@ -17,6 +15,18 @@ let truffleDev;
  */
 function delay(ms) {
   return new Promise(res => setTimeout(res, ms));
+}
+
+/**
+ * Singleton container of spawned processes
+ *
+ * @return {Array}
+ */
+function spawnedProcesses() {
+  if (spawnedProcesses.processes === undefined) {
+    spawnedProcesses.processes = [];
+  }
+  return spawnedProcesses.processes;
 }
 
 /**
@@ -29,8 +39,8 @@ exports.startBlockchain = async function() {
     cwd: __dirname,
     stdio: 'ignore',
   };
-  
-  truffleDev = spawn('yarn', ['truffle', 'dev'], options);
+
+  spawnedProcesses().push(spawn('yarn', ['truffle', 'dev'], options));
   await delay(10000);
   spawnSync('yarn', ['gsn-start'], options);
   spawnSync('yarn', ['truffle', 'migrate', '--network', 'test'], options);
@@ -46,6 +56,6 @@ exports.startBlockchain = async function() {
  * @return {undefined}
  */
 exports.stopBlockchain = function() {
-  truffleDev.kill();
-  spawn('pkill', ['-f', 'gsn']);
+  spawnedProcesses().forEach(p => p.kill());
+  spawnSync('pkill', ['-f', 'gsn']);
 }

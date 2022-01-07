@@ -4,6 +4,7 @@
  *   :copyright: Copyright (c) 2022 Chris Hughes
  *   :license: MIT License
  */
+import Avatar from './avatar';
 import {
   BrowserRouter as Router,
   Routes,
@@ -11,7 +12,9 @@ import {
 } from "react-router-dom";
 import { connectContractsToProvider } from './common';
 import React, { useEffect, useRef, useState } from 'react';
-import Avatar from './avatar';
+import ProfileSidebar from './profile-sidebar';
+import SidebarNavigation from './sidebar-navigation';
+import UserStats from './user-stats';
 import Web3 from 'web3';
 import Web3Context, { disconnected } from './web3-context';
 
@@ -55,11 +58,19 @@ function App() {
     connectToProvider(setWeb3Context, isMounted);
   }, [isMounted]);
 
+  const sidebar = (
+    <ProfileSidebar>
+      <Avatar/>
+      <UserStats/>
+      <SidebarNavigation/>
+    </ProfileSidebar>
+  );
+
   return (
     <Web3Context.Provider value={ web3Context }>
       <Router>
         <Routes>
-          <Route index element={<Avatar/>}/>
+          <Route index element={sidebar}/>
         </Routes>
       </Router>
     </Web3Context.Provider>

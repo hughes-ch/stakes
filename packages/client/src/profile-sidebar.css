@@ -1,0 +1,13 @@
+/**
+ *   Style for the ProfileSidebar component
+ *
+ *   :copyright: Copyright (c) 2022 Chris Hughes
+ *   :license: MIT License
+ */
+.profile-sidebar {
+    max-width: 15rem;
+    width: fit-content;
+}
+.profile-sidebar > div {
+    margin-top: 1.5rem;
+}

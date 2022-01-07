@@ -10,7 +10,6 @@ import { startBlockchain,
          stopBlockchain } from '@stakes/contracts/scripts/local-blockchain';
 import Web3 from 'web3';
 
-
 /**
  * Connects contracts to the provider
  *
@@ -35,11 +34,78 @@ async function connectContractsToProvider(contracts, provider) {
 }
 
 /**
+ * Gets computed CSS style
+ *
+ * @param {Object} element Element to get
+ * @param {String} prop    Property to get
+ * @return {String}
+ */
+function getCssStyle(element, prop) {
+  return window.getComputedStyle(element, null).getPropertyValue(prop);
+}
+
+/**
+ * Gets text width
+ *
+ * @param {String} text Text to measure
+ * @param {String} font CSS font descriptor
+ * @return {Number}
+ *
+ * @see https://stackoverflow.com/questions/118241
+ */
+function getTextWidth(el) {
+  const fontWeight = getCssStyle(el, 'font-weight') || 'normal';
+  const fontSize = getCssStyle(el, 'font-size') || '16px';
+  const fontFamily = getCssStyle(el, 'font-family') || 'Times New Roman';
+  const font = `${fontWeight} ${fontSize} ${fontFamily}`;
+  
+  const canvas = getTextWidth.canvas ||
+        (getTextWidth.canvas = document.createElement("canvas"));
+  
+  const context = canvas.getContext("2d");
+  context.font = font;
+  const metrics = context.measureText(el.innerHTML);
+  return metrics.width;
+}
+
+/**
+ * Fits the text width to its container
+ *
+ * @param {Object} element   DOM element to fit
+ * @param {Object} container Container to fit within
+ * @return {undefined}
+ */
+function fitTextWidthToContainer(element, container) {
+  const textWidth = getTextWidth(element);
+  const elementWidth = container.offsetWidth;
+  const widthMultiplier = elementWidth / textWidth;
+  const fontSize = window.getComputedStyle(element, null)
+        .getPropertyValue('font-size').slice(0, -2);
+
+  element.style.fontSize = `${fontSize * widthMultiplier}px`;
+}
+
+/**
+ * Counter for number of blockchain connections
+ *
+ * @return {Object}
+ */
+function blockChainConnections() {
+  if (blockChainConnections.connections === undefined) {
+    blockChainConnections.connections = {
+      count: 0,
+    }
+  }
+  return blockChainConnections.connections;
+}
+
+/**
  * Connects to a local blockchain instance (for test)
  *
  * @return {Promise} Resolves to Web3Context
  */
 async function connectToLocalBlockChain() {
+  blockChainConnections().count++;
   const [host, port] = await startBlockchain();
   const provider = new Web3.providers.HttpProvider(
     `http://${host}:${port}`,
@@ -62,9 +128,13 @@ async function connectToLocalBlockChain() {
  * @return {Promise}
  */
 function stopLocalBlockChain() {
-  stopBlockchain();
+  blockChainConnections().count--;
+  if (blockChainConnections().count === 0) {
+    stopBlockchain();
+  }
 }
 
 export { connectContractsToProvider,
          connectToLocalBlockChain,
+         fitTextWidthToContainer,
          stopLocalBlockChain };

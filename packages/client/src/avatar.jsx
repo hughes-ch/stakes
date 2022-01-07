@@ -6,6 +6,7 @@
  */
 import './avatar.css';
 import config from './config';
+import { fitTextWidthToContainer } from './common';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Web3Context from './web3-context';
 
@@ -59,11 +60,16 @@ function Avatar() {
     updateUserInfo(web3, setName, setPicUrl, isMounted);
   }, [web3, isMounted]);
 
+  const container = useRef(null);
+  const nameSpan = useRef(null);
+  useEffect(() => {
+    fitTextWidthToContainer(nameSpan.current, container.current);
+  }, [name]);
+
   return (
-    <div className='avatar'>
-      <img src={ picUrl }
-           alt={ name }/>
-      <span>{ name }</span>
+    <div className='avatar' ref={ container }>
+      <img src={ picUrl } alt={ name }/>
+      <span ref={ nameSpan }>{ name }</span>
     </div>
   );
 }

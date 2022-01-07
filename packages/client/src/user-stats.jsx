@@ -23,9 +23,12 @@ async function setInitialKarma(web3, setState, isMounted) {
   }
   
   const karmaBalance = await web3.contracts.karma.balanceOf(web3.activeAccount);
-  const scaledKarmaBalance = karmaBalance.toString().slice(
+  let scaledKarmaBalance = karmaBalance.toString().slice(
     0, -config.KARMA_SCALE_FACTOR
   );
+  if (scaledKarmaBalance.length === 0) {
+    scaledKarmaBalance = '0';
+  }
   
   if (isMounted.current) {
     setState(scaledKarmaBalance);
@@ -79,10 +82,12 @@ function UserStats() {
 
   return (
     <div className='user-stats'>
-      <span className='icon'>&#9755;</span>
-      <span>{ numStaked } Staked</span>
-      <span className='icon'>&#9829;</span>
-      <span>{ karmaBalance } Karma</span>
+      <div>
+        <span className='icon'>&#9755;</span>
+        <span>{ numStaked } Staked</span>
+        <span className='icon'>&#9829;</span>
+        <span>{ karmaBalance } Karma</span>
+      </div>
     </div>
   );
 }

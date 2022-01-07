@@ -11,6 +11,15 @@ import { connectToLocalBlockChain, stopLocalBlockChain } from './common';
 import { render, screen } from '@testing-library/react';
 import Web3Context from './web3-context';
 
+jest.mock('./common', () => {
+  const originalModule = jest.requireActual('./common');
+  return {
+    __esModule: true,
+    ...originalModule,
+    fitTextWidthToContainer: jest.fn(() => {}),
+  };
+});
+
 let web3Context;
 
 beforeAll(async () => {
@@ -19,7 +28,7 @@ beforeAll(async () => {
 
 afterAll(() => {
   stopLocalBlockChain();
-});
+}); 
 
 describe('the Avatar component', () => {
   it('renders a default picture', async () => {
@@ -44,7 +53,7 @@ describe('the Avatar component', () => {
     expect(await screen.findByText(myAccount)).toBeInTheDocument();
   });
 
-  it.only('renders the username and pic from the blockchain', async () => {
+  it('renders the username and pic from the blockchain', async () => {
     const myName = 'name';
     const picUrl = '/path/to/pic.jpg';
     await web3Context.contracts.stake.updateUserData(
