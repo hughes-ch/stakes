@@ -9,10 +9,9 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import config from './config';
 import { connectContractsToProvider } from './common';
 import React, { useEffect, useRef, useState } from 'react';
-import UserStats from './user-stats';
+import Avatar from './avatar';
 import Web3 from 'web3';
 import Web3Context, { disconnected } from './web3-context';
 
@@ -43,11 +42,6 @@ async function connectToProvider(setState, isMounted) {
  * Component
  */
 function App() {
-  const [web3Context, setWeb3Context] = useState(disconnected);
-  useEffect(() => {
-    connectToProvider(setWeb3Context, isMounted);
-  }, []);
-
   const isMounted = useRef(false);
   useEffect(() => {
     isMounted.current = true;
@@ -56,11 +50,16 @@ function App() {
     };
   }, []);
   
+  const [web3Context, setWeb3Context] = useState(disconnected);
+  useEffect(() => {
+    connectToProvider(setWeb3Context, isMounted);
+  }, [isMounted]);
+
   return (
     <Web3Context.Provider value={ web3Context }>
       <Router>
         <Routes>
-          <Route index element={<UserStats/>}/>
+          <Route index element={<Avatar/>}/>
         </Routes>
       </Router>
     </Web3Context.Provider>

@@ -9,7 +9,13 @@ import "./Search.sol";
 /// @dev Find more information here: https://github.com/hughes-ch/stakes
 contract Stake is BaseRelayRecipient {
     using Search for address[];
-    
+
+    struct UserData {
+        string name;
+        string picture;
+    }
+
+    mapping(address => UserData) private userData;
     mapping(address => address[]) private stakes;
     mapping(address => uint) private incomingStakes;
     mapping(uint256 => bool) private usedNonces;
@@ -54,6 +60,23 @@ contract Stake is BaseRelayRecipient {
     /// @notice Returns an array of users which this account is staked
     function getOutgoingStakes() public view returns (address[] memory) {
         return stakes[_msgSender()];
+    }
+
+    /// @notice Sets user data
+    /// @param _name The user's name
+    /// @param _picture The user's picture (CID)
+    function updateUserData(string memory _name, string memory _picture)
+        external {
+        userData[_msgSender()].name = _name;
+        userData[_msgSender()].picture = _picture;
+    }
+
+    /// @notice Sets user data
+    /// @param _user The user to lookup
+    /// @dev "Visiting" users will be provided empty information
+    function getUserData(address _user) 
+        external view returns (string memory, string memory) {
+        return (userData[_user].name, userData[_user].picture);
     }
 
     /// @notice Returns the version of the recipient

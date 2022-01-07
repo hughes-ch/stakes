@@ -1,0 +1,26 @@
+/**
+ *   Style for the Avatar component
+ *
+ *   :copyright: Copyright (c) 2022 Chris Hughes
+ *   :license: MIT License
+ */
+.avatar {
+    --picture-size: 10rem;
+    align-content: center;
+    align-items: center;
+    color: var(--light-text-color);
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    font-weight: bold;
+    font-size: 1.15rem;
+    justify-content: center;
+    margin: 1rem;
+}
+.avatar img {
+    border-radius: 50%;
+    height: var(--picture-size);
+    margin-bottom: 1rem;
+    object-fit: cover;
+    width: var(--picture-size);
+}

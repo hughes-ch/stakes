@@ -58,17 +58,6 @@ async function setInitialStaked(web3, setState, isMounted) {
  * Component
  */
 function UserStats() {
-  const web3 = useContext(Web3Context);
-  const [karmaBalance, setKarmaBalance] = useState(0);
-  useEffect(() => {
-    setInitialKarma(web3, setKarmaBalance, isMounted);
-  }, [web3]);
-
-  const [numStaked, setNumStaked] = useState(0);
-  useEffect(() => {
-    setInitialStaked(web3, setNumStaked, isMounted);
-  }, [web3]);
-
   const isMounted = useRef(false);
   useEffect(() => {
     isMounted.current = true;
@@ -77,6 +66,17 @@ function UserStats() {
     };
   }, []);
   
+  const web3 = useContext(Web3Context);
+  const [karmaBalance, setKarmaBalance] = useState(0);
+  useEffect(() => {
+    setInitialKarma(web3, setKarmaBalance, isMounted);
+  }, [web3, isMounted]);
+
+  const [numStaked, setNumStaked] = useState(0);
+  useEffect(() => {
+    setInitialStaked(web3, setNumStaked, isMounted);
+  }, [web3, isMounted]);
+
   return (
     <div className='user-stats'>
       <span className='icon'>&#9755;</span>

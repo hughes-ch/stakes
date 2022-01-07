@@ -108,4 +108,23 @@ contract('Stake', (accounts) => {
     // right ballpark...
     expect(difference).to.be.closeTo(costInEth, difference * 0.1);
   });
+
+  it('should allow getting and updating user data', async () => {
+    const name = 'Bono';
+    const pic = 'QmT5NvUtoM5nWFfrQdVrFtvGfKFmG7AHE8P34isapyhCxX'
+    const myAccount = accounts[0];
+    await giveSomeKarmaTo(myAccount, paymasterInstance, karmaInstance);
+    await instance.updateUserData(name, pic, { from: myAccount });
+    const { 0: receivedName,
+            1: receivedPic } = await instance.getUserData(myAccount);
+    expect(receivedName).to.equal(name);
+    expect(receivedPic).to.equal(pic);
+  });
+
+  it('should return default content for "visiting" users', async () => {
+    const { 0: receivedName,
+            1: receivedPic } = await instance.getUserData(accounts[1]);
+    expect(receivedName).is.empty;
+    expect(receivedPic).is.empty;
+  });
 });

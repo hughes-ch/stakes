@@ -6,6 +6,10 @@
  */
 import config from './config';
 import contract from '@truffle/contract';
+import { startBlockchain,
+         stopBlockchain } from '@stakes/contracts/scripts/local-blockchain';
+import Web3 from 'web3';
+
 
 /**
  * Connects contracts to the provider
@@ -30,4 +34,37 @@ async function connectContractsToProvider(contracts, provider) {
   );
 }
 
-export { connectContractsToProvider };
+/**
+ * Connects to a local blockchain instance (for test)
+ *
+ * @return {Promise} Resolves to Web3Context
+ */
+async function connectToLocalBlockChain() {
+  const [host, port] = await startBlockchain();
+  const provider = new Web3.providers.HttpProvider(
+    `http://${host}:${port}`,
+    { keepAlive: false }
+  );
+  
+  const web3 = new Web3(provider);
+  return {
+    activeAccount: (await web3.eth.getAccounts())[0],
+    instance: web3,
+    contracts: await connectContractsToProvider(
+      ['Karma', 'Stake', 'KarmaPaymaster'], provider
+    ),
+  };
+}
+
+/**
+ * Stops the local blockchain instance (for test)
+ *
+ * @return {Promise}
+ */
+function stopLocalBlockChain() {
+  stopBlockchain();
+}
+
+export { connectContractsToProvider,
+         connectToLocalBlockChain,
+         stopLocalBlockChain };
