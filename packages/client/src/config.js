@@ -10,7 +10,9 @@ module.exports = {
   DEFAULT_USER_NAME: 'User',
   DEFAULT_USER_PIC_URL: '/default-profile-pic.png',
   EDIT_PROFILE_URL: '/edit-profile',
+  KARMA_ICON: '&#9829;',
   KARMA_SCALE_FACTOR: 9,
   NEW_POST_URL: '/new-post',
+  NUM_SCALED_KARMA_ON_UPVOTE: 1,
   TOP_MOVERS_URL: '/top-movers',
 };

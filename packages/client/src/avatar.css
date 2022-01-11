@@ -5,10 +5,8 @@
  *   :license: MIT License
  */
 .avatar {
-    --picture-size: 10rem;
     align-content: center;
     align-items: center;
-    color: var(--light-text-color);
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -16,11 +14,11 @@
     font-size: 1.15rem;
     justify-content: center;
     margin: 1rem;
+    width: 100%;
 }
 .avatar img {
     border-radius: 50%;
-    height: var(--picture-size);
+    height: var(--picture-size-small);
     margin-bottom: 1rem;
     object-fit: cover;
-    width: var(--picture-size);
 }

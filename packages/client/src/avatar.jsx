@@ -43,8 +43,10 @@ async function updateUserInfo(web3, setName, setPicUrl, isMounted) {
 
 /**
  * Component
+ *
+ * @param {Object} props This component's properties
  */
-function Avatar() {
+function Avatar(props) {
   const isMounted = useRef(false);
   useEffect(() => {
     isMounted.current = true;
@@ -54,11 +56,11 @@ function Avatar() {
   }, []);
   
   const web3 = useContext(Web3Context);
-  const [name, setName] = useState(web3.activeAccount);
+  const [name, setName] = useState(props.user);
   const [picUrl, setPicUrl] = useState(config.DEFAULT_USER_PIC_URL);
   useEffect(() => {
     updateUserInfo(web3, setName, setPicUrl, isMounted);
-  }, [web3, isMounted]);
+  }, [props.user, web3, isMounted]);
 
   const container = useRef(null);
   const nameSpan = useRef(null);

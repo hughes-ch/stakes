@@ -85,7 +85,7 @@ function UserStats() {
       <div>
         <span className='icon'>&#9755;</span>
         <span>{ numStaked } Staked</span>
-        <span className='icon'>&#9829;</span>
+        <span className='icon'>content.KARMA_ICON</span>
         <span>{ karmaBalance } Karma</span>
       </div>
     </div>
