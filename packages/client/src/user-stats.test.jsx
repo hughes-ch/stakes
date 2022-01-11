@@ -5,6 +5,7 @@
  *   :license: MIT License
  */
 import '@testing-library/jest-dom';
+import config from './config';
 import { connectToLocalBlockChain, stopLocalBlockChain } from './common';
 import { render, screen } from '@testing-library/react';
 import UserStats from './user-stats';
@@ -14,7 +15,7 @@ let web3Context;
 
 beforeAll(async () => {
   web3Context = await connectToLocalBlockChain();
-}, 60000);
+}, config.UNIT_TEST_SETUP_TIMEOUT);
 
 afterAll(() => {
   stopLocalBlockChain();

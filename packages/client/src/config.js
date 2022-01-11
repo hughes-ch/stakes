@@ -15,4 +15,5 @@ module.exports = {
   NEW_POST_URL: '/new-post',
   NUM_SCALED_KARMA_ON_UPVOTE: 1,
   TOP_MOVERS_URL: '/top-movers',
+  UNIT_TEST_SETUP_TIMEOUT: 120000,
 };

@@ -16,7 +16,7 @@ const defaultContent = {
   text: '',
   price: '0',
   karma: '0',
-  creator: '0',
+  creator: undefined,
 };
 
 /**

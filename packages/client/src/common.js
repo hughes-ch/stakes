@@ -117,7 +117,7 @@ async function connectToLocalBlockChain() {
     activeAccount: (await web3.eth.getAccounts())[0],
     instance: web3,
     contracts: await connectContractsToProvider(
-      ['Karma', 'Stake', 'KarmaPaymaster'], provider
+      ['Karma', 'KarmaPaymaster', 'Stake', 'Content'], provider
     ),
   };
 }

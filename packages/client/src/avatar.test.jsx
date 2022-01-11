@@ -24,7 +24,7 @@ let web3Context;
 
 beforeAll(async () => {
   web3Context = await connectToLocalBlockChain();
-}, 60000);
+}, config.UNIT_TEST_SETUP_TIMEOUT);
 
 afterAll(() => {
   stopLocalBlockChain();
@@ -34,7 +34,7 @@ describe('the Avatar component', () => {
   it('renders a default picture', async () => {
     render(
       <Web3Context.Provider value={ web3Context }>
-        <Avatar/>
+        <Avatar user={ web3Context.activeAccount }/>
       </Web3Context.Provider>
     );
 
@@ -45,7 +45,7 @@ describe('the Avatar component', () => {
   it('renders a default username', async () => {
     render(
       <Web3Context.Provider value={ web3Context }>
-        <Avatar/>
+        <Avatar user={ web3Context.activeAccount }/>
       </Web3Context.Provider>
     );
 
@@ -62,7 +62,7 @@ describe('the Avatar component', () => {
 
     render(
       <Web3Context.Provider value={ web3Context }>
-        <Avatar/>
+        <Avatar user={ web3Context.activeAccount }/>
       </Web3Context.Provider>
     );
 
