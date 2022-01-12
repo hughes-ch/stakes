@@ -9,6 +9,7 @@
 .content-card {
     background-color: var(--light-background-color);
     border-radius: 0.15rem;
+    box-sizing: border-box;
     color: var(--dark-text-color);
     column-gap: 5%;
     display: grid;
@@ -17,7 +18,6 @@
     margin: 0.1rem;
     max-width: var(--max-content-width);
     padding: 0.5rem;
-    width: 100%;
 }
 
 .content-card > *:nth-child(1) {
@@ -30,7 +30,7 @@
     align-items: flex-start;
     display: flex;
     flex-direction: column;
-    font-size: 0.75rem;
+    font-size: var(--content-font-size);
     grid-column: 2 / span 2;
     grid-row: 1;
     height: 100%;
@@ -59,11 +59,15 @@
 
 .content-card button {
     all: unset;
-    font-size: 0.75rem;
+    font-size: var(--content-font-size);
 }
 
 .content-card button:hover {
     color: var(--lighter-text-color);
     cursor: pointer;
 }
-
+@media only screen and (max-width: 515px) {
+    .content-card button {
+        font-size: 2vw;
+    }
+}

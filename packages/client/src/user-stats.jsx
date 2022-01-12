@@ -15,14 +15,15 @@ import Web3Context from './web3-context';
  * @param {Object}   web3      Web3Context
  * @param {Function} setState  Mutator on component state 
  * @param {Boolean}  isMounted Indicates if component is still mounted
+ * @param {Number}   account   Account to request
  * @return {Promise}
  */
-async function setInitialKarma(web3, setState, isMounted) {
+async function setInitialKarma(web3, setState, isMounted, account) {
   if (!web3.contracts.karma) {
     return;
   }
   
-  const karmaBalance = await web3.contracts.karma.balanceOf(web3.activeAccount);
+  const karmaBalance = await web3.contracts.karma.balanceOf(account);
   let scaledKarmaBalance = karmaBalance.toString().slice(
     0, -config.KARMA_SCALE_FACTOR
   );
@@ -41,17 +42,15 @@ async function setInitialKarma(web3, setState, isMounted) {
  * @param {Object}   web3      Web3Context
  * @param {Function} setState  Mutator on component state 
  * @param {Boolean}  isMounted Indicates if component is still mounted
+ * @param {Number}   account   Account to request
  * @return {Promise}
  */
-async function setInitialStaked(web3, setState, isMounted) {
+async function setInitialStaked(web3, setState, isMounted, account) {
   if (!web3.contracts.stake) {
     return;
   }
   
-  const numStaked = await web3.contracts.stake.getIncomingStakes(
-    web3.activeAccount
-  );
-  
+  const numStaked = await web3.contracts.stake.getIncomingStakes(account);
   if (isMounted.current) {
     setState(numStaked.toNumber());
   }
@@ -60,7 +59,7 @@ async function setInitialStaked(web3, setState, isMounted) {
 /**
  * Component
  */
-function UserStats() {
+function UserStats(props) {
   const isMounted = useRef(false);
   useEffect(() => {
     isMounted.current = true;
@@ -72,20 +71,20 @@ function UserStats() {
   const web3 = useContext(Web3Context);
   const [karmaBalance, setKarmaBalance] = useState(0);
   useEffect(() => {
-    setInitialKarma(web3, setKarmaBalance, isMounted);
-  }, [web3, isMounted]);
+    setInitialKarma(web3, setKarmaBalance, isMounted, props.user);
+  }, [web3, isMounted, props.user]);
 
   const [numStaked, setNumStaked] = useState(0);
   useEffect(() => {
-    setInitialStaked(web3, setNumStaked, isMounted);
-  }, [web3, isMounted]);
+    setInitialStaked(web3, setNumStaked, isMounted, props.user);
+  }, [web3, isMounted, props.user]);
 
   return (
     <div className='user-stats'>
       <div>
         <span className='icon'>&#9755;</span>
         <span>{ numStaked } Staked</span>
-        <span className='icon'>content.KARMA_ICON</span>
+        <span className='icon'>&#9829;</span>
         <span>{ karmaBalance } Karma</span>
       </div>
     </div>

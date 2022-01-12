@@ -72,13 +72,12 @@ function getTextWidth(el) {
  * Fits the text width to its container
  *
  * @param {Object} element   DOM element to fit
- * @param {Object} container Container to fit within
  * @return {undefined}
  */
-function fitTextWidthToContainer(element, container) {
+function fitTextWidthToContainer(element) {
   const textWidth = getTextWidth(element);
-  const elementWidth = container.offsetWidth;
-  const widthMultiplier = elementWidth / textWidth;
+  const elementWidth = element.getBoundingClientRect().width;
+  const widthMultiplier = 0.95 * elementWidth / textWidth;
   const fontSize = window.getComputedStyle(element, null)
         .getPropertyValue('font-size').slice(0, -2);
 

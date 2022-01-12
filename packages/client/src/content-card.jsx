@@ -115,7 +115,7 @@ function ContentCard(props) {
     setKarmaCaption(content.karma);
     setBuyNowCaption(content.price);
   }, [content]);
-  
+
   return (
     <div className='content-card'>
       <Avatar user={ content.creator }/>

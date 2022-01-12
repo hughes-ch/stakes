@@ -13,12 +13,22 @@
     font-weight: bold;
     font-size: 1.15rem;
     justify-content: center;
-    margin: 1rem;
     width: 100%;
 }
 .avatar img {
     border-radius: 50%;
     height: var(--picture-size-small);
-    margin-bottom: 1rem;
     object-fit: cover;
+}
+.avatar span {
+    flex-grow: 1;
+    width: 70%;
+}
+.avatar > * {
+    margin: 0.5rem;
+}
+@media only screen and (max-width: 720px) {
+    .avatar {
+        justify-content: flex-start;
+    }
 }

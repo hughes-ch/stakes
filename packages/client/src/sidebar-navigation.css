@@ -4,9 +4,30 @@
  *   :copyright: Copyright (c) 2022 Chris Hughes
  *   :license: MIT License
  */
+.sidebar-navigation {
+    margin-top: 3rem;
+}
 .sidebar-navigation a {
     color: var(--light-text-color);
     display: block;
-    margin: 0.5rem;
+    font-size: var(--link-font-size);
+    margin-top: 0.5rem;
     text-decoration: none;
+}
+@media only screen and (max-width: 720px) {
+    .sidebar-navigation {
+        align-items: center;
+        background-color: var(--light-background-color);
+        border-top: 1px solid var(--dark-text-color);
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 0.2rem 0.2rem 2rem 0.2rem;
+        width: 100vw;
+    }
+    .sidebar-navigation a {
+        color: var(--dark-text-color);
+        font-weight: bold;
+    }
 }

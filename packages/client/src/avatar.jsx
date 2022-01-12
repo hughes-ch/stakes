@@ -7,7 +7,11 @@
 import './avatar.css';
 import config from './config';
 import { fitTextWidthToContainer } from './common';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext,
+                useLayoutEffect,
+                useEffect,
+                useRef,
+                useState } from 'react';
 import Web3Context from './web3-context';
 
 /**
@@ -64,11 +68,22 @@ function Avatar(props) {
   const container = useRef(null);
   const nameSpan = useRef(null);
   useEffect(() => {
-    fitTextWidthToContainer(nameSpan.current, container.current);
+    const resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        fitTextWidthToContainer(nameSpan.current);
+      }
+    });
+    resizeObserver.observe(container.current);
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  useLayoutEffect(() => {
+    fitTextWidthToContainer(nameSpan.current);
   }, [name]);
 
   return (
-    <div className='avatar' ref={ container }>
+    <div className='avatar' ref={ container }
+         style={{ flexDirection: props.flexDirection }}>
       <img src={ picUrl } alt={ name }/>
       <span ref={ nameSpan }>{ name }</span>
     </div>

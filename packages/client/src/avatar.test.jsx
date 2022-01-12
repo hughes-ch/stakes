@@ -5,20 +5,12 @@
  *   :license: MIT License
  */
 import '@testing-library/jest-dom';
+import './mocks';
 import Avatar from './avatar';
 import config from './config';
 import { connectToLocalBlockChain, stopLocalBlockChain } from './common';
 import { render, screen } from '@testing-library/react';
 import Web3Context from './web3-context';
-
-jest.mock('./common', () => {
-  const originalModule = jest.requireActual('./common');
-  return {
-    __esModule: true,
-    ...originalModule,
-    fitTextWidthToContainer: jest.fn(() => {}),
-  };
-});
 
 let web3Context;
 

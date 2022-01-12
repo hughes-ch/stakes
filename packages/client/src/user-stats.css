@@ -7,11 +7,12 @@
 .user-stats {
     color: var(--light-text-color);
     display: flex;
+    font-size: var(--link-font-size);
     justify-content: center;
     margin: 0.5rem;
 }
 .user-stats .icon {
-    font-size: 1.5rem;
+    font-size: var(--link-font-size);
 }
 .user-stats > div {
     align-items: center;

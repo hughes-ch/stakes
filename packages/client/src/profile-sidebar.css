@@ -11,3 +11,22 @@
 .profile-sidebar > div {
     margin-top: 1.5rem;
 }
+@media only screen and (max-width: 720px) {
+    .profile-sidebar {
+        align-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+    }
+    .profile-sidebar > div {
+        margin-top: 0px;
+    }
+    .profile-sidebar > div:nth-child(1) {
+        width: 50%;
+    }
+    .profile-sidebar > div:nth-child(2) {
+        width: 50%;
+    }
+}

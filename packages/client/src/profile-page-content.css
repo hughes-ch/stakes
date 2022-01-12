@@ -12,8 +12,9 @@
 .profile-page-content > div > div:nth-child(1) {
     background-color: var(--light-background-color);
     border-radius: 0.15rem;
+    box-sizing: border-box;
     color: var(--dark-text-color);
-    font-size: 0.75rem;
+    font-size: var(--content-font-size);
     margin: 0.1rem;
     max-width: var(--max-content-width);
     padding: 0.5rem;

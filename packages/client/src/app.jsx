@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 import { connectContractsToProvider } from './common';
 import { ethers } from 'ethers';
-import ProfilePageContent from './profile-page-content';
+import ProfilePage from './profile-page';
 import React, { useEffect, useRef, useState } from 'react';
 import Web3 from 'web3';
 import Web3Context, { disconnected } from './web3-context';
@@ -94,7 +94,7 @@ function App() {
     <Web3Context.Provider value={ web3Context }>
       <Router>
         <Routes>
-          <Route index element={ <ProfilePageContent/> }/>
+          <Route index element={ <ProfilePage/> }/>
         </Routes>
       </Router>
     </Web3Context.Provider>

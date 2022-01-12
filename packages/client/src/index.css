@@ -5,20 +5,37 @@
  *   :license: MIT License
  */
 :root {
-    --dark-text-color: black;
+    --content-font-size: 0.75rem;
+    --dark-background-color: #545454;
+    --dark-text-color: var(--dark-background-color);
     --light-background-color: #f1f2f2;
     --light-grey: #d9d9d9;
     --light-text-color: white;
     --lighter-text-color: var(--light-grey);
+    --link-font-size: 1rem;
     --max-content-width: 50rem;
     --picture-size-large: 10rem;
     --picture-size-small: 5rem;
+    --title-font-size: 2rem;
 }
 
 body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   background-color: var(--light-grey);
-  margin: 0;
   font-family: 'Libre Baskerville', serif;
+  margin: 0;
+}
+#root {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+@media only screen and (max-width: 515px) {
+    :root {
+        --content-font-size: 2.5vw;
+        --link-font-size: 3vw;
+        --title-font-size: 5vw;
+    }
 }

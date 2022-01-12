@@ -32,7 +32,7 @@ describe('the UserStats component', () => {
 
     render(
       <Web3Context.Provider value={ web3Context }>
-        <UserStats/>
+        <UserStats user={ web3Context.activeAccount }/>
       </Web3Context.Provider>
     );
 
@@ -52,7 +52,7 @@ describe('the UserStats component', () => {
 
     render(
       <Web3Context.Provider value={ web3Context }>
-        <UserStats/>
+        <UserStats user={ web3Context.activeAccount }/>
       </Web3Context.Provider>
     );
 
