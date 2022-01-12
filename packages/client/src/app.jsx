@@ -10,8 +10,8 @@ import {
   Route,
 } from "react-router-dom";
 import { connectContractsToProvider } from './common';
-import ContentCard from './content-card';
 import { ethers } from 'ethers';
+import ProfilePageContent from './profile-page-content';
 import React, { useEffect, useRef, useState } from 'react';
 import Web3 from 'web3';
 import Web3Context, { disconnected } from './web3-context';
@@ -58,37 +58,43 @@ function App() {
     connectToProvider(setWeb3Context, isMounted);
   }, [isMounted]);
 
-  const [tokenId, setTokenId] = useState(undefined);
   useEffect(() => {
     const getTokenId = async () => {
       if (!web3Context.activeAccount) {
         return;
       }
-      
-      const price = web3Context.instance.utils.toWei('1', 'gwei');
+
+      const accounts = await web3Context.instance.eth.getAccounts();
+      console.log(`Accounts: ${accounts} [${accounts[0].constructor.name}]`);
       await web3Context.contracts.content.publish(
         'Hello world!',
-        price,
-        { from: web3Context.activeAccount }
+        web3Context.instance.utils.toWei('1', 'gwei'),
+        { from: accounts[0] }
+      );
+      await web3Context.contracts.content.publish(
+        'Howdy Doody',
+        web3Context.instance.utils.toWei('500', 'gwei'),
+        { from: accounts[0] }
+      );
+      await web3Context.contracts.content.publish(
+        'Someone\'s poisoned the water hole!',
+        web3Context.instance.utils.toWei('30', 'gwei'),
+        { from: accounts[0] }
       );
 
-      setTokenId(
-        await web3Context.contracts.content.tokenOfOwnerByIndex(
-          web3Context.activeAccount, ethers.BigNumber.from(1)
-        )
+      const result = await web3Context.contracts.stake.stakeUser(
+        accounts[0],
+        { from: web3Context.activeAccount }
       );
+      console.log(`Result: ${JSON.stringify(result)}`);
     };
     getTokenId();
   }, [web3Context]);
-  const contentCard = (
-    <ContentCard tokenId={ tokenId }/>
-  );
-
   return (
     <Web3Context.Provider value={ web3Context }>
       <Router>
         <Routes>
-          <Route index element={ contentCard }/>
+          <Route index element={ <ProfilePageContent/> }/>
         </Routes>
       </Router>
     </Web3Context.Provider>

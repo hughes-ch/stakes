@@ -55,9 +55,7 @@ contract('Stake', (accounts) => {
     await instance.stakeUser(accounts[1], { from: accounts[2] });
 
     const numStakes = await instance.getIncomingStakes(accounts[1]);
-    const outgoingStakes = await instance.getOutgoingStakes(
-      {from: accounts[0]}
-    );
+    const outgoingStakes = await instance.getOutgoingStakes(accounts[0]);
     
     expect(numStakes.toNumber()).to.equal(2);
     expect(outgoingStakes.length).to.equal(1);
@@ -69,7 +67,7 @@ contract('Stake', (accounts) => {
     await instance.unstakeUser(accounts[1], { from: accounts[0] });
     
     const numStakes = await instance.getIncomingStakes(accounts[1]);
-    const outgoingStakes = await instance.getOutgoingStakes({from:accounts[0]});
+    const outgoingStakes = await instance.getOutgoingStakes(accounts[0]);
     const stakesArray = outgoingStakes;
     
     expect(numStakes.toNumber()).to.equal(0);

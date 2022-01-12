@@ -206,7 +206,7 @@ contract('Content', (accounts) => {
     const contentPrice = web3.utils.toWei('500', 'gwei'); // KARMA === 1 wei
     const response = await contentInstance.publish(
       contentTxt,
-      ethers.utils.bigNumberify(contentPrice),
+      ethers.BigNumber.from(contentPrice),
       {from: publisher}
     );
 
@@ -214,7 +214,7 @@ contract('Content', (accounts) => {
     await contentInstance.approve(buyer, tokenId, { from: publisher });
     await karmaInstance.increaseAllowance(
       contentInstance.address,
-      ethers.utils.bigNumberify(contentPrice),
+      ethers.BigNumber.from(contentPrice),
       { from: buyer }
     );
 

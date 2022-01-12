@@ -10,6 +10,7 @@
     --light-grey: #d9d9d9;
     --light-text-color: white;
     --lighter-text-color: var(--light-grey);
+    --max-content-width: 50rem;
     --picture-size-large: 10rem;
     --picture-size-small: 5rem;
 }

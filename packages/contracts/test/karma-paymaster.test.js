@@ -37,11 +37,11 @@ contract('KarmaPaymaster', (accounts) => {
     const amountToDeposit = web3.utils.toWei('1', 'ether');
     await paymasterInstance.buyKarma({value: amountToDeposit, from: myAccount});
 
-    const balanceBefore = ethers.utils.bigNumberify(
+    const balanceBefore = ethers.BigNumber.from(
       await web3.eth.getBalance(myAccount)
     );
     await paymasterInstance.withdrawAll({from: myAccount});
-    const balanceAfter = ethers.utils.bigNumberify(
+    const balanceAfter = ethers.BigNumber.from(
       await web3.eth.getBalance(myAccount)
     );
     

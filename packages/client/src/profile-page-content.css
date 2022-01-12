@@ -1,0 +1,21 @@
+/**
+ *   Style for the ProfilePageContent component
+ *
+ *   :copyright: Copyright (c) 2022 Chris Hughes
+ *   :license: MIT License
+ */
+@import './index.css';
+
+.profile-page-content > div {
+    margin-bottom: 1rem;
+}
+.profile-page-content > div > div:nth-child(1) {
+    background-color: var(--light-background-color);
+    border-radius: 0.15rem;
+    color: var(--dark-text-color);
+    font-size: 0.75rem;
+    margin: 0.1rem;
+    max-width: var(--max-content-width);
+    padding: 0.5rem;
+    text-align: center;
+}

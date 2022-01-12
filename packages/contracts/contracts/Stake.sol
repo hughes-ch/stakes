@@ -58,8 +58,12 @@ contract Stake is BaseRelayRecipient {
     }
 
     /// @notice Returns an array of users which this account is staked
-    function getOutgoingStakes() public view returns (address[] memory) {
-        return stakes[_msgSender()];
+    /// @param _user [address] The user to request
+    function getOutgoingStakes(address _user)
+        public
+        view
+        returns (address[] memory) {
+        return stakes[_user];
     }
 
     /// @notice Sets user data
