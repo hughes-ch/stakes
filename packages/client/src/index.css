@@ -13,6 +13,7 @@
     --light-text-color: white;
     --lighter-text-color: var(--light-grey);
     --link-font-size: 1rem;
+    --font-family: 'Libre Baskerville', serif;
     --max-content-width: 50rem;
     --picture-size-large: 10rem;
     --picture-size-small: 5rem;
@@ -23,7 +24,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   background-color: var(--light-grey);
-  font-family: 'Libre Baskerville', serif;
+  font-family: var(--font-family);
   margin: 0;
 }
 #root {

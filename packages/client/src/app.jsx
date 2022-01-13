@@ -35,7 +35,7 @@ async function connectToProvider(setState, isMounted) {
       activeAccount: (await web3.eth.getAccounts())[0],
       instance: web3,
       contracts: await connectContractsToProvider(
-        ['Content', 'Karma', 'Stake'], provider
+        ['Content', 'Karma', 'Stake', 'KarmaPaymaster'], provider
       ),
     });
   }
