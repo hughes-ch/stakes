@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 function SidebarNavigation(props) {
   return (
     <div className='sidebar-navigation'>
-      <Link to={ config.NEW_POST_URL }>New Post</Link>
+      <button onClick={ props.onAddPost }>New Post</button>
       <Link to={ config.TOP_MOVERS_URL }>Your Top Movers</Link>
       <button onClick={ props.onAddKarma }>Add Karma</button>
       <button onClick={ props.onEditProfile }>Edit Profile</button>

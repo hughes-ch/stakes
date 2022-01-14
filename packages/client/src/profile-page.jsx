@@ -7,6 +7,7 @@
  */
 import './profile-page.css';
 import AddKarmaPopup from './add-karma-popup';
+import AddPostPopup from './add-post-popup';
 import Avatar from './avatar';
 import config from './config';
 import EditProfilePopup from './edit-profile-popup';
@@ -56,6 +57,29 @@ async function updateUserData(event, web3, ipfs, setPopup) {
 
   return web3.contracts.stake.updateUserData(
     name, cid.toString(), { from: web3.activeAccount }
+  );
+}
+
+/**
+ * Adds a new post to the current user's collection
+ *
+ * @param {Object}   event    submit event
+ * @param {Context}  web3     Web3 context
+ * @param {Function} setPopup Function to set (or clear) popups
+ * @return {Promise}
+ */
+async function addNewPost(event, web3, setPopup) {
+  event.preventDefault();
+  setPopup(undefined);
+
+  const content = event.target.elements[config.POST_CONTENT_ENTRY].value;
+  const price = web3.instance.utils.toWei(
+    event.target.elements[config.POST_PRICE_ENTRY].value.toString(),
+    'gwei'
+  );
+  
+  return web3.contracts.content.publish(
+    content, price, { from: web3.activeAccount }
   );
 }
 
@@ -114,6 +138,14 @@ function ProfilePage() {
               setPopup(
                 <EditProfilePopup
                   onSubmit={ async (e) => updateUserData(e, web3, ipfs, setPopup) }
+                  onCancel={ () => setPopup(undefined) }
+                />
+              );
+            }}
+            onAddPost={ () => {
+              setPopup(
+                <AddPostPopup
+                  onSubmit={ async (e) => addNewPost(e, web3, setPopup) }
                   onCancel={ () => setPopup(undefined) }
                 />
               );

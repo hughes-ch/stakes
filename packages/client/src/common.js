@@ -149,4 +149,5 @@ async function getFromIpfs(ipfs, cid) {
 export { connectContractsToProvider,
          connectToLocalBlockChain,
          fitTextWidthToContainer,
+         getFromIpfs,
          stopLocalBlockChain };

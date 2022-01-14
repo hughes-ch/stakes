@@ -85,7 +85,6 @@ function App() {
       }
 
       const accounts = await web3Context.instance.eth.getAccounts();
-      console.log(`Accounts: ${accounts} [${accounts[0].constructor.name}]`);
       await web3Context.contracts.content.publish(
         'Hello world!',
         web3Context.instance.utils.toWei('1', 'gwei'),
@@ -106,7 +105,6 @@ function App() {
         accounts[0],
         { from: web3Context.activeAccount }
       );
-      console.log(`Result: ${JSON.stringify(result)}`);
     };
     getTokenId();
   }, [web3Context]);
