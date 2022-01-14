@@ -5,8 +5,11 @@
  *   :license: MIT License
  */
 import './avatar.css';
+import all from 'it-all';
+import { concat as uint8ArrayConcat } from 'uint8arrays/concat';
 import config from './config';
 import { fitTextWidthToContainer } from './common';
+import IpfsContext from './ipfs-context';
 import React, { useContext,
                 useLayoutEffect,
                 useEffect,
@@ -15,33 +18,13 @@ import React, { useContext,
 import Web3Context from './web3-context';
 
 /**
- * Updates the user's name
+ * Sets the img ref to use the default image
  *
- * @param {Object}   web3      Web3Context
- * @param {String}   name      Current name
- * @param {Function} setName   Name hook
- * @param {Function} setPicUrl PicUrl hook
- * @param {Boolean}  isMounted Indicates if the component is still mounted
- * @return {Promise}
+ * @param {DOMElement} img DOM Element to update
+ * @return {undefined}
  */
-async function updateUserInfo(web3, name, setName, setPicUrl, isMounted) {
-  let userPicUrl = config.DEFAULT_USER_PIC_URL;
-  let userName = name ? name : config.DEFAULT_USER_NAME;
-
-  try {
-    const response = await web3.contracts.stake.getUserData(name);
-    if (response['0'] && response['1']) {
-      userName = response['0'];
-      userPicUrl = response['1'];
-    } 
-  } catch (err) {
-    // Do nothing - just use defaults (already set)
-  }
-
-  if (isMounted.current) {
-    setName(userName);
-    setPicUrl(userPicUrl);
-  }
+function setDefaultImg(img) {
+  img.current.src = config.DEFAULT_USER_PIC_URL;
 }
 
 /**
@@ -57,19 +40,60 @@ function Avatar(props) {
       isMounted.current = false;
     };
   }, []);
-  
+
+  const ipfs = useContext(IpfsContext);
   const web3 = useContext(Web3Context);
   const [name, setName] = useState(props.user);
-  const [picUrl, setPicUrl] = useState(config.DEFAULT_USER_PIC_URL);
+  const img = useRef(null);
   useEffect(() => {
-    updateUserInfo(web3, props.user, setName, setPicUrl, isMounted);
-  }, [props.user, web3, isMounted]);
+    async function updateUserPic() {
+      try {
+        const userPic = await web3.contracts.stake.getUserPic(props.user);
+        if (userPic) {
+          const data = uint8ArrayConcat(await all(ipfs.cat(userPic)));
+          if (data.length > 0) {
+            const blob = new Blob([data], { type: 'image/jpg' });
+            img.current.src = window.URL.createObjectURL(blob);
+          }
+        } else {
+          setDefaultImg(img);
+        }
+      } catch (err) {
+        setDefaultImg(img);
+      }
+    }
+
+    async function updateUserName() {
+      let userName = props.user ? props.user : config.DEFAULT_USER_NAME;
+      try {
+        const userNameFromChain = await web3.contracts.stake.getUserName(
+          props.user
+        );
+        
+        if (userNameFromChain) {
+          userName = userNameFromChain;
+        }
+      } catch (err) {
+        // Do nothing - defaults already set
+      }
+
+      if (isMounted.current) {
+        setName(userName);
+      }
+    }
+    
+    async function updateUserInfo() {
+      return Promise.all([updateUserPic(), updateUserName()]);
+    }
+      
+    updateUserInfo();
+  }, [props.user, web3, ipfs, isMounted]);
 
   const container = useRef(null);
   const nameSpan = useRef(null);
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
-      for (const entry of entries) {
+      for (let ii = 0; ii < entries.length; ii++) {
         fitTextWidthToContainer(nameSpan.current);
       }
     });
@@ -84,7 +108,7 @@ function Avatar(props) {
   return (
     <div className='avatar' ref={ container }
          style={{ flexDirection: props.flexDirection }}>
-      <img src={ picUrl } alt={ name }/>
+      <img ref={ img } alt={ name }/>
       <span ref={ nameSpan }>{ name }</span>
     </div>
   );

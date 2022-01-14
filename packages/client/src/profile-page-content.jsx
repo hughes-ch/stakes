@@ -61,10 +61,8 @@ async function generateContent(setState, web3, isMounted) {
   
   content.sort((a, b) => a.tokenId.gt(b));
   const promises = content.map(async (post) => {
-    let { 0: user,
-          1: userPic } = await web3.contracts.stake.getUserData(post.owner);
-
-    if (!user || !userPic) {
+    let user = await web3.contracts.stake.getUserName(post.owner);
+    if (!user) {
       user = post.owner ? post.owner : config.DEFAULT_USER_NAME;
     }
     

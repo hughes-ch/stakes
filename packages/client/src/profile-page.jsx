@@ -9,6 +9,8 @@ import './profile-page.css';
 import AddKarmaPopup from './add-karma-popup';
 import Avatar from './avatar';
 import config from './config';
+import EditProfilePopup from './edit-profile-popup';
+import IpfsContext from './ipfs-context';
 import ProfilePageContent from './profile-page-content';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import SearchBar from './search-bar';
@@ -22,7 +24,7 @@ import Web3Context from './web3-context';
  * @param {Object}   event    Submit event
  * @param {Object}   web3     Web3 context
  * @param {Function} setPopup Function to set (or clear) popups
- * @return {undefined}
+ * @return {Promise}
  */
 async function addKarma(event, web3, setPopup) {
   event.preventDefault();
@@ -33,6 +35,28 @@ async function addKarma(event, web3, setPopup) {
     from: web3.activeAccount,
     value: web3.instance.utils.toWei(karmaToAdd.toString(), 'gwei'),
   });
+}
+
+/**
+ * Updates user data on chain and uploads to IPFS
+ *
+ * @param {Object}   event    submit event
+ * @param {Context}  web3     Web3 context
+ * @param {Context}  ipfs     IPFS context
+ * @param {Function} setPopup Function to set (or clear) popups
+ * @return {Promise}
+ */
+async function updateUserData(event, web3, ipfs, setPopup) {
+  event.preventDefault();
+
+  const name = event.target.elements[config.PROFILE_NAME_ENTRY].value;
+  const file = event.target.elements[config.PROFILE_PIC_ENTRY].files[0];
+  const { cid } = await ipfs.add(file);
+
+  setPopup(undefined);
+  return web3.contracts.stake.updateUserData(
+    name, cid.toString(), { from: web3.activeAccount }
+  );
 }
 
 /**
@@ -51,7 +75,7 @@ function ProfilePage() {
   const [avatarDirection, setAvatarDirection] = useState(undefined);
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
-      for (const entry of entries) {
+      for (let ii = 0; ii < entries.length; ii++) {
         if (isMounted.current && userInfoRef.current) {
           setAvatarDirection(
             window.getComputedStyle(userInfoRef.current).position === 'sticky' ?
@@ -66,6 +90,7 @@ function ProfilePage() {
 
   const [popup, setPopup] = useState(undefined);
   const web3 = useContext(Web3Context);
+  const ipfs = useContext(IpfsContext);
   return (
     <React.Fragment>
       { popup }
@@ -81,7 +106,16 @@ function ProfilePage() {
               setPopup(
                 <AddKarmaPopup
                   onSubmit={ async (event) => addKarma(event, web3, setPopup) }
-                  onCancel={ () => setPopup(undefined) }/>
+                  onCancel={ () => setPopup(undefined) }
+                />
+              );
+            }}
+            onEditProfile={ () => {
+              setPopup(
+                <EditProfilePopup
+                  onSubmit={ async (e) => updateUserData(e, web3, ipfs, setPopup) }
+                  onCancel={ () => setPopup(undefined) }
+                />
               );
             }}/>
         </div>

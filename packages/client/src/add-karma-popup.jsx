@@ -7,7 +7,7 @@
 import config from './config';
 import { ethers } from 'ethers';
 import Popup from './popup';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 
 /**
  * Updates the estimated cost label

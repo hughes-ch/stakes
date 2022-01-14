@@ -75,12 +75,20 @@ contract Stake is BaseRelayRecipient {
         userData[_msgSender()].picture = _picture;
     }
 
-    /// @notice Sets user data
+    /// @notice Get user name
     /// @param _user The user to lookup
     /// @dev "Visiting" users will be provided empty information
-    function getUserData(address _user) 
-        external view returns (string memory, string memory) {
-        return (userData[_user].name, userData[_user].picture);
+    function getUserName(address _user) 
+        external view returns (string memory) {
+        return userData[_user].name;
+    }
+
+    /// @notice Get user pic CID
+    /// @param _user The user to lookup
+    /// @dev "Visiting" users will be provided empty information
+    function getUserPic(address _user) 
+        external view returns (string memory) {
+        return userData[_user].picture;
     }
 
     /// @notice Returns the version of the recipient

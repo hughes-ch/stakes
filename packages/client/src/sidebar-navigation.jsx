@@ -15,7 +15,7 @@ function SidebarNavigation(props) {
       <Link to={ config.NEW_POST_URL }>New Post</Link>
       <Link to={ config.TOP_MOVERS_URL }>Your Top Movers</Link>
       <button onClick={ props.onAddKarma }>Add Karma</button>
-      <Link to={ config.EDIT_PROFILE_URL }>Edit Profile</Link>
+      <button onClick={ props.onEditProfile }>Edit Profile</button>
     </div>
   );
 }

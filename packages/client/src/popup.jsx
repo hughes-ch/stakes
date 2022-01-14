@@ -8,7 +8,7 @@
  *   :license: MIT License
  */
 import './popup.css';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React from 'react';
 
 /**
  * Component

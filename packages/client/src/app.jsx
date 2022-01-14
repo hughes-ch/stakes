@@ -4,13 +4,14 @@
  *   :copyright: Copyright (c) 2022 Chris Hughes
  *   :license: MIT License
  */
+import * as IPFS from 'ipfs-core';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
 } from "react-router-dom";
 import { connectContractsToProvider } from './common';
-import { ethers } from 'ethers';
+import IpfsContext from './ipfs-context';
 import ProfilePage from './profile-page';
 import React, { useEffect, useRef, useState } from 'react';
 import Web3 from 'web3';
@@ -42,6 +43,20 @@ async function connectToProvider(setState, isMounted) {
 }
 
 /**
+ * Creates an IPFS node
+ *
+ * @param {Function} setState  Hook to set state
+ * @param {Ref}      isMounted Ref indicating if component is mounted
+ * @return {Promise}
+ */
+async function createIpfsNode(setState, isMounted) {
+  const ipfs = await IPFS.create();
+  if (isMounted.current) {
+    setState(ipfs);
+  }
+}
+
+/**
  * Component
  */
 function App() {
@@ -52,6 +67,11 @@ function App() {
       isMounted.current = false;
     };
   }, []);
+
+  const [ipfsContext, setIpfsContext] = useState(undefined);
+  useEffect(() => {
+    createIpfsNode(setIpfsContext, isMounted);
+  }, [isMounted]);
   
   const [web3Context, setWeb3Context] = useState(disconnected);
   useEffect(() => {
@@ -91,13 +111,15 @@ function App() {
     getTokenId();
   }, [web3Context]);
   return (
-    <Web3Context.Provider value={ web3Context }>
-      <Router>
-        <Routes>
-          <Route index element={ <ProfilePage/> }/>
-        </Routes>
-      </Router>
-    </Web3Context.Provider>
+    <IpfsContext.Provider value={ ipfsContext }>
+      <Web3Context.Provider value={ web3Context }>
+        <Router>
+          <Routes>
+            <Route index element={ <ProfilePage/> }/>
+          </Routes>
+        </Router>
+      </Web3Context.Provider>
+    </IpfsContext.Provider>
   );
 }
 

@@ -33,7 +33,7 @@
     margin-block-start: 0.5rem;
     margin-block-end: 2rem;
 }
-.popup input[type=number] {
+.popup input[type=number], .popup input[type=text] {
     background-color: var(--light-background-color);
     border: none;
     border-radius: 0.5rem;
@@ -42,6 +42,20 @@
     font-size: var(--link-font-size);
     margin: 0.5rem;
     padding: 0.5rem 1rem;
+}
+.popup input[type=file] {
+    display: none;
+}
+.popup label {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+.popup img {
+    border-radius: 50%;
+    height: var(--picture-size-small);
+    object-fit: cover;
+    margin: 0.5rem;
 }
 .popup .buttons {
     margin: 3rem 0.5rem 0.5rem 0.5rem;
