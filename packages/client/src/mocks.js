@@ -14,6 +14,7 @@ jest.mock('./common', () => {
     __esModule: true,
     ...originalModule,
     fitTextWidthToContainer: jest.fn(() => {}),
+    getFromIpfs: (ipfs, cid) => [cid],
   };
 });
 
@@ -25,6 +26,24 @@ class ResizeObserver {
   unobserve() {}
   disconnect() {}
 }
-
 window.ResizeObserver = ResizeObserver;
-export default ResizeObserver;
+
+/**
+ * Mock createObjectURL (not implemented in Jest)
+ */
+function createObjectURL() {
+  return '';
+}
+window.URL.createObjectURL = createObjectURL;
+
+/**
+ * Mock IPFS object
+ */
+const mockCid = 1232423;
+const mockIpfs = {
+  add: (file) => { return { cid: mockCid }; },
+  cat: (cid) => [mockCid],
+  lastAssignedCid: mockCid,
+};
+
+export { mockIpfs };

@@ -48,12 +48,12 @@ async function addKarma(event, web3, setPopup) {
  */
 async function updateUserData(event, web3, ipfs, setPopup) {
   event.preventDefault();
+  setPopup(undefined);
 
   const name = event.target.elements[config.PROFILE_NAME_ENTRY].value;
   const file = event.target.elements[config.PROFILE_PIC_ENTRY].files[0];
   const { cid } = await ipfs.add(file);
 
-  setPopup(undefined);
   return web3.contracts.stake.updateUserData(
     name, cid.toString(), { from: web3.activeAccount }
   );

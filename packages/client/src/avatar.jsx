@@ -5,10 +5,8 @@
  *   :license: MIT License
  */
 import './avatar.css';
-import all from 'it-all';
-import { concat as uint8ArrayConcat } from 'uint8arrays/concat';
 import config from './config';
-import { fitTextWidthToContainer } from './common';
+import { fitTextWidthToContainer, getFromIpfs } from './common';
 import IpfsContext from './ipfs-context';
 import React, { useContext,
                 useLayoutEffect,
@@ -20,11 +18,14 @@ import Web3Context from './web3-context';
 /**
  * Sets the img ref to use the default image
  *
- * @param {DOMElement} img DOM Element to update
+ * @param {DOMElement} img        DOM Element to update
+ * @param {Ref}        isMounted  Ref indicating if component is mounted
  * @return {undefined}
  */
-function setDefaultImg(img) {
-  img.current.src = config.DEFAULT_USER_PIC_URL;
+function setDefaultImg(img, isMounted) {
+  if (isMounted.current) {
+    img.current.src = config.DEFAULT_USER_PIC_URL;
+  }
 }
 
 /**
@@ -50,16 +51,16 @@ function Avatar(props) {
       try {
         const userPic = await web3.contracts.stake.getUserPic(props.user);
         if (userPic) {
-          const data = uint8ArrayConcat(await all(ipfs.cat(userPic)));
+          const data = await getFromIpfs(ipfs, userPic);
           if (data.length > 0) {
             const blob = new Blob([data], { type: 'image/jpg' });
             img.current.src = window.URL.createObjectURL(blob);
           }
         } else {
-          setDefaultImg(img);
+          setDefaultImg(img, isMounted);
         }
       } catch (err) {
-        setDefaultImg(img);
+        setDefaultImg(img, isMounted);
       }
     }
 

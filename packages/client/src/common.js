@@ -4,6 +4,8 @@
  *   :copyright: Copyright (c) 2022 Chris Hughes
  *   :license: MIT License
  */
+import all from 'it-all';
+import { concat as uint8ArrayConcat } from 'uint8arrays/concat';
 import config from './config';
 import contract from '@truffle/contract';
 import { startBlockchain,
@@ -131,6 +133,17 @@ function stopLocalBlockChain() {
   if (blockChainConnections().count === 0) {
     stopBlockchain();
   }
+}
+
+/**
+ * Gets data from IPFS
+ * 
+ * @param {Object} ipfs Instance of IPFS
+ * @param {String} cid  CID of data to get
+ * @return {Promise} resolves to Uint8Array
+ */
+async function getFromIpfs(ipfs, cid) {
+  return uint8ArrayConcat(await all(ipfs.cat(cid)));
 }
 
 export { connectContractsToProvider,
