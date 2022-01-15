@@ -1,0 +1,84 @@
+/**
+ *   Style for the PublicPage component
+ *
+ *   :copyright: Copyright (c) 2022 Chris Hughes
+ *   :license: MIT License
+ */
+@import './index.css';
+
+.public-background {
+    background-image: url('./images/oslo.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    left: 0px;
+    position: absolute;
+    top: 0px;
+    width: 100vw;
+    z-index: 1;
+}
+.public-page {
+    --font-size: 3.5rem;
+    
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+    z-index: 2;
+}
+.public-page > div {
+    align-items: center;
+    background-color: #d9d9d9d9;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    font-color: var(--dark-text-color);
+    font-size: 3.5rem;
+    text-align: center;
+    width: 50rem;
+}
+.public-page h1 {
+    font-family: 'Pacifico', cursive;
+    text-transform: uppercase;
+}
+.public-page button {
+    all: unset;
+    background-color: var(--dark-background-color);
+    border-radius: 1rem;
+    color: var(--light-text-color);
+    font-family: var(--font-family);
+    font-size: 2.5rem;
+    margin: 8rem;
+    padding: 2rem;
+}
+.public-page button:hover {
+    cursor: pointer;
+    outline: medium auto var(--light-text-color);
+}
+.public-page button:focus {
+    outline: medium auto var(--light-text-color);
+}
+.public-page button:disabled {
+    cursor: not-allowed;
+}
+.public-page span {
+    margin: 2rem 0rem;
+}
+@media only screen and (max-width: 815px) {
+    .public-page > div {
+        font-size: 10vw;
+        width: 100vw;
+    }
+    .public-page button {
+        font-size: 10vw;
+    }
+    .public-page span {
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
+    .public-page h1 {
+        font-size: 15vw;
+    }
+}

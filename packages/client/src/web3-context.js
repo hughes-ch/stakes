@@ -10,6 +10,7 @@ const disconnected = {
   activeAccount: undefined,
   instance: undefined,
   contracts: { },
+  initialize: () => {},
 };
 Object.freeze(disconnected);
 

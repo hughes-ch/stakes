@@ -8,7 +8,7 @@
     --content-font-size: 0.75rem;
     --dark-background-color: #545454;
     --dark-text-color: var(--dark-background-color);
-    --light-background-color: #f1f2f2;
+    --light-background-color: #f1f2f2ff;
     --light-grey: #d9d9d9;
     --light-text-color: white;
     --lighter-text-color: var(--light-grey);
