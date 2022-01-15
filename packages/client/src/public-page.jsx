@@ -18,15 +18,14 @@ import Web3Context from './web3-context';
  */
 function PublicPage() {
   const [message, setMessage] = useState('');
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
   const ipfs = useContext(IpfsContext);
   const web3 = useContext(Web3Context);
   const connectToWeb3 = async() => {
     try {
       setMessage(`Connecting to provider...`);
-      console.log(`Keys: ${Object.keys(web3)}`);
       await Promise.all([ipfs.initialize(), web3.initialize()]);
-      navigate(config.URL_PROFILE);
+      navigateTo(config.URL_PROFILE);
     } catch(err) {
       setMessage(`Error encountered: ${err}`);
     }

@@ -44,6 +44,7 @@ const mockIpfs = {
   add: (file) => { return { cid: mockCid }; },
   cat: (cid) => [mockCid],
   lastAssignedCid: mockCid,
+  initialize: () => {},
 };
 
 export { mockIpfs };
