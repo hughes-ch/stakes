@@ -17,6 +17,7 @@ module.exports = {
   NUM_SCALED_KARMA_ON_UPVOTE: 1,
   POST_CONTENT_ENTRY: 'post-content',
   POST_PRICE_ENTRY: 'post-price',
+  PRICE_ENTRY_NAME: 'price-entry',
   PROFILE_NAME_ENTRY: 'Name',
   PROFILE_PIC_ENTRY: 'Picture',
   TOP_MOVERS_URL: '/top-movers',

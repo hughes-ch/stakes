@@ -24,3 +24,11 @@
     all: unset;
     width: 100%;
 }
+.content > div > button:hover {
+    cursor: pointer;
+}
+.content > div > button:focus {
+    outline: medium auto currentColor;
+    outline: medium auto invert;
+    outline: 5px auto -webkit-focus-ring-color;
+}

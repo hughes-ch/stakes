@@ -36,7 +36,7 @@ async function createMetaContent(ownerIndex, props, web3) {
     karma: Number(scaleDownKarma(karma)),
     html: (
       <div key={ tokenId }>
-        <button onClick={ props.createPricePopup }>Set Price</button>
+        <button onClick={ props.createPricePopup(tokenId) }>Set Price</button>
         <ContentCard tokenId={ tokenId }/>
       </div>
     ),

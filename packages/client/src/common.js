@@ -157,6 +157,7 @@ async function getFromIpfs(ipfs, cid) {
  * @return {Array}
  */
 const range = n => Array.from(Array(n).keys());
+
 /**
  * Scales from the Karma amount stored on the chain to the more human
  * readable one that's displayed to the user.
@@ -168,10 +169,22 @@ function scaleDownKarma(karma) {
   return karma.toString().slice(0, -config.KARMA_SCALE_FACTOR);
 }
 
+/**
+ * Scales from the human-readable Karma amount to the scale stored on-chain
+ *
+ * @param {Context}   web3  Web3 Context
+ * @param {BigNumber} karma Karma amount (human-readable)
+ * @return {String}
+ */
+function scaleUpKarma(karma, web3) {
+  return web3.instance.utils.toWei(karma.toString(), 'gwei');
+}
+
 export { connectContractsToProvider,
          connectToLocalBlockChain,
          fitTextWidthToContainer,
          getFromIpfs,
          range,
          scaleDownKarma,
+         scaleUpKarma,
          stopLocalBlockChain };

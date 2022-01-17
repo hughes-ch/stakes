@@ -26,7 +26,7 @@ function AddPostPopup(props) {
 
   const validatePrice = (e) => {
     setPrice(e.target.value);
-    if (e.target.value < 0) {
+    if (!e.target.value || e.target.value <= 0) {
       setError('Price must be greater than 0');
     } else {
       setError('');

@@ -12,6 +12,7 @@ import config from './config';
 import EditProfilePopup from './edit-profile-popup';
 import IpfsContext from './ipfs-context';
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { scaleUpKarma } from './common';
 import SearchBar from './search-bar';
 import SidebarNavigation from './sidebar-navigation';
 import UserStats from './user-stats';
@@ -32,7 +33,7 @@ async function addKarma(event, web3, setPopup) {
   const karmaToAdd = event.target.elements[config.KARMA_ENTRY_NAME].value;
   return web3.contracts.karmaPaymaster.buyKarma({
     from: web3.activeAccount,
-    value: web3.instance.utils.toWei(karmaToAdd.toString(), 'gwei'),
+    value: scaleUpKarma(karmaToAdd, web3),
   });
 }
 
