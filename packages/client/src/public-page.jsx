@@ -9,7 +9,7 @@
 import './public-page.css';
 import config from './config';
 import IpfsContext from './ipfs-context';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Web3Context from './web3-context';
 

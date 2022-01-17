@@ -5,8 +5,8 @@
  *   :license: MIT License
  */
 import './user-stats.css';
-import config from './config';
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { scaleDownKarma } from './common';
 import Web3Context from './web3-context';
 
 /**
@@ -24,9 +24,7 @@ async function setInitialKarma(web3, setState, isMounted, account) {
   }
   
   const karmaBalance = await web3.contracts.karma.balanceOf(account);
-  let scaledKarmaBalance = karmaBalance.toString().slice(
-    0, -config.KARMA_SCALE_FACTOR
-  );
+  let scaledKarmaBalance = scaleDownKarma(karmaBalance);
   if (scaledKarmaBalance.length === 0) {
     scaledKarmaBalance = '0';
   }

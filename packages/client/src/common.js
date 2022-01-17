@@ -77,6 +77,10 @@ function getTextWidth(el) {
  * @return {undefined}
  */
 function fitTextWidthToContainer(element) {
+  if (!element) {
+    return;
+  }
+    
   const textWidth = getTextWidth(element);
   const elementWidth = element.getBoundingClientRect().width;
   const widthMultiplier = 0.95 * elementWidth / textWidth;
@@ -146,8 +150,28 @@ async function getFromIpfs(ipfs, cid) {
   return uint8ArrayConcat(await all(ipfs.cat(cid)));
 }
 
+/**
+ * Returns an iterable range (like Python's range())
+ *
+ * @param {Number} n Upper bound of range (non-inclusive)
+ * @return {Array}
+ */
+const range = n => Array.from(Array(n).keys());
+/**
+ * Scales from the Karma amount stored on the chain to the more human
+ * readable one that's displayed to the user.
+ *
+ * @param {BigNumber} karma Karma amount from chain
+ * @return {String}
+ */
+function scaleDownKarma(karma) {
+  return karma.toString().slice(0, -config.KARMA_SCALE_FACTOR);
+}
+
 export { connectContractsToProvider,
          connectToLocalBlockChain,
          fitTextWidthToContainer,
          getFromIpfs,
+         range,
+         scaleDownKarma,
          stopLocalBlockChain };

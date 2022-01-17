@@ -15,7 +15,6 @@
     display: grid;
     grid-template-columns: 20% 35% 35%;
     justify-items: center;
-    margin: 0.1rem;
     max-width: var(--max-content-width);
     padding: 0.5rem;
 }

@@ -5,10 +5,11 @@
  *   :copyright: Copyright (c) 2022 Chris Hughes
  *   :license: MIT License
  */
-import './profile-page-content.css';
+import './content.css';
 import ContentCard from './content-card';
 import config from './config';
 import { ethers } from 'ethers';
+import { range } from './common';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Web3Context from './web3-context';
 
@@ -43,7 +44,6 @@ async function generateContent(setState, web3, isMounted) {
   );
 
   const content = [];
-  const range = n => [...Array(n).keys()];
   for (const stake of stakes) {
     const balance = await web3.contracts.content.balanceOf(stake);
     const promiseOfContent = range(balance.toNumber()).map(async (idx) => {
@@ -101,7 +101,7 @@ function ProfilePageContent() {
   }, [web3, isMounted]);
 
   return (
-    <div className='profile-page-content'>
+    <div className='content'>
       { content }
     </div>
   );

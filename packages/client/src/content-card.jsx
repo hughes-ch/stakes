@@ -10,6 +10,7 @@ import Avatar from './avatar';
 import config from './config';
 import { ethers } from 'ethers';
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { scaleDownKarma } from './common';
 import Web3Context from './web3-context';
 
 const defaultContent = {
@@ -37,8 +38,8 @@ async function lookupContent(tokenId, web3, setState, isMounted) {
           2: karma,
           3: creator } = await web3.contracts.content.getContentNft(tokenId);
 
-  let scaledPrice = price.toString().slice(0, -config.KARMA_SCALE_FACTOR);
-  let scaledKarma = karma.toString().slice(0, -config.KARMA_SCALE_FACTOR);
+  let scaledPrice = scaleDownKarma(price);
+  let scaledKarma = scaleDownKarma(karma);
   if (scaledPrice.length === 0) scaledPrice = '0';
   if (scaledKarma.length === 0) scaledKarma = '0';
   
@@ -66,7 +67,7 @@ async function addKarma(tokenId, karma, setState, web3) {
   );
   
   const newKarmaAmount = ethers.BigNumber.from(karma).add(karmaToAdd);
-  setState(newKarmaAmount.toString().slice(0, -config.KARMA_SCALE_FACTOR));
+  setState(scaleDownKarma(newKarmaAmount));
   
   try {
     await web3.contracts.content.addKarmaTo(

@@ -1,22 +1,26 @@
 /**
- *   Style for the ProfilePageContent component
+ *   Style for the *Content components
  *
  *   :copyright: Copyright (c) 2022 Chris Hughes
  *   :license: MIT License
  */
 @import './index.css';
 
-.profile-page-content > div {
+.content > div {
     margin-bottom: 1rem;
 }
-.profile-page-content > div > div:nth-child(1) {
+.content > div > *:nth-child(1) {
     background-color: var(--light-background-color);
     border-radius: 0.15rem;
     box-sizing: border-box;
     color: var(--dark-text-color);
     font-size: var(--content-font-size);
-    margin: 0.1rem;
+    margin-bottom: 0.2rem;
     max-width: var(--max-content-width);
     padding: 0.5rem;
     text-align: center;
+}
+.content > div > button {
+    all: unset;
+    width: 100%;
 }

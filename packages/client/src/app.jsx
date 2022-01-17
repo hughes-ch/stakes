@@ -16,28 +16,24 @@ import IpfsContext from './ipfs-context';
 import ProfilePage from './profile-page';
 import PublicPage from './public-page';
 import React, { useEffect, useRef, useState } from 'react';
+import TopMovers from './top-movers';
 import Web3 from 'web3';
 import Web3Context, { disconnected } from './web3-context';
 
 async function initContent(web3Context) {
-  console.log(`Initializing content`);
   if (!web3Context.activeAccount) {
     return;
   }
 
-  console.log(`Getting account balance`);
   const accounts = await web3Context.instance.eth.getAccounts();
   const contentBalance = await web3Context.contracts.content.balanceOf(
     accounts[0]
   );
 
-  console.log(`Balance is ${contentBalance.toNumber()}`);
   if (contentBalance.toNumber() > 0) {
-    console.log(`Skipping init`);
     return;
   }
 
-  console.log(`Continuing init`);
   await web3Context.contracts.content.publish(
     'Hello world!',
     web3Context.instance.utils.toWei('1', 'gwei'),
@@ -54,7 +50,7 @@ async function initContent(web3Context) {
     { from: accounts[0] }
   );
 
-  const result = await web3Context.contracts.stake.stakeUser(
+  await web3Context.contracts.stake.stakeUser(
     accounts[0],
     { from: web3Context.activeAccount }
   );
@@ -82,7 +78,6 @@ function App() {
   
   const [web3Provider, setWeb3Provider] = useState(disconnected);
   const connectToProvider = async () => {
-    console.log(`Connecting to provider`);
     const provider = window.ethereum;
     if (provider === undefined) {
       throw new Error('Cannot connect to provider');
@@ -90,7 +85,6 @@ function App() {
 
     const web3 = new Web3(provider);
     if (isMounted.current) {
-      console.log(`Setting web3 provider`);
       setWeb3Provider({
         activeAccount: (await web3.eth.getAccounts())[0],
         instance: web3,
@@ -121,6 +115,7 @@ function App() {
           <Routes>
             <Route index element={ <PublicPage/> }/>
             <Route path={ config.URL_PROFILE } element={ <ProfilePage/> }/>
+            <Route path={ config.TOP_MOVERS_URL } element={ <TopMovers/> }/>
           </Routes>
         </Router>
       </Web3Context.Provider>
