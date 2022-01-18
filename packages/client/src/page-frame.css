@@ -30,15 +30,16 @@
 .page-frame > div:nth-child(2) > div.heading {
     align-items: center;
     display: grid;
-    justify-items: center;
+    justify-items: right;
 }
 .page-frame > div:nth-child(2) > div.heading > h1 {
     font-size: var(--title-font-size);
     grid-row: 1;
     grid-column: 1 / span 3;
     text-align: center;
+    width: 100%;
 }
-.page-frame > div:nth-child(2) > div.heading > span {
+.page-frame > div:nth-child(2) > div.heading > form {
     grid-row: 1;
     grid-column: 3;
 }
@@ -82,5 +83,8 @@
     .page-frame > div:nth-child(2) {
         flex-grow: 0;
         width: 95vw;
+    }
+    .page-frame > div:nth-child(2) > div.heading > h1 {
+        grid-column: 1 / span 2;        
     }
 }

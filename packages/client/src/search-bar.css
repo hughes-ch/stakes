@@ -7,4 +7,33 @@
 @import './index.css';
 
 .search-bar {
+    background-color: var(--light-background-color);
+    border-radius: 0.25rem;
+    margin-bottom: 0.15rem;
+    padding: 0.5rem;
+}
+.search-bar > input[type=text] {
+    all: unset;
+    color: var(--dark-text-color);
+    font-family: var(--font-family);
+    font-size: var(--content-font-size);
+}
+.search-bar > input[type=submit] {
+    all: unset;
+    font-size: var(--link-font-size);
+}
+.search-bar > input[type=submit]:hover {
+    cursor: pointer;
+}
+.search-bar > input[type=submit]:focus {
+    outline: medium auto var(--dark-text-color);
+}
+.search-bar > input[type=submit]:disabled {
+    cursor: not-allowed;
+    visibility: hidden;
+}
+@media only screen and (max-width: 720px) {
+    .search-bar {
+        padding: 1vw;
+    }
 }
