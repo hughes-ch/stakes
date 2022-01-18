@@ -7,7 +7,7 @@
  */
 import config from './config';
 import ProfileFrame from './profile-frame';
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { scaleUpKarma } from './common';
 import SetPricePopup from './set-price-popup';
 import TopMoverContent from './top-mover-content';
@@ -25,7 +25,6 @@ import Web3Context from './web3-context';
 async function updatePrice(e, tokenId, web3, setState) {
   e.preventDefault();
   setState(undefined);
-  console.log(`Elements: ${Object.keys(e.target.elements)}`);
   const newPrice = scaleUpKarma(
     e.target.elements[config.PRICE_ENTRY_NAME].value, web3
   );
@@ -41,7 +40,7 @@ async function updatePrice(e, tokenId, web3, setState) {
 function TopMovers() {
   const [popup, setPopup] = useState(undefined);
   const web3 = useContext(Web3Context);
-  const createPricePopup = (tokenId) => {
+  const createPricePopup = useCallback((tokenId) => {
     return () => {
       setPopup(
         <SetPricePopup
@@ -50,7 +49,7 @@ function TopMovers() {
         />
       );
     };
-  };
+  }, [web3]);
   
   return (
     <React.Fragment>
