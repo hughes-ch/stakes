@@ -17,7 +17,7 @@ function ProfilePage() {
   const web3 = useContext(Web3Context);
   return (
     <ProfileFrame title='Top Trending'>
-      <ProfilePageContent user={ web3.activeAccount }/>
+      <ProfilePageContent/>
     </ProfileFrame>
   );
 }

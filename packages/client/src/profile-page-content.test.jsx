@@ -6,6 +6,7 @@
  */
 import '@testing-library/jest-dom';
 import './mocks';
+import { BrowserRouter as Router } from "react-router-dom";
 import config from './config';
 import { connectToLocalBlockChain, stopLocalBlockChain } from './common';
 import ProfilePageContent from './profile-page-content';
@@ -82,7 +83,9 @@ describe('the ProfilePageContent component', () => {
   it('renders content owned by stakes', async () => {
     render(
       <Web3Context.Provider value={ web3Context }>
-        <ProfilePageContent/>
+        <Router>
+          <ProfilePageContent/>
+        </Router>
       </Web3Context.Provider>
     );
 
@@ -98,7 +101,9 @@ describe('the ProfilePageContent component', () => {
   it('does not render content owned by non-stakes', async () => {
     render(
       <Web3Context.Provider value={ web3Context }>
-        <ProfilePageContent/>
+        <Router>
+          <ProfilePageContent/>
+        </Router>
       </Web3Context.Provider>
     );
 

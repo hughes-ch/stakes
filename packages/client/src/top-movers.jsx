@@ -56,8 +56,8 @@ function TopMovers() {
       { popup }
       <ProfileFrame title='Your Top Movers'>
         <TopMoverContent
-          createPricePopup={ createPricePopup }
-        />
+          account={ web3.activeAccount }
+          createPricePopup={ createPricePopup }/>
       </ProfileFrame>
     </React.Fragment>
   );

@@ -14,20 +14,31 @@ import Web3Context from './web3-context';
 /**
  * Creates a new object which contains content about a piece of content
  *
- * @param {Number}  ownerIndex The enumerated number of this content NFT
- * @param {Object}  props      React props passed to this element
- * @param {Context} web3       Web3 context
+ * @param {Object} input Input parameters
  * @return {Promise} resolves to Object
  */
-async function createMetaContent(ownerIndex, props, web3) {
+async function createMetaContent(input) {
+  const { web3,
+          ownerIndex,
+          props,
+          name,
+          isMounted} = input;
+  if (!isMounted.current) {
+    return { };
+  }
+          
   const tokenId = await web3.contracts.content.tokenOfOwnerByIndex(
-    web3.activeAccount, ownerIndex
+    props.account, ownerIndex
   );
 
   const { 1: txt,
           2: price,
           3: karma,
           4: creator } = await web3.contracts.content.getContentNft(tokenId);
+
+  const heading = props.account === web3.activeAccount && props.createPricePopup ?
+        (<button onClick={ props.createPricePopup(tokenId) }>Set Price</button>) :
+        (<div>{ `Shared by ${name}` }</div>);
 
   return {
     txt: txt,
@@ -36,7 +47,7 @@ async function createMetaContent(ownerIndex, props, web3) {
     karma: Number(scaleDownKarma(karma)),
     html: (
       <div key={ tokenId }>
-        <button onClick={ props.createPricePopup(tokenId) }>Set Price</button>
+        { heading }
         <ContentCard tokenId={ tokenId }/>
       </div>
     ),
@@ -46,23 +57,32 @@ async function createMetaContent(ownerIndex, props, web3) {
 /**
  * Generates the content for the top movers page
  *
- * @param {Function} setState  Hook to set content
- * @param {Object}   props     React props passed to this element
- * @param {Object}   web3      Web3 context
- * @param {Ref}      isMounted Ref indicating if component is still mounted
+ * @param {Object} input Input parameters
  * @return {undefined}
  */
-async function generateContent(setState, props, web3, isMounted) {
-  if (!web3.contracts.content) {
+async function generateContent(input) {
+  const { setState,
+          props,
+          web3,
+          isMounted,
+          name } = input;
+  
+  if (!web3.contracts.content || !isMounted.current) {
     return;
   }
   
   const contentBalance = await web3.contracts.content.balanceOf(
-    web3.activeAccount
+    props.account
   );
 
   const promiseOfContent = range(contentBalance.toNumber()).map(
-    async (idx) => createMetaContent(idx, props, web3)
+    async (idx) => createMetaContent({
+      ownerIndex: idx,
+      props: props,
+      web3: web3,
+      name: name,
+      isMounted: isMounted,
+    })
   );
 
   const content = await Promise.all(promiseOfContent);
@@ -85,10 +105,30 @@ function TopMoverContent(props) {
   }, []);
   
   const web3 = useContext(Web3Context);
+  const [name, setName] = useState(props.account);
+  useEffect(() => {
+    async function getHumanReadableName() {
+      const nameFromChain = await web3.contracts.stake.getUserName(
+        props.account
+      );
+
+      if (nameFromChain && isMounted.current) {
+        setName(nameFromChain);
+      }
+    }
+    getHumanReadableName();
+  }, [web3, props.account]);
+  
   const [content, setContent] = useState(undefined);
   useEffect(() => {
-    generateContent(setContent, props, web3, isMounted);
-  }, [props, web3, isMounted]);
+    generateContent({
+      setState: setContent,
+      props: props,
+      web3: web3,
+      isMounted: isMounted,
+      name: name,
+    });
+  }, [props, web3, isMounted, name]);
 
   return (
     <div className='content'>

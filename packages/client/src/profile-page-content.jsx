@@ -32,16 +32,18 @@ function MetaContent(tokenId, owner) {
  *
  * @param {Function} setState  Hook to set content
  * @param {Object}   web3      Web3 context
- * @param {String}   account   Accounts's data to request
  * @param {Ref}      isMounted Ref indicating if component is still mounted
  * @return {undefined}
  */
-async function generateContent(setState, web3, account, isMounted) {
+async function generateContent(setState, web3, isMounted) {
   if (!web3.contracts.stake) {
     return;
   }
   
-  const stakes = await web3.contracts.stake.getOutgoingStakes(account);
+  const stakes = await web3.contracts.stake.getOutgoingStakes(
+    web3.activeAccount
+  );
+  
   const content = [];
   for (const stake of stakes) {
     const balance = await web3.contracts.content.balanceOf(stake);
@@ -68,7 +70,7 @@ async function generateContent(setState, web3, account, isMounted) {
     post.html = (
       <div key={ post.tokenId }>
         <div>
-          <Link to={ `${config.URL_STAKE_PAGE}/${account}` }>
+          <Link to={ `${config.URL_STAKE_PAGE}/${post.owner}` }>
             Shared by { user }
           </Link>
         </div>
@@ -86,7 +88,7 @@ async function generateContent(setState, web3, account, isMounted) {
 /**
  * Component
  */
-function ProfilePageContent(props) {
+function ProfilePageContent() {
   const isMounted = useRef(false);
   useEffect(() => {
     isMounted.current = true;
@@ -98,8 +100,8 @@ function ProfilePageContent(props) {
   const web3 = useContext(Web3Context);
   const [content, setContent] = useState(undefined);
   useEffect(() => {
-    generateContent(setContent, web3, props.user, isMounted);
-  }, [web3, isMounted, props.user]);
+    generateContent(setContent, web3, isMounted);
+  }, [web3, isMounted]);
 
   return (
     <div className='content'>
