@@ -9,6 +9,7 @@ import './content.css';
 import ContentCard from './content-card';
 import config from './config';
 import { ethers } from 'ethers';
+import { Link } from "react-router-dom";
 import { range } from './common';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Web3Context from './web3-context';
@@ -29,20 +30,18 @@ function MetaContent(tokenId, owner) {
 /**
  * Generates the content for the profile page
  *
- * @param {Function} setState Hook to set content
- * @param {Object}   web3 Web3 context
+ * @param {Function} setState  Hook to set content
+ * @param {Object}   web3      Web3 context
+ * @param {String}   account   Accounts's data to request
  * @param {Ref}      isMounted Ref indicating if component is still mounted
  * @return {undefined}
  */
-async function generateContent(setState, web3, isMounted) {
+async function generateContent(setState, web3, account, isMounted) {
   if (!web3.contracts.stake) {
     return;
   }
   
-  const stakes = await web3.contracts.stake.getOutgoingStakes(
-    web3.activeAccount
-  );
-
+  const stakes = await web3.contracts.stake.getOutgoingStakes(account);
   const content = [];
   for (const stake of stakes) {
     const balance = await web3.contracts.content.balanceOf(stake);
@@ -69,7 +68,9 @@ async function generateContent(setState, web3, isMounted) {
     post.html = (
       <div key={ post.tokenId }>
         <div>
-          <span>Shared by { user }</span>
+          <Link to={ `${config.URL_STAKE_PAGE}/${account}` }>
+            Shared by { user }
+          </Link>
         </div>
         <ContentCard tokenId={ post.tokenId }/>
       </div>
@@ -85,7 +86,7 @@ async function generateContent(setState, web3, isMounted) {
 /**
  * Component
  */
-function ProfilePageContent() {
+function ProfilePageContent(props) {
   const isMounted = useRef(false);
   useEffect(() => {
     isMounted.current = true;
@@ -97,8 +98,8 @@ function ProfilePageContent() {
   const web3 = useContext(Web3Context);
   const [content, setContent] = useState(undefined);
   useEffect(() => {
-    generateContent(setContent, web3, isMounted);
-  }, [web3, isMounted]);
+    generateContent(setContent, web3, props.user, isMounted);
+  }, [web3, isMounted, props.user]);
 
   return (
     <div className='content'>

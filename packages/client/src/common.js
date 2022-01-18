@@ -180,10 +180,27 @@ function scaleUpKarma(karma, web3) {
   return web3.instance.utils.toWei(karma.toString(), 'gwei');
 }
 
+/**
+ * Shortens the name if it is too long. Otherwise, returns name untouched.
+ * 
+ * @param {String} name (Potentially long) user name
+ * @return {String}
+ */
+function getReasonablySizedName(name) {
+  let sizeCheckedName = name;
+  if (name.length > config.MAX_NAME_LENGTH) {
+    const frontOfName = name.slice(0, config.SHORT_NAME_SEGMENT_LENGTH);
+    const backOfName = name.slice(-config.SHORT_NAME_SEGMENT_LENGTH);
+    sizeCheckedName = `${frontOfName} ... ${backOfName}`;
+  }
+  return sizeCheckedName;
+}
+
 export { connectContractsToProvider,
          connectToLocalBlockChain,
          fitTextWidthToContainer,
          getFromIpfs,
+         getReasonablySizedName,
          range,
          scaleDownKarma,
          scaleUpKarma,

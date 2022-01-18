@@ -4,18 +4,15 @@
  *   :copyright: Copyright (c) 2022 Chris Hughes
  *   :license: MIT License
  */
-import './profile-frame.css';
 import AddKarmaPopup from './add-karma-popup';
 import AddPostPopup from './add-post-popup';
-import Avatar from './avatar';
 import config from './config';
 import EditProfilePopup from './edit-profile-popup';
 import IpfsContext from './ipfs-context';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import PageFrame from './page-frame';
+import React, { useContext, useMemo, useState } from 'react';
 import { scaleUpKarma } from './common';
-import SearchBar from './search-bar';
 import SidebarNavigation from './sidebar-navigation';
-import UserStats from './user-stats';
 import Web3Context from './web3-context';
 
 /**
@@ -86,78 +83,45 @@ async function addNewPost(event, web3, setPopup) {
  * Component
  */
 function ProfileFrame(props) {
-  const isMounted = useRef(false);
-  useEffect(() => {
-    isMounted.current = true;
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
-  const userInfoRef = useRef(null);
-  const [avatarDirection, setAvatarDirection] = useState(undefined);
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
-      for (let ii = 0; ii < entries.length; ii++) {
-        if (isMounted.current && userInfoRef.current) {
-          setAvatarDirection(
-            window.getComputedStyle(userInfoRef.current).position === 'sticky' ?
-              'row' : 'column'
-          );
-        }
-      }
-    });
-    resizeObserver.observe(document.body);
-    return () => resizeObserver.disconnect();
-  }, [userInfoRef]);
-
   const [popup, setPopup] = useState(undefined);
   const web3 = useContext(Web3Context);
   const ipfs = useContext(IpfsContext);
+  const sidebar = useMemo(() => (
+    <SidebarNavigation
+      onAddKarma={ () => {
+        setPopup(
+          <AddKarmaPopup
+            onSubmit={ async (event) => addKarma(event, web3, setPopup) }
+            onCancel={ () => setPopup(undefined) }
+          />
+        );
+      }}
+      onEditProfile={ () => {
+        setPopup(
+          <EditProfilePopup
+            onSubmit={ async (e) => updateUserData(e, web3, ipfs, setPopup) }
+            onCancel={ () => setPopup(undefined) }
+          />
+        );
+      }}
+      onAddPost={ () => {
+        setPopup(
+          <AddPostPopup
+            onSubmit={ async (e) => addNewPost(e, web3, setPopup) }
+            onCancel={ () => setPopup(undefined) }
+          />
+        );
+      }}/>
+  ), [web3, ipfs]);
+
   return (
     <React.Fragment>
       { popup }
-      <div className='profile-frame'>
-        <div>
-          <div className='user-info' ref={ userInfoRef }>
-            <Avatar user={ web3.activeAccount }
-                    flexDirection={ avatarDirection }/>
-            <UserStats user={ web3.activeAccount }/>
-          </div>
-          <SidebarNavigation
-            onAddKarma={ () => {
-              setPopup(
-                <AddKarmaPopup
-                  onSubmit={ async (event) => addKarma(event, web3, setPopup) }
-                  onCancel={ () => setPopup(undefined) }
-                />
-              );
-            }}
-            onEditProfile={ () => {
-              setPopup(
-                <EditProfilePopup
-                  onSubmit={ async (e) => updateUserData(e, web3, ipfs, setPopup) }
-                  onCancel={ () => setPopup(undefined) }
-                />
-              );
-            }}
-            onAddPost={ () => {
-              setPopup(
-                <AddPostPopup
-                  onSubmit={ async (e) => addNewPost(e, web3, setPopup) }
-                  onCancel={ () => setPopup(undefined) }
-                />
-              );
-            }}/>
-        </div>
-        <div>
-          <div className='heading'>
-            <h1>{ props.title }</h1>
-            <SearchBar/>
-          </div>
-          { props.children }
-        </div>
-      </div>
+      <PageFrame title={ props.title }
+                 user={ web3.activeAccount }
+                 sidebar={ sidebar }>
+        { props.children }
+      </PageFrame>
     </React.Fragment>
   );
 }

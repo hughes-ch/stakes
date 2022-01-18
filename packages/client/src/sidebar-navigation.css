@@ -43,4 +43,8 @@
         color: var(--dark-text-color);
         font-weight: bold;
     }
+    .sidebar-navigation button {
+        color: var(--dark-text-color);
+        font-weight: bold;
+    }
 }
