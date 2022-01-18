@@ -44,6 +44,7 @@ function SearchBar() {
              }}/>
       <input type='submit'
              value='&#128270;'
+             role='button'
              disabled={ error }/>
     </form>
   );
