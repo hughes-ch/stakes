@@ -1,0 +1,38 @@
+/**
+ *   Style for the SearchContentCard component
+ *
+ *   :copyright: Copyright (c) 2022 Chris Hughes
+ *   :license: MIT License
+ */
+@import './index.css';
+
+.search-content-card {
+    align-items: center;
+    align-content: center;
+    background-color: var(--light-background-color);
+    border-radius: 1rem;
+    box-sizing: border-box;
+    color: var(--dark-text-color);
+    display: grid;
+    padding: 1rem;
+    width: 100%;
+}
+.search-content-card > *:nth-child(1) {
+    grid-row: 1;
+    grid-column: 1;
+}
+.search-content-card > *:nth-child(2) {
+    grid-row: 1;
+    grid-column: 2;
+}
+.search-content-card > *:nth-child(3) {
+    grid-row: 1;
+    grid-column: 3;
+}
+.search-content-card a {
+    color: var(--dark-text-color);
+    text-decoration: none;
+}
+.search-content-card a:visited {
+    color: var(--dark-text-color);
+}

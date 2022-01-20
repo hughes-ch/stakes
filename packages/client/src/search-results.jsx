@@ -50,7 +50,7 @@ function SearchResults() {
       
       if (accounts.length) {
         setSearchResults(accounts.map(account => (
-          <div key={ account }>
+          <div key={ account } className='search-content-container'>
             <SearchContentCard account={ account }/>
           </div>
         )));

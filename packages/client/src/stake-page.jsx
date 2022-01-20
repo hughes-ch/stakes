@@ -5,16 +5,11 @@
  *   :copyright: Copyright (c) 2022 Chris Hughes
  *   :license: MIT License
  */
-import './stake-page.css';
-import config from'./config';
+import config from './config';
 import { getReasonablySizedName } from './common';
 import PageFrame from './page-frame';
-import React, { useCallback,
-                useContext,
-                useEffect,
-                useMemo,
-                useRef,
-                useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import StakeButton from './stake-button';
 import TopMoverContent from './top-mover-content';
 import { useParams } from "react-router-dom";
 import Web3Context from './web3-context';
@@ -68,48 +63,12 @@ function StakePage() {
     });
   }, [params, web3, isMounted, setName]);
   
-  const [isStaked, setIsStaked] = useState(false);
-  useEffect(() => {
-    async function getInitialStakeStatus() {
-      const stakes = await web3.contracts.stake.getOutgoingStakes(
-        web3.activeAccount
-      );
-
-      if (isMounted.current) {
-        setIsStaked(stakes.includes(params[config.URL_STAKE_PAGE_PARAM]));
-      }
-    }
-    getInitialStakeStatus();
-  }, [web3, params, isMounted]);
-
-  const stakeUser = useCallback(async () => {
-    setIsStaked(true);
-    return web3.contracts.stake.stakeUser(
-      params[config.URL_STAKE_PAGE_PARAM],
-      { from: web3.activeAccount }
-    );
-  }, [web3, params]);
-
-  const unstakeUser = useCallback(async () => {
-    setIsStaked(false);
-    return web3.contracts.stake.unstakeUser(
-      params[config.URL_STAKE_PAGE_PARAM],
-      { from: web3.activeAccount }
-    );
-  }, [web3, params]);
-  
-  const sidebar = useMemo(() => (
-    <div className='stake-page-sidebar'>
-      <button onClick={ isStaked ? unstakeUser : stakeUser }>
-        { isStaked ? "Unstake" : "Stake" }
-      </button>
-    </div>
-  ), [isStaked, unstakeUser, stakeUser]);
-  
   return (
     <PageFrame title={ `${name}'s Top Movers` }
                user={ params[config.URL_STAKE_PAGE_PARAM] }
-               sidebar={ sidebar }>
+               sidebar={
+                 <StakeButton user={ params[config.URL_STAKE_PAGE_PARAM] }/>
+               }>
       <TopMoverContent account={ params[config.URL_STAKE_PAGE_PARAM] }/>
     </PageFrame>
   );

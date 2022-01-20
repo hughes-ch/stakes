@@ -4,7 +4,13 @@
  *   :copyright: Copyright (c) 2022 Chris Hughes
  *   :license: MIT License
  */
+import './search-content-card.css';
+import Avatar from './avatar';
+import config from './config';
+import { Link } from "react-router-dom";
 import React from 'react';
+import StakeButton from './stake-button';
+import UserStats from './user-stats';
 
 /**
  * Component
@@ -13,7 +19,13 @@ import React from 'react';
  */
 function SearchContentCard(props) {
   return (
-    <span>{ props.account }</span>
+    <div className='search-content-card'>
+      <Link to={ `${config.URL_STAKE_PAGE}/${props.account}` }>
+        <Avatar user={ props.account } flexDirection='row'/>
+      </Link>
+      <UserStats user={ props.account }/>
+      <StakeButton user={ props.account }/>
+    </div>
   );
 }
 

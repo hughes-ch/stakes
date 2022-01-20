@@ -42,10 +42,19 @@ function Avatar(props) {
     };
   }, []);
 
+  const [maxTextHeight, setMaxTextHeight] = useState(null);
+  const img = useRef(null);
+  useEffect(() => {
+    if (img.current) {
+      setMaxTextHeight(
+        img.current.clientHeight * config.MAX_REL_AVATAR_TEXT_SIZE
+      );
+    }
+  }, [img]);
+
   const ipfs = useContext(IpfsContext);
   const web3 = useContext(Web3Context);
   const [name, setName] = useState(props.user);
-  const img = useRef(null);
   useEffect(() => {
     async function updateUserPic() {
       try {
@@ -95,20 +104,23 @@ function Avatar(props) {
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
       for (let ii = 0; ii < entries.length; ii++) {
-        fitTextWidthToContainer(nameSpan.current);
+        fitTextWidthToContainer(nameSpan.current, maxTextHeight);
       }
     });
     resizeObserver.observe(container.current);
     return () => resizeObserver.disconnect();
-  }, []);
+  }, [maxTextHeight]);
 
   useLayoutEffect(() => {
-    fitTextWidthToContainer(nameSpan.current);
-  }, [name]);
+    fitTextWidthToContainer(nameSpan.current, maxTextHeight);
+  }, [name, maxTextHeight]);
 
   return (
     <div className='avatar' ref={ container }
-         style={{ flexDirection: props.flexDirection }}>
+         style={{
+           flexDirection: props.flexDirection,
+           textAlign: props.flexDirection === 'row' ? 'left' : 'center',
+         }}>
       <img ref={ img } alt={ name }/>
       <span ref={ nameSpan }>{ name }</span>
     </div>

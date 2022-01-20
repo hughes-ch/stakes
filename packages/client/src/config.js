@@ -15,6 +15,7 @@ module.exports = {
   KARMA_ICON: '&#9829;',
   KARMA_SCALE_FACTOR: 9,
   MAX_NAME_LENGTH: 25,
+  MAX_REL_AVATAR_TEXT_SIZE: 0.25,
   NUM_SCALED_KARMA_ON_UPVOTE: 1,
   POST_CONTENT_ENTRY: 'post-content',
   POST_PRICE_ENTRY: 'post-price',

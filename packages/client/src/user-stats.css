@@ -5,7 +5,6 @@
  *   :license: MIT License
  */
 .user-stats {
-    color: var(--light-text-color);
     display: flex;
     font-size: var(--link-font-size);
     justify-content: center;
