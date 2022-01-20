@@ -36,7 +36,7 @@ function MetaContent(tokenId, owner) {
  * @return {undefined}
  */
 async function generateContent(setState, web3, isMounted) {
-  if (!web3.contracts.stake) {
+  if (!web3.contracts.stake || !web3.activeAccount) {
     return;
   }
   

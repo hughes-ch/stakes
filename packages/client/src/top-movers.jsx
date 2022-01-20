@@ -25,11 +25,15 @@ import Web3Context from './web3-context';
 async function updatePrice(e, tokenId, web3, setState) {
   e.preventDefault();
   setState(undefined);
+  if (!web3.activeAccount) {
+    return;
+  }
+  
   const newPrice = scaleUpKarma(
     e.target.elements[config.PRICE_ENTRY_NAME].value, web3
   );
   
-  return web3.contracts.content.setPrice(
+  await web3.contracts.content.setPrice(
     tokenId, newPrice, { from: web3.activeAccount }
   );
 }

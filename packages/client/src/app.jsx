@@ -5,6 +5,7 @@
  *   :license: MIT License
  */
 import * as IPFS from 'ipfs-core';
+import Authenticator from './authenticator';
 import {
   BrowserRouter as Router,
   Routes,
@@ -13,9 +14,14 @@ import {
 import config from './config';
 import { connectContractsToProvider } from './common';
 import IpfsContext from './ipfs-context';
+import MetaMaskOnboarding from '@metamask/onboarding';
 import ProfilePage from './profile-page';
 import PublicPage from './public-page';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback,
+                useEffect,
+                useMemo,
+                useRef,
+                useState } from 'react';
 import SearchResults from './search-results';
 import StakePage from './stake-page';
 import TopMovers from './top-movers';
@@ -59,6 +65,25 @@ async function initContent(web3Context) {
 }
 
 /**
+ * Returns routes protected by the Authenticator
+ *
+ * @param {Array} routes Routes that need restricted access
+ * @return {JSX}
+ */
+function authenticatedRoutes(routes) {
+  return routes.map(route => (
+    <Route
+      key={ route.path }
+      path={ route.path }
+      element={
+        <Authenticator>
+          { route.element }
+        </Authenticator>
+      }/>
+  ));
+}
+
+/**
  * Component
  */
 function App() {
@@ -71,21 +96,29 @@ function App() {
   }, []);
 
   const [ipfsNode, setIpfsNode] = useState(undefined);
-  const createIpfsNode = async () => {
+  const createIpfsNode = useCallback(async () => {
+    if (ipfsNode) {
+      return;
+    }
+    
     const ipfs = await IPFS.create();
     if (isMounted.current) {
       setIpfsNode(ipfs);
     }
-  };
+  }, [isMounted, ipfsNode]);
   
   const [web3Provider, setWeb3Provider] = useState(disconnected);
-  const connectToProvider = async () => {
+  const connectToProvider = useCallback(async () => {
     const provider = window.ethereum;
     if (provider === undefined) {
-      throw new Error('Cannot connect to provider');
+      const onboarding = new MetaMaskOnboarding({
+        forwarderOrigin: window.location.href
+      });
+      onboarding.startOnboarding();
     }
 
     const web3 = new Web3(provider);
+    await provider.request({ method: 'eth_requestAccounts' });
     if (isMounted.current) {
       setWeb3Provider({
         activeAccount: (await web3.eth.getAccounts())[0],
@@ -95,20 +128,40 @@ function App() {
         ),
       });
     }
-  };
+  }, [isMounted]);
 
   useEffect(() => {
     initContent(web3Provider);
   }, [web3Provider]);
 
-  const ipfsContext = {
-    ...ipfsNode,
-    initialize: createIpfsNode,
-  };
-  const web3Context = {
-    ...web3Provider,
-    initialize: connectToProvider,
-  };
+  const ipfsContext = useMemo(() => {
+    return {
+      ...ipfsNode,
+      initialize: createIpfsNode,
+    };
+  }, [ipfsNode, createIpfsNode]);
+  
+  const web3Context = useMemo(() => {
+    return {
+      ...web3Provider,
+      initialize: connectToProvider,
+    };
+  }, [web3Provider, connectToProvider]);
+
+  useEffect(() => {
+    const authenticationChecker = setInterval(async () => {
+      if (web3Context.activeAccount) {
+        const activeAccount = (await web3Provider.instance.eth.getAccounts())[0];
+        if (activeAccount !== web3Provider.activeAccount && isMounted.current) {
+          setWeb3Provider({
+            ...web3Provider,
+            activeAccount: activeAccount,
+          });
+        }
+      }
+    }, config.AUTH_CHECKER_INTERVAL);
+    return () => clearInterval(authenticationChecker);
+  }, [web3Context, web3Provider]);
 
   return (
     <IpfsContext.Provider value={ ipfsContext }>
@@ -116,12 +169,26 @@ function App() {
         <Router>
           <Routes>
             <Route index element={ <PublicPage/> }/>
-            <Route path={ config.URL_PROFILE } element={ <ProfilePage/> }/>
-            <Route path={ config.TOP_MOVERS_URL } element={ <TopMovers/> }/>
-            <Route path={ `${config.URL_STAKE_PAGE}/:${config.URL_STAKE_PAGE_PARAM}` }
-                   element={ <StakePage/> }/>
-            <Route path={ `${config.URL_SEARCH}/:${config.URL_SEARCH_PARAM}` }
-                   element={ <SearchResults/> }/>
+            {
+              authenticatedRoutes([
+                {
+                  path: config.URL_PROFILE,
+                  element: ( <ProfilePage/> ),
+                },
+                {
+                  path: config.TOP_MOVERS_URL,
+                  element: ( <TopMovers/> ),
+                },
+                {
+                  path: `${config.URL_STAKE_PAGE}/:${config.URL_STAKE_PAGE_PARAM}`,
+                  element: ( <StakePage/> ),
+                },
+                {
+                  path: `${config.URL_SEARCH}/:${config.URL_SEARCH_PARAM}`,
+                  element: ( <SearchResults/> ),
+                },
+              ])
+            }
           </Routes>
         </Router>
       </Web3Context.Provider>

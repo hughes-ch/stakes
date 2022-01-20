@@ -5,6 +5,7 @@
  *   :license: MIT License
  */
 module.exports = {
+  AUTH_CHECKER_INTERVAL: 1000,
   CONTRACT_LOCATION: './deployed-contracts',
   DEFAULT_KARMA_PURCHASE: 5000,
   DEFAULT_POST_PRICE: 5000,

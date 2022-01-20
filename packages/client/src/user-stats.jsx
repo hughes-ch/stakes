@@ -19,7 +19,7 @@ import Web3Context from './web3-context';
  * @return {Promise}
  */
 async function setInitialKarma(web3, setState, isMounted, account) {
-  if (!web3.contracts.karma) {
+  if (!web3.contracts.karma || !account) {
     return;
   }
   
@@ -44,7 +44,7 @@ async function setInitialKarma(web3, setState, isMounted, account) {
  * @return {Promise}
  */
 async function setInitialStaked(web3, setState, isMounted, account) {
-  if (!web3.contracts.stake) {
+  if (!web3.contracts.stake || !account) {
     return;
   }
   

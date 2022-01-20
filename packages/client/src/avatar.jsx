@@ -23,7 +23,7 @@ import Web3Context from './web3-context';
  * @return {undefined}
  */
 function setDefaultImg(img, isMounted) {
-  if (isMounted.current) {
+  if (isMounted.current && img.current) {
     img.current.src = config.DEFAULT_USER_PIC_URL;
   }
 }

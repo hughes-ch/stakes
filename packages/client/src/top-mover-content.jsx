@@ -23,7 +23,7 @@ async function createMetaContent(input) {
           props,
           name,
           isMounted} = input;
-  if (!isMounted.current) {
+  if (!isMounted.current || !web3.activeAccount || !props.account) {
     return { };
   }
           
@@ -67,7 +67,7 @@ async function generateContent(input) {
           isMounted,
           name } = input;
   
-  if (!web3.contracts.content || !isMounted.current) {
+  if (!web3.contracts.content || !isMounted.current || !props.account) {
     return;
   }
   
@@ -108,6 +108,10 @@ function TopMoverContent(props) {
   const [name, setName] = useState(props.account);
   useEffect(() => {
     async function getHumanReadableName() {
+      if (!props.account) {
+        return;
+      }
+      
       const nameFromChain = await web3.contracts.stake.getUserName(
         props.account
       );

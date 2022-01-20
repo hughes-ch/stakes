@@ -21,6 +21,10 @@ import Web3Context from './web3-context';
  * @return {Promise} 
  */
 async function retrieveCurrentPic(img, web3, ipfs, isMounted) {
+  if (!web3.activeAccount) {
+    return;
+  }
+  
   img.current.src = config.DEFAULT_USER_PIC_URL;
   const userPic = await web3.contracts.stake.getUserPic(
     web3.activeAccount
@@ -54,6 +58,10 @@ function EditProfilePopup(props) {
   const nameHasBeenSet = useRef(false);
   useEffect(() => {
     async function retrieveCurrentUserName() {
+      if (!web3.activeAccount) {
+        return;
+      }
+      
       const userName = await web3.contracts.stake.getUserName(
         web3.activeAccount
       );

@@ -26,9 +26,12 @@ import Web3Context from './web3-context';
 async function addKarma(event, web3, setPopup) {
   event.preventDefault();
   setPopup(undefined);
+  if (!web3.activeAccount) {
+    return;
+  }
 
   const karmaToAdd = event.target.elements[config.KARMA_ENTRY_NAME].value;
-  return web3.contracts.karmaPaymaster.buyKarma({
+  await web3.contracts.karmaPaymaster.buyKarma({
     from: web3.activeAccount,
     value: scaleUpKarma(karmaToAdd, web3),
   });
@@ -46,12 +49,15 @@ async function addKarma(event, web3, setPopup) {
 async function updateUserData(event, web3, ipfs, setPopup) {
   event.preventDefault();
   setPopup(undefined);
+  if (!web3.activeAccount) {
+    return;
+  }
 
   const name = event.target.elements[config.PROFILE_NAME_ENTRY].value;
   const file = event.target.elements[config.PROFILE_PIC_ENTRY].files[0];
   const { cid } = await ipfs.add(file);
 
-  return web3.contracts.stake.updateUserData(
+  await web3.contracts.stake.updateUserData(
     name, cid.toString(), { from: web3.activeAccount }
   );
 }
@@ -67,6 +73,9 @@ async function updateUserData(event, web3, ipfs, setPopup) {
 async function addNewPost(event, web3, setPopup) {
   event.preventDefault();
   setPopup(undefined);
+  if (!web3.activeAccount) {
+    return;
+  }
 
   const content = event.target.elements[config.POST_CONTENT_ENTRY].value;
   const price = web3.instance.utils.toWei(
@@ -74,7 +83,7 @@ async function addNewPost(event, web3, setPopup) {
     'gwei'
   );
   
-  return web3.contracts.content.publish(
+  await web3.contracts.content.publish(
     content, price, { from: web3.activeAccount }
   );
 }

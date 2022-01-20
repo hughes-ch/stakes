@@ -62,6 +62,10 @@ async function lookupContent(tokenId, web3, setState, isMounted) {
  * @param {Object}   web3     Web3 Context
  */
 async function addKarma(tokenId, karma, setState, web3) {
+  if (!web3.activeAccount) {
+    return;
+  }
+  
   const karmaToAdd = ethers.BigNumber.from(
     `${config.NUM_SCALED_KARMA_ON_UPVOTE}${'0'.repeat(config.KARMA_SCALE_FACTOR)}`
   );
@@ -87,6 +91,10 @@ async function addKarma(tokenId, karma, setState, web3) {
  * @param {Object}   web3     Web3 Context
  */
 async function buyPost(tokenId, web3) {
+  if (!web3.activeAccount) {
+    return;
+  }
+  
   await web3.contracts.content.buyContent(tokenId, { from: web3.activeAccount });
 }
 

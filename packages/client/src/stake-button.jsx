@@ -28,6 +28,10 @@ function StakeButton(props) {
   const [isStaked, setIsStaked] = useState(false);
   useEffect(() => {
     async function getInitialStakeStatus() {
+      if (!web3.activeAccount || !props.user) {
+        return;
+      }
+      
       const stakes = await web3.contracts.stake.getOutgoingStakes(
         web3.activeAccount
       );
@@ -40,16 +44,24 @@ function StakeButton(props) {
   }, [web3, props.user, isMounted]);
 
   const stakeUser = useCallback(async () => {
+    if (!web3.activeAccount || !props.user) {
+      return;
+    }
+    
     setIsStaked(true);
-    return web3.contracts.stake.stakeUser(
+    await web3.contracts.stake.stakeUser(
       props.user,
       { from: web3.activeAccount }
     );
   }, [web3, props.user]);
 
   const unstakeUser = useCallback(async () => {
+    if (!web3.activeAccount || !props.user) {
+      return;
+    }
+    
     setIsStaked(false);
-    return web3.contracts.stake.unstakeUser(
+    await web3.contracts.stake.unstakeUser(
       props.user,
       { from: web3.activeAccount }
     );
