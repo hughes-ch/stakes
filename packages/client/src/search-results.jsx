@@ -47,7 +47,6 @@ function SearchResults() {
         accounts = results.filter(result => result.search(/[^x0]/) >= 0);
       }
 
-      
       if (accounts.length) {
         setSearchResults(accounts.map(account => (
           <div key={ account } className='search-content-container'>
