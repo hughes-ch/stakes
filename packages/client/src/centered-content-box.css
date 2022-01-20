@@ -1,0 +1,24 @@
+/**
+ *   Style for the CenteredContentBox component
+ *
+ *   :copyright: Copyright (c) 2022 Chris Hughes
+ *   :license: MIT License
+ */
+@import './index.css';
+
+.centered-content-box {
+    background-color: var(--dark-background-color);
+    border-radius: 1rem;
+    color: var(--light-text-color);
+    margin-top: 1rem;
+    max-width: 70rem;
+    min-width: 45rem;
+    width: 100%;
+}
+@media only screen and (max-width: 720px) {
+    .centered-content-box {
+        border-radius: 0px;
+        margin-top: 0px;
+        min-width: unset;
+    }
+}

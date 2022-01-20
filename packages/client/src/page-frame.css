@@ -8,15 +8,9 @@
 
 .page-frame {
     align-items: flex-start;
-    background-color: var(--dark-background-color);
-    border-radius: 1rem;
-    color: var(--light-text-color);
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    margin-top: 1rem;
-    max-width: 70rem;
-    min-width: 45rem;
     width: 100%;
 }
 .page-frame > div:nth-child(1) {
@@ -27,34 +21,10 @@
     flex-grow: 1;
     padding-right: 0.5rem;
 }
-.page-frame > div:nth-child(2) > div.heading {
-    align-items: center;
-    display: grid;
-    justify-items: right;
-}
-.page-frame > div:nth-child(2) > div.heading > h1 {
-    font-size: var(--title-font-size);
-    grid-row: 1;
-    grid-column: 1 / span 3;
-    text-align: center;
-    width: 100%;
-}
-.page-frame > div:nth-child(2) > div.heading > form {
-    grid-row: 1;
-    grid-column: 3;
-}
-@media only screen and (max-width: 1000px) {
-    .page-frame > div:nth-child(2) > div.heading > h1 {
-        font-size: 3vw;
-    }
-}
 @media only screen and (max-width: 720px) {
     .page-frame {
         align-items: center;
-        border-radius: 0px;
         flex-direction: column;
-        margin-top: 0px;
-        min-width: unset;
     }
     .page-frame > div:nth-child(1) {
         padding: 0px;
@@ -83,8 +53,5 @@
     .page-frame > div:nth-child(2) {
         flex-grow: 0;
         width: 95vw;
-    }
-    .page-frame > div:nth-child(2) > div.heading > h1 {
-        grid-column: 1 / span 2;        
     }
 }

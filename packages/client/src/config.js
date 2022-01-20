@@ -23,6 +23,7 @@ module.exports = {
   PROFILE_PIC_ENTRY: 'Picture',
   TOP_MOVERS_URL: '/top-movers',
   SEARCH_ENTRY_NAME: 'search-entry',
+  SEARCH_RESULT_COUNT: 100,
   SHORT_NAME_SEGMENT_LENGTH: 6,
   UNIT_TEST_SETUP_TIMEOUT: 120000,
   URL_PROFILE: '/profile',

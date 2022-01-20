@@ -16,6 +16,7 @@ import IpfsContext from './ipfs-context';
 import ProfilePage from './profile-page';
 import PublicPage from './public-page';
 import React, { useEffect, useRef, useState } from 'react';
+import SearchResults from './search-results';
 import StakePage from './stake-page';
 import TopMovers from './top-movers';
 import Web3 from 'web3';
@@ -119,6 +120,8 @@ function App() {
             <Route path={ config.TOP_MOVERS_URL } element={ <TopMovers/> }/>
             <Route path={ `${config.URL_STAKE_PAGE}/:${config.URL_STAKE_PAGE_PARAM}` }
                    element={ <StakePage/> }/>
+            <Route path={ `${config.URL_SEARCH}/:${config.URL_SEARCH_PARAM}` }
+                   element={ <SearchResults/> }/>
           </Routes>
         </Router>
       </Web3Context.Provider>

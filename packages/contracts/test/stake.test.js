@@ -131,4 +131,46 @@ contract('Stake', (accounts) => {
     expect(receivedName).is.empty;
     expect(receivedPic).is.empty;
   });
+
+  it('should allow searching for user based on address', async () => {
+    const searchedForAccount = accounts[2];
+    const stakedAccount = accounts[4];
+    const notFoundAccount = accounts[5];
+    
+    await giveSomeKarmaTo(searchedForAccount, paymasterInstance, karmaInstance);
+    await instance.stakeUser(stakedAccount, { from: searchedForAccount });
+
+    let hasUserConnected = await instance.userHasConnected(searchedForAccount);
+    expect(hasUserConnected).to.equal(true);
+
+    hasUserConnected = await instance.userHasConnected(notFoundAccount);
+    expect(hasUserConnected).to.equal(false);
+  });
+
+  it('should allow searching for user based on name', async () => {
+    const myAccount = accounts[0];
+    const searchedForAccount = accounts[2];
+
+    const name = 'John Doe';
+    await giveSomeKarmaTo(myAccount, paymasterInstance, karmaInstance);
+    await giveSomeKarmaTo(searchedForAccount, paymasterInstance, karmaInstance);
+    await instance.updateUserData(name, 'picture', { from: searchedForAccount });
+
+    const resultsFromFirst = await instance.searchForUserName(
+      name.split(' ')[0], 0, 10
+    );
+    const resultsFromLast = await instance.searchForUserName(
+      name.split(' ')[1], 0, 10
+    );
+    const resultsFromWhole = await instance.searchForUserName(
+      name, 0, 10
+    );
+    const resultsFromNonMatchingSearch = await instance.searchForUserName(
+      'John Smith', 0, 10
+    );
+
+    expect(resultsFromLast).to.include(searchedForAccount);
+    expect(resultsFromWhole).to.include(searchedForAccount);
+    expect(resultsFromNonMatchingSearch).not.to.include(searchedForAccount);
+  });
 });

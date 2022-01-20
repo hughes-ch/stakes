@@ -7,14 +7,12 @@
  */
 import ProfileFrame from './profile-frame';
 import ProfilePageContent from './profile-page-content';
-import React, { useContext } from 'react';
-import Web3Context from './web3-context';
+import React from 'react';
 
 /**
  * Component
  */
 function ProfilePage() {
-  const web3 = useContext(Web3Context);
   return (
     <ProfileFrame title='Top Trending'>
       <ProfilePageContent/>

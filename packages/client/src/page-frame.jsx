@@ -7,8 +7,9 @@
  */
 import './page-frame.css';
 import Avatar from './avatar';
+import CenteredContentBox from './centered-content-box';
+import Heading from './heading';
 import React, { useEffect, useRef, useState } from 'react';
-import SearchBar from './search-bar';
 import UserStats from './user-stats';
 
 /**
@@ -41,23 +42,22 @@ function PageFrame(props) {
   }, [userInfoRef]);
 
   return (
-    <div className='page-frame'>
-      <div>
-        <div className='user-info' ref={ userInfoRef }>
-          <Avatar user={ props.user }
-                  flexDirection={ avatarDirection }/>
-          <UserStats user={ props.user }/>
+    <CenteredContentBox>
+      <div className='page-frame'>
+        <div>
+          <div className='user-info' ref={ userInfoRef }>
+            <Avatar user={ props.user }
+                    flexDirection={ avatarDirection }/>
+            <UserStats user={ props.user }/>
+          </div>
+          { props.sidebar }
         </div>
-        { props.sidebar }
-      </div>
-      <div>
-        <div className='heading'>
-          <h1>{ props.title }</h1>
-          <SearchBar/>
+        <div>
+          <Heading title={ props.title }/>
+          { props.children }
         </div>
-        { props.children }
       </div>
-    </div>
+    </CenteredContentBox>
   );
 }
 
