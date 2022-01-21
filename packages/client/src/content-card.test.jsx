@@ -8,6 +8,7 @@ import '@testing-library/jest-dom';
 import './mocks';
 import config from './config';
 import { connectToLocalBlockChain,
+         getReasonablySizedName,
          scaleUpKarma,
          stopLocalBlockChain } from './common';
 import { ethers } from 'ethers';
@@ -62,8 +63,9 @@ describe('the ContentCard component', () => {
       button => button.innerHTML.includes('Buy Now for')
     );
     expect(buyNowButton).toBeInTheDocument();
-    expect(await screen.findByText(config.DEFAULT_USER_NAME))
-      .toBeInTheDocument();
+    expect(await screen.findByText(
+      getReasonablySizedName(config.DEFAULT_USER_NAME)
+    )).toBeInTheDocument();
   });
 
   it('renders the user, content, and karma information', async () => {
@@ -73,8 +75,10 @@ describe('the ContentCard component', () => {
       </Web3Context.Provider>
     );
 
-    expect(await screen.findByText(owningAccount)).toBeInTheDocument();
-    expect(await screen.findByText(contentText)).toBeInTheDocument();
+    expect(await screen.findByText(getReasonablySizedName(owningAccount)))
+      .toBeInTheDocument();
+    expect(await screen.findByText(getReasonablySizedName(contentText)))
+      .toBeInTheDocument();
   });
 
   it('allows for paying the owner in Karma', async () => {
@@ -87,7 +91,8 @@ describe('the ContentCard component', () => {
     );
 
     await waitFor(
-      () => expect(screen.getByText(owningAccount)).toBeInTheDocument()
+      () => expect(screen.getByText(getReasonablySizedName(owningAccount)))
+        .toBeInTheDocument()
     );
 
     const buttons = screen.getAllByRole('button');
@@ -109,7 +114,8 @@ describe('the ContentCard component', () => {
     );
 
     await waitFor(
-      () => expect(screen.getByText(owningAccount)).toBeInTheDocument()
+      () => expect(screen.getByText(getReasonablySizedName(owningAccount)))
+        .toBeInTheDocument()
     );
     
     const buttons = screen.getAllByRole('button');

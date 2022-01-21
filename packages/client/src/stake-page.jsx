@@ -25,6 +25,10 @@ async function getHumanReadableName(inputs) {
           nameFromUrl,
           isMounted,
           setName } = inputs;
+
+  if (!nameFromUrl) {
+    return;
+  }
   
   const nameFromChain = await web3.contracts.stake.getUserName(nameFromUrl);
   const humanReadableName = getReasonablySizedName(
@@ -61,7 +65,7 @@ function StakePage() {
       isMounted: isMounted,
       setName: setName,
     });
-  }, [params, web3, isMounted, setName]);
+  }, [params, web3, setName]);
   
   return (
     <PageFrame title={ `${name}'s Top Movers` }

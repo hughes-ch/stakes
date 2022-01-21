@@ -9,6 +9,7 @@ import "./mocks";
 import { BrowserRouter as Router } from "react-router-dom";
 import config from './config';
 import { connectToLocalBlockChain,
+         getReasonablySizedName,
          range,
          scaleUpKarma,
          stopLocalBlockChain } from './common';
@@ -53,8 +54,10 @@ beforeEach(async () => {
   
   await screen.findByText(content[0].text);
   await waitFor(
-    () => expect(screen.queryAllByText(web3Context.activeAccount).length)
-    .toEqual(content.length+1)
+    () => expect(screen.queryAllByText(
+      getReasonablySizedName(web3Context.activeAccount)
+    ).length)
+      .toEqual(content.length+1)
   );
 });
 afterAll(() => {

@@ -7,6 +7,7 @@
 import './search-results.css';
 import CenteredContentBox from './centered-content-box';
 import config from './config';
+import { getReasonablySizedName } from './common';
 import Heading from './heading';
 import React, { useContext, useEffect, useState } from 'react';
 import SearchContentCard from './search-content-card';
@@ -63,7 +64,9 @@ function SearchResults() {
   return (
     <CenteredContentBox>
       <div className='search-results'>
-        <Heading title={ `Search Results for "${query}"` }/>
+        <Heading
+          title={ `Search Results for "${getReasonablySizedName(query)}"` }
+        />
         { searchResults }
       </div>
     </CenteredContentBox>

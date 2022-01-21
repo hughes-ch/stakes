@@ -6,7 +6,9 @@
  */
 import './avatar.css';
 import config from './config';
-import { fitTextWidthToContainer, getFromIpfs } from './common';
+import { fitTextWidthToContainer,
+         getFromIpfs,
+         getReasonablySizedName } from './common';
 import IpfsContext from './ipfs-context';
 import React, { useContext,
                 useLayoutEffect,
@@ -88,7 +90,7 @@ function Avatar(props) {
       }
 
       if (isMounted.current) {
-        setName(userName);
+        setName(getReasonablySizedName(userName));
       }
     }
     

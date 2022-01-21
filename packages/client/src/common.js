@@ -230,6 +230,10 @@ function scaleUpKarma(karma) {
  * @return {String}
  */
 function getReasonablySizedName(name) {
+  if (!name) {
+    return name;
+  }
+  
   let sizeCheckedName = name;
   if (name.length > config.MAX_NAME_LENGTH) {
     const frontOfName = name.slice(0, config.SHORT_NAME_SEGMENT_LENGTH);

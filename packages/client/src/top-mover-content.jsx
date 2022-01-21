@@ -7,7 +7,7 @@
  */
 import './content.css';
 import ContentCard from './content-card';
-import { range, scaleDownKarma } from './common';
+import { getReasonablySizedName, range, scaleDownKarma } from './common';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Web3Context from './web3-context';
 
@@ -105,7 +105,7 @@ function TopMoverContent(props) {
   }, []);
   
   const web3 = useContext(Web3Context);
-  const [name, setName] = useState(props.account);
+  const [name, setName] = useState(getReasonablySizedName(props.account));
   useEffect(() => {
     async function getHumanReadableName() {
       if (!props.account) {
@@ -117,7 +117,7 @@ function TopMoverContent(props) {
       );
 
       if (nameFromChain && isMounted.current) {
-        setName(nameFromChain);
+        setName(getReasonablySizedName(nameFromChain));
       }
     }
     getHumanReadableName();

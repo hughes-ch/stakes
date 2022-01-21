@@ -9,6 +9,7 @@ import './mocks';
 import { BrowserRouter as Router } from "react-router-dom";
 import config from './config';
 import { connectToLocalBlockChain,
+         getReasonablySizedName,
          scaleUpKarma,
          stopLocalBlockChain } from './common';
 import ProfilePageContent from './profile-page-content';
@@ -94,8 +95,9 @@ describe('the ProfilePageContent component', () => {
     for (const userContent of content) {
       if (userContent.staked) {
         expect(await screen.findByText(userContent.text)).toBeInTheDocument();
-        expect(await screen.findByText(`Shared by ${userContent.account}`))
-          .toBeInTheDocument();
+        expect(await screen.findByText(
+          `Shared by ${getReasonablySizedName(userContent.account)}`
+        )).toBeInTheDocument();
       }
     }
   });
@@ -111,7 +113,9 @@ describe('the ProfilePageContent component', () => {
 
     // First wait for staked user content to be visible...
     const stakedAccount = content.find(c => c.staked);
-    expect(await screen.findByText(`Shared by ${stakedAccount.account}`));
+    expect(await screen.findByText(
+      `Shared by ${getReasonablySizedName(stakedAccount.account)}`
+    ));
     
     // ... then check for non-existance of non-staked stuff
     for (const userContent of content) {
