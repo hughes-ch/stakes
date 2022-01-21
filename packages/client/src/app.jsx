@@ -178,7 +178,7 @@ function App() {
           });
         }
       }
-    }, config.AUTH_CHECKER_INTERVAL);
+    }, config.PERIODIC_UPDATE_INTERVAL);
     return () => clearInterval(authenticationChecker);
   }, [web3Context, web3Provider]);
 

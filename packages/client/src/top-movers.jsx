@@ -54,14 +54,24 @@ function TopMovers() {
       );
     };
   }, [web3]);
+
+  const [key, setKey] = useState(0);
+  const refresh = useCallback(() => {
+    setKey(key + 1);
+  }, [key]);
   
   return (
     <React.Fragment>
       { popup }
-      <ProfileFrame title='Your Top Movers'>
+      <ProfileFrame title='Your Top Movers'
+                    triggerRefresh={ refresh }
+                    key={ key }
+      >
         <TopMoverContent
           account={ web3.activeAccount }
-          createPricePopup={ createPricePopup }/>
+          createPricePopup={ createPricePopup }
+          key={ key }
+        />
       </ProfileFrame>
     </React.Fragment>
   );

@@ -5,6 +5,7 @@
  *   :license: MIT License
  */
 import './user-stats.css';
+import config from './config';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { scaleDownKarma } from './common';
 import Web3Context from './web3-context';
@@ -76,6 +77,20 @@ function UserStats(props) {
   useEffect(() => {
     setInitialStaked(web3, setNumStaked, isMounted, props.user);
   }, [web3, isMounted, props.user]);
+
+  useEffect(() => {
+    let periodicUpdate;
+    if (props.user === web3.activeAccount) {
+      setInterval(async () => {
+        await setInitialKarma(web3, setKarmaBalance, isMounted, props.user);
+      }, config.PERIODIC_UPDATE_INTERVAL);
+    }
+    return () => {
+      if (periodicUpdate) {
+        clearInterval(periodicUpdate);
+      }
+    };
+  }, [props.user, web3]);
 
   return (
     <div className='user-stats'>

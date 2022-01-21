@@ -7,15 +7,23 @@
  */
 import ProfileFrame from './profile-frame';
 import ProfilePageContent from './profile-page-content';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 
 /**
  * Component
  */
 function ProfilePage() {
+  const [key, setKey] = useState(0);
+  const refresh = useCallback(() => {
+    setKey(key + 1);
+  }, [key]);
+  
   return (
-    <ProfileFrame title='Top Trending'>
-      <ProfilePageContent/>
+    <ProfileFrame title='Top Trending'
+                  triggerRefresh={ refresh }
+                  key={ key }
+    >
+      <ProfilePageContent key={ key }/>
     </ProfileFrame>
   );
 }

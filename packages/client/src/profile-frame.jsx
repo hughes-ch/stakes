@@ -44,9 +44,10 @@ async function addKarma(event, web3, setPopup) {
  * @param {Context}  web3     Web3 context
  * @param {Context}  ipfs     IPFS context
  * @param {Function} setPopup Function to set (or clear) popups
+ * @param {Object}   props    React properties
  * @return {Promise}
  */
-async function updateUserData(event, web3, ipfs, setPopup) {
+async function updateUserData(event, web3, ipfs, setPopup, props) {
   event.preventDefault();
   setPopup(undefined);
   if (!web3.activeAccount) {
@@ -60,6 +61,8 @@ async function updateUserData(event, web3, ipfs, setPopup) {
   await web3.contracts.stake.updateUserData(
     name, cid.toString(), { from: web3.activeAccount }
   );
+
+  props.triggerRefresh();
 }
 
 /**
@@ -68,9 +71,10 @@ async function updateUserData(event, web3, ipfs, setPopup) {
  * @param {Object}   event    submit event
  * @param {Context}  web3     Web3 context
  * @param {Function} setPopup Function to set (or clear) popups
+ * @param {Object}   props    React properties
  * @return {Promise}
  */
-async function addNewPost(event, web3, setPopup) {
+async function addNewPost(event, web3, setPopup, props) {
   event.preventDefault();
   setPopup(undefined);
   if (!web3.activeAccount) {
@@ -85,6 +89,8 @@ async function addNewPost(event, web3, setPopup) {
   await web3.contracts.content.publish(
     content, price, { from: web3.activeAccount }
   );
+
+  props.triggerRefresh();
 }
 
 /**
@@ -107,7 +113,7 @@ function ProfileFrame(props) {
       onEditProfile={ () => {
         setPopup(
           <EditProfilePopup
-            onSubmit={ async (e) => updateUserData(e, web3, ipfs, setPopup) }
+            onSubmit={ async (e) => updateUserData(e, web3, ipfs, setPopup, props) }
             onCancel={ () => setPopup(undefined) }
           />
         );
@@ -115,12 +121,12 @@ function ProfileFrame(props) {
       onAddPost={ () => {
         setPopup(
           <AddPostPopup
-            onSubmit={ async (e) => addNewPost(e, web3, setPopup) }
+            onSubmit={ async (e) => addNewPost(e, web3, setPopup, props) }
             onCancel={ () => setPopup(undefined) }
           />
         );
       }}/>
-  ), [web3, ipfs]);
+  ), [web3, ipfs, props]);
 
   return (
     <React.Fragment>
