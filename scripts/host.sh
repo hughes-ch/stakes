@@ -7,7 +7,7 @@
 echo Starting deployment...
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-BUILD_DIR=$SCRIPT_DIR/../packages/contracts/build/contracts
+BUILD_DIR=$SCRIPT_DIR/../packages/contracts/build
 LINK_TO_BUILD=$SCRIPT_DIR/../packages/client/src/deployed-contracts
 if [ -e $LINK_TO_BUILD ]
 then

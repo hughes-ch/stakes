@@ -7,7 +7,9 @@
 import '@testing-library/jest-dom';
 import './mocks';
 import config from './config';
-import { connectToLocalBlockChain, stopLocalBlockChain } from './common';
+import { connectToLocalBlockChain,
+         scaleUpKarma,
+         stopLocalBlockChain } from './common';
 import { ethers } from 'ethers';
 import { render, screen, waitFor } from '@testing-library/react';
 import ContentCard from './content-card';
@@ -22,7 +24,7 @@ const contentText = 'Hello world!';
 
 beforeAll(async () => {
   web3Context = await connectToLocalBlockChain();
-  price = web3Context.instance.utils.toWei('500', 'gwei');
+  price = scaleUpKarma('500');
   accounts = await web3Context.instance.eth.getAccounts();
   owningAccount = accounts[3];
   await web3Context.contracts.content.publish(

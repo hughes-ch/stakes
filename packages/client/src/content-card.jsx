@@ -10,7 +10,7 @@ import Avatar from './avatar';
 import config from './config';
 import { ethers } from 'ethers';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { scaleDownKarma } from './common';
+import { scaleDownKarma, scaleUpKarma } from './common';
 import Web3Context from './web3-context';
 
 const defaultContent = {
@@ -67,7 +67,7 @@ async function addKarma(tokenId, karma, setState, web3) {
   }
   
   const karmaToAdd = ethers.BigNumber.from(
-    `${config.NUM_SCALED_KARMA_ON_UPVOTE}${'0'.repeat(config.KARMA_SCALE_FACTOR)}`
+    scaleUpKarma(config.NUM_SCALED_KARMA_ON_UPVOTE)
   );
   
   const newKarmaAmount = ethers.BigNumber.from(karma).add(karmaToAdd);

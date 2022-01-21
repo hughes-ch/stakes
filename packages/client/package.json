@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@metamask/onboarding": "^1.0.1",
+    "@opengsn/provider": "^2.2.5",
     "@truffle/contract": "^4.4.2",
     "ethers": "^5.5.3",
     "ipfs-core": "^0.13.0",

@@ -30,7 +30,7 @@ async function updatePrice(e, tokenId, web3, setState) {
   }
   
   const newPrice = scaleUpKarma(
-    e.target.elements[config.PRICE_ENTRY_NAME].value, web3
+    e.target.elements[config.PRICE_ENTRY_NAME].value
   );
   
   await web3.contracts.content.setPrice(

@@ -8,7 +8,9 @@ import "@testing-library/jest-dom";
 import "./mocks";
 import { BrowserRouter as Router } from "react-router-dom";
 import config from './config';
-import { connectToLocalBlockChain, stopLocalBlockChain } from './common';
+import { connectToLocalBlockChain,
+         scaleUpKarma,
+         stopLocalBlockChain } from './common';
 import ProfilePage from './profile-page';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -53,16 +55,16 @@ describe('The AddPostPopup component', () => {
     await userEvent.clear(textArea);
     await userEvent.type(textArea, content);
 
-    const price = '5000';
+    const price = 5000;
     const priceInput = await screen.findByLabelText('Post Resell Value:');
     await userEvent.clear(priceInput);
-    await userEvent.type(priceInput, price);
+    await userEvent.type(priceInput, price.toString());
 
     screen.getByText('Submit').click();
 
     await waitFor(() => expect(mockPublish).toHaveBeenCalledWith(
       content,
-      web3Context.instance.utils.toWei(price, 'gwei'),
+      scaleUpKarma(price),
       { from: web3Context.activeAccount }
     ));
   });

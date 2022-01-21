@@ -33,7 +33,7 @@ async function addKarma(event, web3, setPopup) {
   const karmaToAdd = event.target.elements[config.KARMA_ENTRY_NAME].value;
   await web3.contracts.karmaPaymaster.buyKarma({
     from: web3.activeAccount,
-    value: scaleUpKarma(karmaToAdd, web3),
+    value: scaleUpKarma(karmaToAdd),
   });
 }
 
@@ -78,9 +78,8 @@ async function addNewPost(event, web3, setPopup) {
   }
 
   const content = event.target.elements[config.POST_CONTENT_ENTRY].value;
-  const price = web3.instance.utils.toWei(
-    event.target.elements[config.POST_PRICE_ENTRY].value.toString(),
-    'gwei'
+  const price = scaleUpKarma(
+    event.target.elements[config.POST_PRICE_ENTRY].value
   );
   
   await web3.contracts.content.publish(

@@ -6,7 +6,9 @@
  */
 import '@testing-library/jest-dom';
 import config from './config';
-import { connectToLocalBlockChain, stopLocalBlockChain } from './common';
+import { connectToLocalBlockChain,
+         scaleUpKarma,
+         stopLocalBlockChain } from './common';
 import { render, screen } from '@testing-library/react';
 import UserStats from './user-stats';
 import Web3Context from './web3-context';
@@ -23,8 +25,8 @@ afterAll(() => {
 
 describe('the UserStats component', () => {
   it('renders karma balance', async () => {
-    const gwei = 500;
-    const value = web3Context.instance.utils.toWei(`${gwei}`, 'gwei');
+    const karma = 500;
+    const value = scaleUpKarma(karma);
     const myAccount = web3Context.activeAccount;
     await web3Context.contracts.karmaPaymaster.buyKarma(
       {value: value, from: myAccount}
@@ -36,7 +38,7 @@ describe('the UserStats component', () => {
       </Web3Context.Provider>
     );
 
-    expect(await screen.findByText(`${gwei} Karma`)).toBeInTheDocument();
+    expect(await screen.findByText(`${karma} Karma`)).toBeInTheDocument();
   });
 
   it('renders num stakes', async () => {

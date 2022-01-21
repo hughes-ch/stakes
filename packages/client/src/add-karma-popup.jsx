@@ -7,6 +7,7 @@
 import config from './config';
 import { ethers } from 'ethers';
 import Popup from './popup';
+import { scaleUpKarma } from './common';
 import React, { useState } from 'react';
 
 /**
@@ -16,11 +17,7 @@ import React, { useState } from 'react';
  * @return {String}
  */
 function estimateCost(karma) {
-  const costInWei = ethers.BigNumber.from(karma)
-        .mul(ethers.BigNumber.from(10)
-             .pow(config.WEI_TO_ETH_SCALE_FACTOR - config.KARMA_SCALE_FACTOR)
-            );
-  
+  const costInWei = ethers.BigNumber.from(scaleUpKarma(karma));
   const costInGwei = costInWei.div(
     ethers.BigNumber.from(10)
       .pow(ethers.BigNumber.from(config.WEI_TO_GWEI_SCALE_FACTOR))
@@ -29,7 +26,7 @@ function estimateCost(karma) {
   const costInEth = costInGwei.toNumber() *
         Math.pow(10, -config.GWEI_TO_ETH_SCALE_FACTOR);
   
-  return `Estimated cost (ETH): ${costInEth.toFixed(6)}`;
+  return `Estimated cost (ETH): ${costInEth.toFixed(config.EST_ETH_LENGTH)}`;
 }
 
 /**

@@ -8,7 +8,9 @@ import '@testing-library/jest-dom';
 import './mocks';
 import { BrowserRouter as Router } from "react-router-dom";
 import config from './config';
-import { connectToLocalBlockChain, stopLocalBlockChain } from './common';
+import { connectToLocalBlockChain,
+         scaleUpKarma,
+         stopLocalBlockChain } from './common';
 import ProfilePageContent from './profile-page-content';
 import { render, screen } from '@testing-library/react';
 import Web3Context from './web3-context';
@@ -26,21 +28,21 @@ async function createContent() {
   const accounts = await web3Context.instance.eth.getAccounts();
   content.push({
     text: 'Hello world!',
-    price: web3Context.instance.utils.toWei('1', 'gwei'),
+    price: scaleUpKarma(1),
     account: accounts[1],
     staked: true,
   });
 
   content.push({
     text: 'foo bar',
-    price: web3Context.instance.utils.toWei('500', 'gwei'),
+    price: scaleUpKarma(500),
     account: accounts[2],
     staked: true,
   });
 
   content.push({
     text: 'That\'s no moon',
-    price: web3Context.instance.utils.toWei('50', 'gwei'),
+    price: scaleUpKarma(50),
     account: accounts[3],
     staked: false,
   });

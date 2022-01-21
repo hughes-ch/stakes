@@ -12,7 +12,7 @@ import {
   Route,
 } from "react-router-dom";
 import config from './config';
-import { connectContractsToProvider } from './common';
+import { initializeGsn, scaleUpKarma } from './common';
 import IpfsContext from './ipfs-context';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import ProfilePage from './profile-page';
@@ -42,19 +42,28 @@ async function initContent(web3Context) {
     return;
   }
 
+  await web3Context.contracts.karmaPaymaster.buyKarma({
+    from: accounts[0],
+    value: scaleUpKarma(10),
+  });
+  await web3Context.contracts.karma.increaseAllowance(
+    web3Context.contracts.karmaPaymaster.address,
+    await web3Context.contracts.karma.balanceOf(accounts[0]),
+    { from: accounts[0] }
+  );
   await web3Context.contracts.content.publish(
     'Hello world!',
-    web3Context.instance.utils.toWei('1', 'gwei'),
+    scaleUpKarma(1),
     { from: accounts[0] }
   );
   await web3Context.contracts.content.publish(
     'Howdy Doody',
-    web3Context.instance.utils.toWei('500', 'gwei'),
+    scaleUpKarma(500),
     { from: accounts[0] }
   );
   await web3Context.contracts.content.publish(
     'Someone\'s poisoned the water hole!',
-    web3Context.instance.utils.toWei('30', 'gwei'),
+    scaleUpKarma(30),
     { from: accounts[0] }
   );
 
@@ -119,13 +128,23 @@ function App() {
 
     const web3 = new Web3(provider);
     await provider.request({ method: 'eth_requestAccounts' });
+    const [accounts, contracts] = await Promise.all([
+      web3.eth.getAccounts(),
+      initializeGsn(
+        web3.currentProvider,
+        {
+          paymaster: 'KarmaPaymaster',
+          nonGsn: ['Karma'],
+          gsn: ['Content', 'Stake'],
+        }
+      ),
+    ]);
+
     if (isMounted.current) {
       setWeb3Provider({
-        activeAccount: (await web3.eth.getAccounts())[0],
+        activeAccount: accounts[0],
         instance: web3,
-        contracts: await connectContractsToProvider(
-          ['Content', 'Karma', 'Stake', 'KarmaPaymaster'], provider
-        ),
+        contracts: contracts,
       });
     }
   }, [isMounted]);

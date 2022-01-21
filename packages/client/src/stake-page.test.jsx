@@ -46,7 +46,7 @@ async function createContent() {
     el.owner  = owner;
     return web3Context.contracts.content.publish(
       el.text,
-      scaleUpKarma(el.price, web3Context),
+      scaleUpKarma(el.price),
       { from: owner }
     );
   });

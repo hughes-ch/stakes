@@ -36,7 +36,7 @@ beforeEach(async () => {
   const promiseOfContent = content.map(async (c) => {
     return web3Context.contracts.content.publish(
       c.text,
-      web3Context.instance.utils.toWei(c.price, 'gwei'),
+      scaleUpKarma(c.price),
       { from: web3Context.activeAccount }
     );
   });
@@ -92,7 +92,7 @@ describe('The SetPricePopup component', () => {
 
     const prices = await Promise.all(promiseOfContentPrice);
     const matchingPriceIdx = prices.findIndex(
-      price => price === scaleUpKarma(previousPrice, web3Context)
+      price => price === scaleUpKarma(previousPrice)
     );
     
     const tokenId = tokenIds[matchingPriceIdx];
@@ -126,7 +126,7 @@ describe('The SetPricePopup component', () => {
     expect(web3Context.contracts.content.setPrice)
       .toHaveBeenCalledWith(
         tokenId,
-        scaleUpKarma(newPrice, web3Context),
+        scaleUpKarma(newPrice),
         { from: web3Context.activeAccount }
       );
   });

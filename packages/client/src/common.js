@@ -8,9 +8,20 @@ import all from 'it-all';
 import { concat as uint8ArrayConcat } from 'uint8arrays/concat';
 import config from './config';
 import contract from '@truffle/contract';
+import { RelayProvider } from '@opengsn/provider';
 import { startBlockchain,
          stopBlockchain } from '@stakes/contracts/scripts/local-blockchain';
 import Web3 from 'web3';
+
+/**
+ * Returns the string camelcased
+ *
+ * @param {String} str String to convert
+ * @return {String}
+ */
+function toCamelCase(str) {
+  return str[0].toLowerCase() + str.slice(1);
+}
 
 /**
  * Connects contracts to the provider
@@ -23,9 +34,9 @@ async function connectContractsToProvider(contracts, provider) {
   return Object.fromEntries(
     await Promise.all(
       contracts.map(async name => {
-        const camelCaseName = name[0].toLowerCase() + name.slice(1);
+        const camelCaseName = toCamelCase(name);
         const contractAbstraction = await contract(
-          require(`${config.CONTRACT_LOCATION}/${name}.json`)
+          require(`${config.CONTRACT_LOCATION}/contracts/${name}.json`)
         );
 
         contractAbstraction.setProvider(provider);
@@ -33,6 +44,38 @@ async function connectContractsToProvider(contracts, provider) {
       })
     )
   );
+}
+
+/**
+ * Initializes GSN and deploys contracts
+ *
+ * @param {Object} origProvider  Original web3 provider
+ * @param {Object} contracts     Specifies paymaster, non-gsn, and gsn contracts
+ * @return {Promise}
+ */
+async function initializeGsn(origProvider, contracts) {
+  let deployed = await connectContractsToProvider(
+    [contracts.paymaster].concat(contracts.nonGsn),
+    origProvider
+  );
+
+  const forwarder = require(`${config.CONTRACT_LOCATION}/gsn/Forwarder.json`);
+  const providerConfig = {
+    forwarderAddress: forwarder.address,
+    paymasterAddress: deployed[toCamelCase(contracts.paymaster)].address,
+    jsonStringifyRequest: true,
+    loggerConfiguration: { logLevel: 'error' },
+  };
+
+  const gsnProvider = await RelayProvider.newProvider({
+    provider: origProvider,
+    config: providerConfig,
+  }).init();
+
+  return {
+    ...deployed,
+    ...(await connectContractsToProvider(contracts.gsn, gsnProvider)),
+  };
 }
 
 /**
@@ -173,12 +216,11 @@ function scaleDownKarma(karma) {
 /**
  * Scales from the human-readable Karma amount to the scale stored on-chain
  *
- * @param {Context}   web3  Web3 Context
  * @param {BigNumber} karma Karma amount (human-readable)
  * @return {String}
  */
-function scaleUpKarma(karma, web3) {
-  return web3.instance.utils.toWei(karma.toString(), 'gwei');
+function scaleUpKarma(karma) {
+  return `${karma.toString()}${'0'.repeat(config.KARMA_SCALE_FACTOR)}`;
 }
 
 /**
@@ -202,6 +244,7 @@ export { connectContractsToProvider,
          fitTextWidthToContainer,
          getFromIpfs,
          getReasonablySizedName,
+         initializeGsn,
          range,
          scaleDownKarma,
          scaleUpKarma,
