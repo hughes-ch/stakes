@@ -60,11 +60,15 @@ function Avatar(props) {
   useEffect(() => {
     async function updateUserPic() {
       try {
-        const userPic = await web3.contracts.stake.getUserPic(props.user);
+        const { 0: userPic,
+                1: filetype } = await web3.contracts.stake.getUserPic(
+                  props.user
+                );
+        
         if (userPic) {
           const data = await getFromIpfs(ipfs, userPic);
           if (data.length > 0) {
-            const blob = new Blob([data], { type: 'image/jpg' });
+            const blob = new Blob([data], { type: filetype });
             img.current.src = window.URL.createObjectURL(blob);
           }
         } else {

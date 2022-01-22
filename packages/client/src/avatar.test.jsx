@@ -57,7 +57,7 @@ describe('the Avatar component', () => {
     const { cid } = await mockIpfs.add(pic);
     const myName = 'name';
     await web3Context.contracts.stake.updateUserData(
-      myName, cid.toString(), { from: web3Context.activeAccount }
+      myName, cid.toString(), 'image/jpg', { from: web3Context.activeAccount }
     );
 
     render(

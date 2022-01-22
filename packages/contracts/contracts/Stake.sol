@@ -17,6 +17,7 @@ contract Stake is BaseRelayRecipient {
     struct UserData {
         string name;
         string picture;
+        string filetype;
     }
 
     mapping(address => UserData) private userData;
@@ -74,8 +75,12 @@ contract Stake is BaseRelayRecipient {
     /// @notice Sets user data
     /// @param _name The user's name
     /// @param _picture The user's picture (CID)
-    function updateUserData(string memory _name, string memory _picture)
-        external {
+    /// @param _filetype The associated picture's filetype (e.g. image/jpg)
+    function updateUserData(
+        string memory _name,
+        string memory _picture,
+        string memory _filetype
+    ) external {
         // Remove previous name from searchAssociations container
         if (bytes(userData[_msgSender()].name).length > 0) {
             bytes[] memory currentSplitName = userData[_msgSender()].name.split();
@@ -94,6 +99,7 @@ contract Stake is BaseRelayRecipient {
         // Update name and picture to newly requested
         userData[_msgSender()].name = _name;
         userData[_msgSender()].picture = _picture;
+        userData[_msgSender()].filetype = _filetype;
         
         // Add new name to searchAssociations container
         bytes[] memory newSplitName = _name.split();
@@ -119,8 +125,8 @@ contract Stake is BaseRelayRecipient {
     /// @param _user The user to lookup
     /// @dev "Visiting" users will be provided empty information
     function getUserPic(address _user) 
-        external view returns (string memory) {
-        return userData[_user].picture;
+        external view returns (string memory, string memory) {
+        return (userData[_user].picture, userData[_user].filetype);
     }
 
     /// @notice Returns whether the user has connected to the contract

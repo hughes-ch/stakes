@@ -63,7 +63,7 @@ beforeAll(async () => {
   mockStakedUser = accounts[2];
 
   await web3Context.contracts.stake.updateUserData(
-    mockStakedUserName, 'picture', { from: mockStakedUser }
+    mockStakedUserName, 'picture', 'image/jpg', { from: mockStakedUser }
   );
     
   await web3Context.contracts.stake.stakeUser(mockStakedUser, { from: currentUser });

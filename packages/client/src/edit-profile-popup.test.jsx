@@ -52,7 +52,8 @@ afterAll(() => {
  */
 describe('The EditProfilePopup component', () => {
   it('can add a picture', async () => {
-    const file = new File(['userPic'], 'myPic.png', {type: 'image/png'});
+    const filetype = 'image/png';
+    const file = new File(['userPic'], 'myPic.png', {type: filetype});
     const input = await screen.findByText('Select picture');
     await userEvent.upload(input, file);
 
@@ -62,6 +63,7 @@ describe('The EditProfilePopup component', () => {
       () => expect(mockUpdateData).toHaveBeenCalledWith(
         config.DEFAULT_USER_NAME,
         mockIpfs.lastAssignedCid.toString(),
+        filetype,
         { from: web3Context.activeAccount }
       )
     );
@@ -80,7 +82,7 @@ describe('The EditProfilePopup component', () => {
     await waitFor(
       () => expect(mockUpdateData).toHaveBeenCalledWith(
         newName,
-        mockIpfs.lastAssignedCid.toString(),
+        '', '',
         { from: web3Context.activeAccount }
       )
     );

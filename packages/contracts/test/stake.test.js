@@ -112,14 +112,15 @@ contract('Stake', (accounts) => {
     const pic = 'QmT5NvUtoM5nWFfrQdVrFtvGfKFmG7AHE8P34isapyhCxX';
     const myAccount = accounts[0];
     await giveSomeKarmaTo(myAccount, paymasterInstance, karmaInstance);
-    await instance.updateUserData(name, pic, { from: myAccount });
+    await instance.updateUserData(name, pic, 'image/jpg', { from: myAccount });
     const [receivedName, receivedPic] = await Promise.all([
       instance.getUserName(myAccount),
       instance.getUserPic(myAccount),
     ]);
     
+    const { 0: cid, 1: filetype } = receivedPic;
+    expect(cid).to.equal(pic);
     expect(receivedName).to.equal(name);
-    expect(receivedPic).to.equal(pic);
   });
 
   it('should return default content for "visiting" users', async () => {
@@ -128,8 +129,9 @@ contract('Stake', (accounts) => {
       await instance.getUserPic(accounts[1]),
     ]);
 
+    const { 0: cid, 1: filetype } = receivedPic;
     expect(receivedName).is.empty;
-    expect(receivedPic).is.empty;
+    expect(cid).is.empty;
   });
 
   it('should allow searching for user based on address', async () => {
@@ -154,7 +156,9 @@ contract('Stake', (accounts) => {
     const name = 'John Doe';
     await giveSomeKarmaTo(myAccount, paymasterInstance, karmaInstance);
     await giveSomeKarmaTo(searchedForAccount, paymasterInstance, karmaInstance);
-    await instance.updateUserData(name, 'picture', { from: searchedForAccount });
+    await instance.updateUserData(
+      name, 'picture', 'image/jpg', { from: searchedForAccount }
+    );
 
     const resultsFromFirst = await instance.searchForUserName(
       name.split(' ')[0], 0, 10

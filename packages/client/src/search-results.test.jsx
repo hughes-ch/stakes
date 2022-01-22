@@ -57,7 +57,7 @@ beforeAll(async () => {
 
   const promiseToUpdateAccount = userAccounts.map(async (account) => {
     return web3Context.contracts.stake.updateUserData(
-      account.name, 'picture', { from: account.account }
+      account.name, 'picture', 'image/jpg', { from: account.account }
     );
   });
 
