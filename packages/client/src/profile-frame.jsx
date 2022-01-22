@@ -56,13 +56,16 @@ async function updateUserData(event, web3, ipfs, setPopup, props) {
 
   const name = event.target.elements[config.PROFILE_NAME_ENTRY].value;
   const files = event.target.elements[config.PROFILE_PIC_ENTRY].files;
-  let fileLocation = '';
-  let filetype = '';
+  let { 0: fileLocation,
+        1: filetype } = await web3.contracts.stake.getUserPic(
+          web3.activeAccount
+        );
+  
   if (files.length > 0) {
     const { cid } = await ipfs.add(files[0]);
     fileLocation = cid.toString();
     filetype = files[0].type;
-  }
+  } 
   
   await web3.contracts.stake.updateUserData(
     name, fileLocation, filetype, { from: web3.activeAccount }
@@ -106,7 +109,7 @@ function ProfileFrame(props) {
   const [popup, setPopup] = useState(undefined);
   const web3 = useContext(Web3Context);
   const ipfs = useContext(IpfsContext);
-  const sidebar = (
+  const sidebar = useMemo(() => (
     <SidebarNavigation
       onAddKarma={ () => {
         setPopup(
@@ -132,7 +135,7 @@ function ProfileFrame(props) {
           />
         );
       }}/>
-  );
+  ), [web3, ipfs, props]);
 
   return (
     <React.Fragment>

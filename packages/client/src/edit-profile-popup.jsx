@@ -15,17 +15,16 @@ import Web3Context from './web3-context';
  * Retrieves the currently set user picture
  *
  * @param {DOMElement} img   Image DOM element
- * @param {Function}   hook  Set file hook
  * @param {Context}    web3  Web3 context
  * @param {Context}    ipfs  IPFS context
  * @param {Ref}      isMounted  Indicates if component is mounted
  * @return {Promise} 
  */
-async function retrieveCurrentPic(img, hook, web3, ipfs, isMounted) {
+async function retrieveCurrentPic(img, web3, ipfs, isMounted) {
   if (!web3.activeAccount) {
     return;
   }
-  
+
   img.current.src = config.DEFAULT_USER_PIC_URL;
   const { 0: userPic, 1: filetype } = await web3.contracts.stake.getUserPic(
     web3.activeAccount
@@ -36,8 +35,7 @@ async function retrieveCurrentPic(img, hook, web3, ipfs, isMounted) {
     if (data.length > 0) {
       const blob = new Blob([data], { type: filetype });
       img.current.src = window.URL.createObjectURL(blob);
-      hook(blob);
-    }
+    } 
   } 
 }
 
@@ -90,8 +88,8 @@ function EditProfilePopup(props) {
   }, [file, error]);
 
   useEffect(() => {
-    retrieveCurrentPic(img, setFile, web3, ipfs, isMounted);
-  }, [img, web3, ipfs, isMounted, file]);
+    retrieveCurrentPic(img, web3, ipfs, isMounted);
+  }, [img, web3, ipfs, isMounted]);
   
   const validateName = e => {
     setName(e.target.value);
