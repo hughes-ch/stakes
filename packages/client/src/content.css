@@ -6,6 +6,10 @@
  */
 @import './index.css';
 
+.content {
+    max-height: 90vh;
+    overflow: auto;
+}
 .content > div {
     margin-bottom: 1rem;
 }
@@ -35,4 +39,9 @@
 .content a {
     color: var(--dark-text-color);
     text-decoration: none;
+}
+@media only screen and (max-width: 720px) {
+    .content {
+        max-height: 85vh;
+    }
 }

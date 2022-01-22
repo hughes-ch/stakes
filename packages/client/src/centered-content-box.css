@@ -8,11 +8,12 @@
 
 .centered-content-box {
     background-color: var(--dark-background-color);
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     color: var(--light-text-color);
     margin-top: 1rem;
     max-width: 70rem;
     min-width: 45rem;
+    overflow: none;
     width: 100%;
 }
 @media only screen and (max-width: 720px) {

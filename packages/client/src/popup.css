@@ -9,7 +9,7 @@
     height: 100vh;
     left: 0px;
     opacity: 0.7;
-    position: absolute;
+    position: fixed;
     top: 0px;
     width: 100vw;
     z-index: 5;
@@ -25,7 +25,7 @@
     flex-direction: column;
     font-size: var(--link-font-size);
     padding: 1rem;
-    position: absolute;
+    position: fixed;
     top: 20vh;
     min-width: 25rem;
     z-index: 6;

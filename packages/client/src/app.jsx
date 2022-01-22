@@ -44,11 +44,26 @@ async function initContent(web3Context) {
 
   await web3Context.contracts.karmaPaymaster.buyKarma({
     from: accounts[0],
-    value: scaleUpKarma(10),
+    value: scaleUpKarma(20),
   });
   await web3Context.contracts.karma.increaseAllowance(
     web3Context.contracts.karmaPaymaster.address,
     await web3Context.contracts.karma.balanceOf(accounts[0]),
+    { from: accounts[0] }
+  );
+  await web3Context.contracts.content.publish(
+    'Hello world!',
+    scaleUpKarma(1),
+    { from: accounts[0] }
+  );
+  await web3Context.contracts.content.publish(
+    'Howdy Doody',
+    scaleUpKarma(500),
+    { from: accounts[0] }
+  );
+  await web3Context.contracts.content.publish(
+    'Someone\'s poisoned the water hole!',
+    scaleUpKarma(30),
     { from: accounts[0] }
   );
   await web3Context.contracts.content.publish(
