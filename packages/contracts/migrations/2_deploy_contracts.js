@@ -1,7 +1,7 @@
+const Array = artifacts.require("Array");
 const Content = artifacts.require("Content");
 const Karma = artifacts.require("Karma");
 const KarmaPaymaster = artifacts.require("KarmaPaymaster");
-const Search = artifacts.require("Search");
 const Stake = artifacts.require("Stake");
 const String = artifacts.require("String");
 
@@ -13,9 +13,9 @@ module.exports = async function(deployer) {
   await karmaInstance.setMinter(KarmaPaymaster.address);
 
   const forwarder = require( '../build/gsn/Forwarder.json').address;
-  await deployer.deploy(Search);
+  await deployer.deploy(Array);
   await deployer.deploy(String);
-  await deployer.link(Search, Stake);
+  await deployer.link(Array, Stake);
   await deployer.link(String, Stake);
   await deployer.deploy(Stake, forwarder);
 

@@ -3,7 +3,7 @@ pragma solidity ^0.8.6;
 
 import "@opengsn/contracts/src/BaseRelayRecipient.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-import "./Search.sol";
+import "./Array.sol";
 import "./String.sol";
 
 /// @title Connection between two users
@@ -11,7 +11,7 @@ import "./String.sol";
 /// @dev Find more information here: https://github.com/hughes-ch/stakes
 contract Stake is BaseRelayRecipient {
     using EnumerableSet for EnumerableSet.AddressSet;
-    using Search for address[];
+    using Array for address[];
     using String for string;
 
     struct UserData {
@@ -68,8 +68,12 @@ contract Stake is BaseRelayRecipient {
     function getOutgoingStakes(address _user)
         public
         view
-        returns (address[] memory) {
-        return stakes[_user];
+        returns (address[] memory outgoingStakes) {
+        for (uint ii = 0; ii < stakes[_user].length; ii++) {
+            if (stakes[_user][ii] != address(0)) {
+                outgoingStakes = outgoingStakes.append(stakes[_user][ii]);
+            }
+        }
     }
 
     /// @notice Sets user data

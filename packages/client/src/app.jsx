@@ -12,7 +12,7 @@ import {
   Route,
 } from "react-router-dom";
 import config from './config';
-import { initializeGsn, scaleUpKarma } from './common';
+import { initializeGsn } from './common';
 import IpfsContext from './ipfs-context';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import ProfilePage from './profile-page';
@@ -27,66 +27,6 @@ import StakePage from './stake-page';
 import TopMovers from './top-movers';
 import Web3 from 'web3';
 import Web3Context, { disconnected } from './web3-context';
-
-async function initContent(web3Context) {
-  if (!web3Context.activeAccount) {
-    return;
-  }
-
-  const accounts = await web3Context.instance.eth.getAccounts();
-  const contentBalance = await web3Context.contracts.content.balanceOf(
-    accounts[0]
-  );
-
-  if (contentBalance.toNumber() > 0) {
-    return;
-  }
-
-  await web3Context.contracts.karmaPaymaster.buyKarma({
-    from: accounts[0],
-    value: scaleUpKarma(20),
-  });
-  await web3Context.contracts.karma.increaseAllowance(
-    web3Context.contracts.karmaPaymaster.address,
-    await web3Context.contracts.karma.balanceOf(accounts[0]),
-    { from: accounts[0] }
-  );
-  await web3Context.contracts.content.publish(
-    'Hello world!',
-    scaleUpKarma(1),
-    { from: accounts[0] }
-  );
-  await web3Context.contracts.content.publish(
-    'Howdy Doody',
-    scaleUpKarma(500),
-    { from: accounts[0] }
-  );
-  await web3Context.contracts.content.publish(
-    'Someone\'s poisoned the water hole!',
-    scaleUpKarma(30),
-    { from: accounts[0] }
-  );
-  await web3Context.contracts.content.publish(
-    'Hello world!',
-    scaleUpKarma(1),
-    { from: accounts[0] }
-  );
-  await web3Context.contracts.content.publish(
-    'Howdy Doody',
-    scaleUpKarma(500),
-    { from: accounts[0] }
-  );
-  await web3Context.contracts.content.publish(
-    'Someone\'s poisoned the water hole!',
-    scaleUpKarma(30),
-    { from: accounts[0] }
-  );
-
-  await web3Context.contracts.stake.stakeUser(
-    accounts[0],
-    { from: web3Context.activeAccount }
-  );
-}
 
 /**
  * Returns routes protected by the Authenticator
@@ -170,10 +110,6 @@ function App() {
       });
     }
   }, [isMounted]);
-
-  useEffect(() => {
-    initContent(web3Provider);
-  }, [web3Provider]);
 
   const ipfsContext = useMemo(() => {
     return {

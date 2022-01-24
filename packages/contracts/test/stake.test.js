@@ -68,11 +68,9 @@ contract('Stake', (accounts) => {
     
     const numStakes = await instance.getIncomingStakes(accounts[1]);
     const outgoingStakes = await instance.getOutgoingStakes(accounts[0]);
-    const stakesArray = outgoingStakes;
     
     expect(numStakes.toNumber()).to.equal(0);
-    expect(stakesArray.length).to.equal(1);
-    expect(stakesArray).not.to.include(accounts[1]);
+    expect(outgoingStakes.length).to.equal(0);
   });
 
   it('should not allow staking without karma', async () => {

@@ -35,6 +35,12 @@ async function addKarma(event, web3, setPopup) {
     from: web3.activeAccount,
     value: scaleUpKarma(karmaToAdd),
   });
+  
+  await web3.contracts.karma.increaseAllowance(
+    web3.contracts.karmaPaymaster.address,
+    await web3.contracts.karma.balanceOf(web3.activeAccount),
+    { from: web3.activeAccount }
+  );
 }
 
 /**
