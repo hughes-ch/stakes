@@ -119,14 +119,6 @@ function ProfileFrame(props) {
           />
         );
       }}
-      onEditProfile={ () => {
-        setPopup(
-          <EditProfilePopup
-            onSubmit={ async (e) => updateUserData(e, web3, ipfs, setPopup, props) }
-            onCancel={ () => setPopup(undefined) }
-          />
-        );
-      }}
       onAddPost={ () => {
         setPopup(
           <AddPostPopup
@@ -135,14 +127,24 @@ function ProfileFrame(props) {
           />
         );
       }}/>
-  ), [web3, ipfs, props]);
+  ), [web3, props]);
 
   return (
     <React.Fragment>
       { popup }
       <PageFrame title={ props.title }
                  user={ web3.activeAccount }
-                 sidebar={ sidebar }>
+                 sidebar={ sidebar }
+                 onEditProfile={ () => {
+                   setPopup(
+                     <EditProfilePopup
+                       onSubmit={
+                         async (e) => updateUserData(e, web3, ipfs, setPopup, props)
+                       }
+                       onCancel={ () => setPopup(undefined) }
+                     />
+                   );
+                 }}>
         { props.children }
       </PageFrame>
     </React.Fragment>

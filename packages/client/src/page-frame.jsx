@@ -9,7 +9,7 @@ import './page-frame.css';
 import Avatar from './avatar';
 import CenteredContentBox from './centered-content-box';
 import Heading from './heading';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import UserStats from './user-stats';
 
 /**
@@ -41,13 +41,25 @@ function PageFrame(props) {
     return () => resizeObserver.disconnect();
   }, [userInfoRef]);
 
+  const avatar = useMemo(() => {
+    const element = (
+      <Avatar user={ props.user }
+              flexDirection={ avatarDirection }
+      />
+    );
+
+    return (props.onEditProfile) ?
+      (<div className='selectable-div'
+            data-testid='edit-profile-link'
+            onClick={ props.onEditProfile }>{ element }</div>) : element;
+  }, [props.user, avatarDirection, props.onEditProfile]);
+
   return (
     <CenteredContentBox>
       <div className='page-frame'>
         <div>
           <div className='user-info' ref={ userInfoRef }>
-            <Avatar user={ props.user }
-                    flexDirection={ avatarDirection }/>
+            { avatar }
             <UserStats user={ props.user }/>
           </div>
           { props.sidebar }

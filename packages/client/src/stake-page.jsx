@@ -9,7 +9,7 @@ import config from './config';
 import { getReasonablySizedName } from './common';
 import PageFrame from './page-frame';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import StakeButton from './stake-button';
+import StakeSidebar from './stake-sidebar';
 import TopMoverContent from './top-mover-content';
 import { useParams } from "react-router-dom";
 import Web3Context from './web3-context';
@@ -71,7 +71,7 @@ function StakePage() {
     <PageFrame title={ `${name}'s Top Movers` }
                user={ params[config.URL_STAKE_PAGE_PARAM] }
                sidebar={
-                 <StakeButton user={ params[config.URL_STAKE_PAGE_PARAM] }/>
+                 <StakeSidebar user={ params[config.URL_STAKE_PAGE_PARAM] }/>
                }>
       <TopMoverContent account={ params[config.URL_STAKE_PAGE_PARAM] }/>
     </PageFrame>

@@ -13,7 +13,6 @@
     margin-top: 1rem;
     max-width: 70rem;
     min-width: 45rem;
-    overflow: none;
     width: 100%;
 }
 @media only screen and (max-width: 720px) {

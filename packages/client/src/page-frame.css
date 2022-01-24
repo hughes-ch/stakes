@@ -21,6 +21,14 @@
     flex-grow: 1;
     padding-right: 0.5rem;
 }
+.page-frame .selectable-div:hover {
+    cursor: pointer;
+}
+.page-frame .selectable-div:focus {
+    outline: medium auto currentColor;
+    outline: medium auto invert;
+    outline: 5px auto -webkit-focus-ring-color;
+}
 @media only screen and (max-width: 720px) {
     .page-frame {
         align-items: center;

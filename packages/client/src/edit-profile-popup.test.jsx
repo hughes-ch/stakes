@@ -37,7 +37,7 @@ beforeEach(async () => {
     </IpfsContext.Provider>
   );
   
-  const editProfileLink = await screen.findByText('Edit Profile');
+  const editProfileLink = await screen.findByTestId('edit-profile-link');
   editProfileLink.click();
 });
 afterEach(() => {

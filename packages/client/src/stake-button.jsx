@@ -68,11 +68,10 @@ function StakeButton(props) {
   }, [web3, props.user]);
   
   return (
-    <div className='stake-button'>
-      <button onClick={ isStaked ? unstakeUser : stakeUser }>
-        { isStaked ? "Unstake" : "Stake" }
-      </button>
-    </div>
+    <button className='stake-button'
+            onClick={ isStaked ? unstakeUser : stakeUser }>
+      { isStaked ? "Unstake" : "Stake" }
+    </button>
   );
 }
 
