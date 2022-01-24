@@ -27,7 +27,7 @@ afterEach(() => {
 
 describe('the Authenticator component', () => {
   it('does not show content to unauthorized users', async () => {
-    const mockWeb3 = { activeAccount: undefined };
+    const mockWeb3 = { activeAccount: undefined, initialize: (input) => { } };
     const protectedText = 'Hello world!';
     render(
       <Web3Context.Provider value={ mockWeb3 }>
@@ -44,7 +44,7 @@ describe('the Authenticator component', () => {
   });
 
   it('shows content to authorized users', async () => {
-    const mockWeb3 = { activeAccount: 'account' };
+    const mockWeb3 = { activeAccount: 'account', initialize: (input) => { } };
     const protectedText = 'Hello world!';
     render(
       <Web3Context.Provider value={ mockWeb3 }>

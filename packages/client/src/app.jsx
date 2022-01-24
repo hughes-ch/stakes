@@ -132,9 +132,13 @@ function App() {
   }, [isMounted, ipfsNode]);
   
   const [web3Provider, setWeb3Provider] = useState(disconnected);
-  const connectToProvider = useCallback(async () => {
+  const connectToProvider = useCallback(async (isInitialConnect=true) => {
     const provider = window.ethereum;
     if (provider === undefined) {
+      if (!isInitialConnect) {
+        return;
+      }
+      
       const onboarding = new MetaMaskOnboarding({
         forwarderOrigin: window.location.href
       });
@@ -142,7 +146,10 @@ function App() {
     }
 
     const web3 = new Web3(provider);
-    await provider.request({ method: 'eth_requestAccounts' });
+    if (isInitialConnect) {
+      await provider.request({ method: 'eth_requestAccounts' });
+    }
+    
     const [accounts, contracts] = await Promise.all([
       web3.eth.getAccounts(),
       initializeGsn(
