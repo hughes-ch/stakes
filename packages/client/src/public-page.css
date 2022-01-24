@@ -68,17 +68,18 @@
 }
 @media only screen and (max-width: 815px) {
     .public-page > div {
-        font-size: 10vw;
+        font-size: 7vw;
         width: 100vw;
     }
     .public-page button {
-        font-size: 10vw;
+        font-size: 7vw;
+        margin: 14vw;
     }
     .public-page span {
         padding-right: 1rem;
         padding-left: 1rem;
     }
     .public-page h1 {
-        font-size: 15vw;
+        font-size: 10vw;
     }
 }

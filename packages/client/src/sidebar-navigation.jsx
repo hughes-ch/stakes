@@ -13,7 +13,7 @@ function SidebarNavigation(props) {
   return (
     <div className='sidebar-navigation'>
       <button onClick={ props.onAddPost }>New Post</button>
-      <Link to={ config.TOP_MOVERS_URL }>Your Top Movers</Link>
+      <Link to={ config.TOP_MOVERS_URL }>Top Movers</Link>
       <button onClick={ props.onAddKarma }>Add Karma</button>
       <button onClick={ props.onEditProfile }>Edit Profile</button>
     </div>

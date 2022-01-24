@@ -17,6 +17,7 @@
 }
 .sidebar-navigation button {
     all: unset;
+    font-size: var(--link-font-size);
     margin-top: var(--indiv-margin);
 }
 .sidebar-navigation button:hover {
