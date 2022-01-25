@@ -48,7 +48,7 @@ async function createMetaContent(input) {
     html: (
       <div key={ tokenId }>
         { heading }
-        <ContentCard tokenId={ tokenId }/>
+        <ContentCard tokenId={ tokenId } onError={ props.onError }/>
       </div>
     ),
   };

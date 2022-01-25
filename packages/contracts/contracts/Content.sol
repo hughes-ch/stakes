@@ -62,7 +62,7 @@ contract Content is BaseRelayRecipient, ERC721Enumerable {
     function getContentNft(uint256 _tokenId)
         public
         view
-        returns (string memory, uint, uint, address)
+        returns (string memory, uint256, uint256, address)
     {
         ContentNft memory nft = content[_tokenId];
         require(bytes(nft.txt).length > 0, "Invalid tokenId provided");
@@ -101,7 +101,7 @@ contract Content is BaseRelayRecipient, ERC721Enumerable {
 
         address ownerAddress = ownerOf(_tokenId);
         karma.transferFrom(_msgSender(), ownerAddress, content[_tokenId].price);
-        safeTransferFrom(ownerAddress, _msgSender(), _tokenId);
+        _transfer(ownerAddress, _msgSender(), _tokenId);
     }
 
     /// @notice Returns the version of the recipient

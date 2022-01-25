@@ -117,6 +117,7 @@ async function addNewPost(event, web3, setPopup, props) {
 
     props.triggerRefresh();
   } catch (err) {
+    console.log(err);
     await displayError(web3, setPopup);
   }
 }

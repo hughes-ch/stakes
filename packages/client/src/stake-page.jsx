@@ -88,7 +88,10 @@ function StakePage() {
                      onError={ onError }
                    />
                  }>
-        <TopMoverContent account={ params[config.URL_STAKE_PAGE_PARAM] }/>
+        <TopMoverContent
+          account={ params[config.URL_STAKE_PAGE_PARAM] }
+          onError={ onError }
+        />
       </PageFrame>
     </React.Fragment>
   );

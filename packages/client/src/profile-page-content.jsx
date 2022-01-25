@@ -32,10 +32,11 @@ function MetaContent(tokenId, owner) {
  *
  * @param {Function} setState  Hook to set content
  * @param {Object}   web3      Web3 context
+ * @param {Object}   props     React props
  * @param {Ref}      isMounted Ref indicating if component is still mounted
  * @return {undefined}
  */
-async function generateContent(setState, web3, isMounted) {
+async function generateContent(setState, web3, props, isMounted) {
   if (!web3.contracts.stake || !web3.activeAccount) {
     return;
   }
@@ -74,7 +75,7 @@ async function generateContent(setState, web3, isMounted) {
             Shared by { getReasonablySizedName(user) }
           </Link>
         </div>
-        <ContentCard tokenId={ post.tokenId }/>
+        <ContentCard tokenId={ post.tokenId } onError={ props.onError }/>
       </div>
     );
   });
@@ -88,7 +89,7 @@ async function generateContent(setState, web3, isMounted) {
 /**
  * Component
  */
-function ProfilePageContent() {
+function ProfilePageContent(props) {
   const isMounted = useRef(false);
   useEffect(() => {
     isMounted.current = true;
@@ -100,8 +101,8 @@ function ProfilePageContent() {
   const web3 = useContext(Web3Context);
   const [content, setContent] = useState(undefined);
   useEffect(() => {
-    generateContent(setContent, web3, isMounted);
-  }, [web3, isMounted]);
+    generateContent(setContent, web3, props, isMounted);
+  }, [web3, isMounted, props]);
 
   return (
     <div className='content'>

@@ -101,7 +101,7 @@ describe('the ContentCard component', () => {
     );
 
     karmaButton.click();
-    expect(mockAddKarma).toHaveBeenCalled();
+    await waitFor(() => expect(mockAddKarma).toHaveBeenCalled());
   });
 
   it('allows for buying the content', async () => {
@@ -124,6 +124,6 @@ describe('the ContentCard component', () => {
     );
 
     buyNowButton.click();
-    expect(mockBuyContent).toHaveBeenCalled();
+    await waitFor(() => expect(mockBuyContent).toHaveBeenCalled());
   });
 });

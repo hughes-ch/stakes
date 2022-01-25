@@ -66,6 +66,12 @@
     color: var(--lighter-text-color);
     cursor: pointer;
 }
+
+.content-card button:disabled:hover {
+    color: inherit;
+    cursor: inherit;
+}
+
 @media only screen and (max-width: 515px) {
     .content-card button {
         font-size: 2vw;

@@ -211,7 +211,6 @@ contract('Content', (accounts) => {
     );
 
     const tokenId = response.receipt.logs[0].args.tokenId;
-    await contentInstance.approve(buyer, tokenId, { from: publisher });
     await karmaInstance.increaseAllowance(
       contentInstance.address,
       ethers.BigNumber.from(contentPrice),

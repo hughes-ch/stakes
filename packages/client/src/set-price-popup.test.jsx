@@ -101,11 +101,10 @@ describe('The SetPricePopup component', () => {
     const tokenId = tokenIds[matchingPriceIdx];
     
     // Get the index in DOM of the price you wish to set
-    await screen.findAllByText(
-      new RegExp(`Buy Now for ${previousPrice} Karma`)
+    const buyNowButtons = await screen.findAllByText(
+      /Owned \(Price: \d+ Karma\)/
     );
     
-    const buyNowButtons = screen.getAllByText(/Buy Now for \d+ Karma/);
     const indexOfContent = buyNowButtons.findIndex(
       button => button.innerHTML.includes(previousPrice)
     );

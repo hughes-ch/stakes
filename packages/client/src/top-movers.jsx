@@ -8,7 +8,7 @@
 import config from './config';
 import ProfileFrame from './profile-frame';
 import React, { useCallback, useContext, useState } from 'react';
-import { scaleUpKarma } from './common';
+import { displayError, scaleUpKarma } from './common';
 import SetPricePopup from './set-price-popup';
 import TopMoverContent from './top-mover-content';
 import Web3Context from './web3-context';
@@ -59,6 +59,11 @@ function TopMovers() {
   const refresh = useCallback(() => {
     setKey(key + 1);
   }, [key]);
+
+  const onError = useCallback(
+    () => displayError(web3, setPopup),
+    [web3, setPopup]
+  );
   
   return (
     <React.Fragment>
@@ -70,6 +75,7 @@ function TopMovers() {
         <TopMoverContent
           account={ web3.activeAccount }
           createPricePopup={ createPricePopup }
+          onError={ onError }
           key={ key }
         />
       </ProfileFrame>
