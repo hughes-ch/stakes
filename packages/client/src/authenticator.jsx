@@ -7,6 +7,7 @@
  *   :copyright: Copyright (c) 2022 Chris Hughes
  *   :license: MIT License
  */
+import IpfsContext from './ipfs-context';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Web3Context from './web3-context';
@@ -53,6 +54,16 @@ function Authenticator(props) {
       navigateTo('/');
     }
   }, [isLoggedIn, navigateTo]);
+
+  const ipfs = useContext(IpfsContext);
+  useEffect(() => {
+    async function initIpfs() {
+      if (isLoggedIn) {
+        await ipfs.initialize();
+      }
+    }
+    initIpfs();
+  }, [isLoggedIn, ipfs]);
   
   return innerHtml;
 }
