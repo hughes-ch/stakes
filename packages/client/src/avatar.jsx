@@ -56,7 +56,7 @@ function Avatar(props) {
 
   const ipfs = useContext(IpfsContext);
   const web3 = useContext(Web3Context);
-  const [name, setName] = useState(props.user);
+  const [name, setName] = useState('');
   useEffect(() => {
     async function updateUserPic() {
       try {

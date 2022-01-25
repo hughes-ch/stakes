@@ -8,7 +8,9 @@ import '@testing-library/jest-dom';
 import { mockIpfs } from './mocks';
 import Avatar from './avatar';
 import config from './config';
-import { connectToLocalBlockChain, stopLocalBlockChain } from './common';
+import { connectToLocalBlockChain,
+         getReasonablySizedName,
+         stopLocalBlockChain } from './common';
 import IpfsContext from './ipfs-context';
 import { render, screen, waitFor } from '@testing-library/react';
 import Web3Context from './web3-context';
@@ -48,7 +50,7 @@ describe('the Avatar component', () => {
       </IpfsContext.Provider>
     );
 
-    const myAccount = web3Context.activeAccount;
+    const myAccount = getReasonablySizedName(web3Context.activeAccount);
     expect(await screen.findByText(myAccount)).toBeInTheDocument();
   });
 

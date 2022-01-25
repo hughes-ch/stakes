@@ -33,7 +33,8 @@ jest.mock('react-router-dom', () => {
   return {
     __esModule: true,
     ...originalModule,
-    useParams: () => { return { stake: mockStakedUser }; }
+    Link: (props) => { return (<a>{ props.children }</a>); },
+    useParams: () => { return { stake: mockStakedUser }; },
   };
 });
 
