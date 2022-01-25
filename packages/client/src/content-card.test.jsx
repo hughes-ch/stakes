@@ -6,6 +6,7 @@
  */
 import '@testing-library/jest-dom';
 import './mocks';
+import { BrowserRouter as Router } from "react-router-dom";
 import config from './config';
 import { connectToLocalBlockChain,
          getReasonablySizedName,
@@ -49,7 +50,9 @@ describe('the ContentCard component', () => {
   it('renders default content', async () => {
     render(
       <Web3Context.Provider value={ web3Context }>
-        <ContentCard tokenId={ tokenId }/>
+        <Router>
+          <ContentCard tokenId={ tokenId }/>
+        </Router>
       </Web3Context.Provider>
     );
 
@@ -71,7 +74,9 @@ describe('the ContentCard component', () => {
   it('renders the user, content, and karma information', async () => {
     render(
       <Web3Context.Provider value={ web3Context }>
-        <ContentCard tokenId={ tokenId }/>
+        <Router>
+          <ContentCard tokenId={ tokenId }/>
+        </Router>
       </Web3Context.Provider>
     );
 
@@ -86,7 +91,9 @@ describe('the ContentCard component', () => {
     web3Context.contracts.content.addKarmaTo = mockAddKarma;
     render(
       <Web3Context.Provider value={ web3Context }>
-        <ContentCard tokenId={ tokenId }/>
+        <Router>
+          <ContentCard tokenId={ tokenId }/>
+        </Router>
       </Web3Context.Provider>
     );
 
@@ -109,7 +116,9 @@ describe('the ContentCard component', () => {
     web3Context.contracts.content.buyContent = mockBuyContent;
     render(
       <Web3Context.Provider value={ web3Context }>
-        <ContentCard tokenId={ tokenId }/>
+        <Router>
+          <ContentCard tokenId={ tokenId }/>
+        </Router>
       </Web3Context.Provider>
     );
 

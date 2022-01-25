@@ -9,8 +9,9 @@ import './content-card.css';
 import Avatar from './avatar';
 import config from './config';
 import { ethers } from 'ethers';
+import { Link } from "react-router-dom";
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { scaleDownKarma, scaleUpKarma } from './common';
+import { ownerPageUrl, scaleDownKarma, scaleUpKarma } from './common';
 import Web3Context from './web3-context';
 
 const defaultContent = {
@@ -194,7 +195,9 @@ function ContentCard(props) {
 
   return (
     <div className='content-card'>
-      <Avatar user={ content.creator }/>
+      <Link to={ ownerPageUrl(content.creator, web3) }>
+        <Avatar user={ content.creator }/>
+      </Link>
       <span>{ content.text }</span>
       <div>
         <button onClick={ () => {
