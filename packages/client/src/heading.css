@@ -8,28 +8,17 @@
 
 .heading {
     align-items: center;
-    display: grid;
+    display: flex;
     justify-items: right;
     width: 100%;
 }
 .heading > h1 {
     font-size: var(--title-font-size);
-    grid-row: 1;
-    grid-column: 1 / span 3;
     text-align: center;
     width: 100%;
 }
-.heading > form {
-    grid-row: 1;
-    grid-column: 3;
-}
 @media only screen and (max-width: 1000px) {
     .heading > h1 {
-        font-size: 3vw;
-    }
-}
-@media only screen and (max-width: 720px) {
-    .heading > h1 {
-        grid-column: 1 / span 2;        
+        font-size: 2.75vw;
     }
 }
