@@ -1,0 +1,26 @@
+/**
+ *   Style for the StakeButton component
+ *
+ *   :copyright: Copyright (c) 2022 Chris Hughes
+ *   :license: MIT License
+ */
+@import './index.css';
+
+.stake-button {
+    all: unset;
+    font-family: var(--font-family);
+    font-size: var(--link-font-size);
+}
+.stake-button:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+.stake-button:focus {
+    text-decoration: underline;
+}
+@media only screen and (max-width: 720px) {
+    .page-frame .stake-button {
+        color: var(--dark-text-color);
+        font-weight: bold;
+    }
+}

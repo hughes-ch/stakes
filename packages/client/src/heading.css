@@ -1,0 +1,24 @@
+/**
+ *   Style for the Heading component
+ *
+ *   :copyright: Copyright (c) 2022 Chris Hughes
+ *   :license: MIT License
+ */
+@import './index.css';
+
+.heading {
+    align-items: center;
+    display: flex;
+    justify-items: right;
+    width: 100%;
+}
+.heading > h1 {
+    font-size: var(--title-font-size);
+    text-align: center;
+    width: 100%;
+}
+@media only screen and (max-width: 1000px) {
+    .heading > h1 {
+        font-size: 2.75vw;
+    }
+}

@@ -55,9 +55,7 @@ contract('Stake', (accounts) => {
     await instance.stakeUser(accounts[1], { from: accounts[2] });
 
     const numStakes = await instance.getIncomingStakes(accounts[1]);
-    const outgoingStakes = await instance.getOutgoingStakes(
-      {from: accounts[0]}
-    );
+    const outgoingStakes = await instance.getOutgoingStakes(accounts[0]);
     
     expect(numStakes.toNumber()).to.equal(2);
     expect(outgoingStakes.length).to.equal(1);
@@ -69,12 +67,10 @@ contract('Stake', (accounts) => {
     await instance.unstakeUser(accounts[1], { from: accounts[0] });
     
     const numStakes = await instance.getIncomingStakes(accounts[1]);
-    const outgoingStakes = await instance.getOutgoingStakes({from:accounts[0]});
-    const stakesArray = outgoingStakes;
+    const outgoingStakes = await instance.getOutgoingStakes(accounts[0]);
     
     expect(numStakes.toNumber()).to.equal(0);
-    expect(stakesArray.length).to.equal(1);
-    expect(stakesArray).not.to.include(accounts[1]);
+    expect(outgoingStakes.length).to.equal(0);
   });
 
   it('should not allow staking without karma', async () => {
@@ -107,5 +103,76 @@ contract('Stake', (accounts) => {
     // Since calculation of gas is an estimate, just make sure we're in the
     // right ballpark...
     expect(difference).to.be.closeTo(costInEth, difference * 0.1);
+  });
+
+  it('should allow getting and updating user data', async () => {
+    const name = 'Bono';
+    const pic = 'QmT5NvUtoM5nWFfrQdVrFtvGfKFmG7AHE8P34isapyhCxX';
+    const myAccount = accounts[0];
+    await giveSomeKarmaTo(myAccount, paymasterInstance, karmaInstance);
+    await instance.updateUserData(name, pic, 'image/jpg', { from: myAccount });
+    const [receivedName, receivedPic] = await Promise.all([
+      instance.getUserName(myAccount),
+      instance.getUserPic(myAccount),
+    ]);
+    
+    const { 0: cid, 1: filetype } = receivedPic;
+    expect(cid).to.equal(pic);
+    expect(receivedName).to.equal(name);
+  });
+
+  it('should return default content for "visiting" users', async () => {
+    const [receivedName, receivedPic] = await Promise.all([
+      await instance.getUserName(accounts[1]),
+      await instance.getUserPic(accounts[1]),
+    ]);
+
+    const { 0: cid, 1: filetype } = receivedPic;
+    expect(receivedName).is.empty;
+    expect(cid).is.empty;
+  });
+
+  it('should allow searching for user based on address', async () => {
+    const searchedForAccount = accounts[2];
+    const stakedAccount = accounts[4];
+    const notFoundAccount = accounts[5];
+    
+    await giveSomeKarmaTo(searchedForAccount, paymasterInstance, karmaInstance);
+    await instance.stakeUser(stakedAccount, { from: searchedForAccount });
+
+    let hasUserConnected = await instance.userHasConnected(searchedForAccount);
+    expect(hasUserConnected).to.equal(true);
+
+    hasUserConnected = await instance.userHasConnected(notFoundAccount);
+    expect(hasUserConnected).to.equal(false);
+  });
+
+  it('should allow searching for user based on name', async () => {
+    const myAccount = accounts[0];
+    const searchedForAccount = accounts[2];
+
+    const name = 'John Doe';
+    await giveSomeKarmaTo(myAccount, paymasterInstance, karmaInstance);
+    await giveSomeKarmaTo(searchedForAccount, paymasterInstance, karmaInstance);
+    await instance.updateUserData(
+      name, 'picture', 'image/jpg', { from: searchedForAccount }
+    );
+
+    const resultsFromFirst = await instance.searchForUserName(
+      name.split(' ')[0], 0, 10
+    );
+    const resultsFromLast = await instance.searchForUserName(
+      name.split(' ')[1], 0, 10
+    );
+    const resultsFromWhole = await instance.searchForUserName(
+      name, 0, 10
+    );
+    const resultsFromNonMatchingSearch = await instance.searchForUserName(
+      'John Smith', 0, 10
+    );
+
+    expect(resultsFromLast).to.include(searchedForAccount);
+    expect(resultsFromWhole).to.include(searchedForAccount);
+    expect(resultsFromNonMatchingSearch).not.to.include(searchedForAccount);
   });
 });

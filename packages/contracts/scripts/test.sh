@@ -5,10 +5,6 @@
 #  :copyright: Copyright (c) 2022 Chris Hughes
 #  :license: MIT License
 #
-GSN_DIR=build/gsn/
-HOST=127.0.0.1
-PORT=9545
-
 echo Discovering tests...
 TESTS=`find . -name '*.test.js'`
 echo Found tests:
@@ -18,6 +14,7 @@ do
 done
 echo ''
 
+# Find tests with "it.only" mocha feature and only run that unit module
 EXCLUSIVE_TESTS=`grep -l 'it.only' ${TESTS}`
 if [ -n "$EXCLUSIVE_TESTS" ]
 then
@@ -25,18 +22,22 @@ then
     TESTS=$EXCLUSIVE_TESTS
 fi
 
+# Compile and check results
 yarn truffle compile
+if [ $? -ne 0 ]
+then
+    exit 1
+fi
 
+# Execute each test
 for TEST in $TESTS
 do
     echo Starting $TEST...
     yarn truffle dev > /dev/null &
     PID_TRUFFLE_DEV=$!
-
     sleep 10
-    gsn start --workdir ${GSN_DIR} -l error -n "http://${HOST}:${PORT}" &
 
-    sleep 10
+    yarn gsn-start
     yarn truffle test $TEST --compile-none
     ERROR=$?
 

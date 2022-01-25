@@ -1,0 +1,52 @@
+/**
+ *   Style for the StakeSidebar component
+ *
+ *   :copyright: Copyright (c) 2022 Chris Hughes
+ *   :license: MIT License
+ */
+@import './index.css';
+
+.stake-sidebar {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin: 2rem 0rem;
+}
+.stake-sidebar > a {
+    color: var(--light-text-color);
+    font-family: var(--font-family);
+    font-size: var(--link-font-size);
+    margin-top: 3rem;
+    text-align: left;
+    text-decoration: none;
+    width: 100%;
+}
+.stake-sidebar > a:visited {
+    color: var(--light-text-color);
+}
+.stake-sidebar > a:focus, .stake-sidebar > a:hover {
+    text-decoration: underline;
+}
+@media only screen and (max-width: 720px) {
+    .page-frame .stake-sidebar {
+        align-items: center;
+        background-color: var(--light-background-color);
+        border-top: 1px solid var(--dark-text-color);
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        margin: 0px;
+        padding: 0.2rem 0.2rem 2rem 0.2rem;
+        width: 100vw;
+    }
+    .page-frame .stake-sidebar a {
+        color: var(--dark-text-color);
+        font-weight: bold;
+        margin-top: 0px;
+        width: auto;
+    }
+    .page-frame .stake-sidebar a:visited {
+        color: var(--dark-text-color);
+    }
+}

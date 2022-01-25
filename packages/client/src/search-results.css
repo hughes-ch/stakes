@@ -1,0 +1,20 @@
+/**
+ *   Style for the SearchResults component
+ *
+ *   :copyright: Copyright (c) 2022 Chris Hughes
+ *   :license: MIT License
+ */
+@import './index.css';
+
+.search-results {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    width: 100%;
+}
+.search-results .search-content-container {
+    max-width: 45rem;
+    width: 100%;
+}

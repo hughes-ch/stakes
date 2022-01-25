@@ -1,0 +1,66 @@
+/**
+ *   Style for the Popup component
+ *
+ *   :copyright: Copyright (c) 2022 Chris Hughes
+ *   :license: MIT License
+ */
+.popup-fog {
+    background-color: white;
+    height: 100vh;
+    left: 0px;
+    opacity: 0.7;
+    position: fixed;
+    top: 0px;
+    width: 100vw;
+    z-index: 5;
+}
+.popup {
+    --input-border-radius: 0.5rem;
+    
+    align-items: center;
+    background-color: var(--dark-background-color);
+    border-radius: 1rem;
+    color: var(--light-background-color);
+    display: flex;
+    flex-direction: column;
+    font-size: var(--link-font-size);
+    padding: 1rem;
+    position: fixed;
+    top: 20vh;
+    min-width: 25rem;
+    z-index: 6;
+}
+.popup-form h2 {
+    font-size: var(--title-font-size);
+    margin-block-start: 0.5rem;
+    margin-block-end: 2rem;
+}
+.popup .buttons {
+    margin: 3rem 0.5rem 0.5rem 0.5rem;
+}
+.popup .buttons > * {
+    all: unset;
+    background-color: var(--light-background-color);
+    border: solid 2px var(--dark-background-color);
+    border-radius: var(--input-border-radius);
+    box-sizing: border-box;
+    color: var(--dark-text-color);
+    font-size: var(--link-font-size);
+    margin: 0.2rem;
+    padding: 1rem;
+}
+.popup .buttons > *:hover {
+    background-color: var(--light-grey);
+    border: solid 2px var(--light-background-color);
+    cursor: pointer;
+}
+.popup .buttons > *:focus {
+    background-color: var(--light-grey);
+    border: solid 2px var(--light-background-color);
+}
+.popup .buttons > *:disabled {
+    border: solid 2px transparent;
+    color: var(--light-grey);
+    cursor: not-allowed;
+}
+

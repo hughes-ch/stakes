@@ -1,0 +1,47 @@
+/**
+ *   Style for the *Content components
+ *
+ *   :copyright: Copyright (c) 2022 Chris Hughes
+ *   :license: MIT License
+ */
+@import './index.css';
+
+.content {
+    max-height: 90vh;
+    overflow: auto;
+}
+.content > div {
+    margin-bottom: 1rem;
+}
+.content > div > *:nth-child(1) {
+    background-color: var(--light-background-color);
+    border-radius: 0.15rem;
+    box-sizing: border-box;
+    color: var(--dark-text-color);
+    font-size: var(--content-font-size);
+    margin-bottom: 0.2rem;
+    max-width: var(--max-content-width);
+    padding: 0.5rem;
+    text-align: center;
+}
+.content > div > button {
+    all: unset;
+    width: 100%;
+}
+.content > div > button:hover {
+    cursor: pointer;
+}
+.content > div > button:focus {
+    outline: medium auto currentColor;
+    outline: medium auto invert;
+    outline: 5px auto -webkit-focus-ring-color;
+}
+.content a {
+    color: var(--dark-text-color);
+    text-decoration: none;
+}
+@media only screen and (max-width: 720px) {
+    .content {
+        max-height: 85vh;
+    }
+}

@@ -1,0 +1,51 @@
+/**
+ *   Styles for the SidebarNavigation component
+ *
+ *   :copyright: Copyright (c) 2022 Chris Hughes
+ *   :license: MIT License
+ */
+.sidebar-navigation {
+    --indiv-margin: 0.5rem;
+    margin-top: 3rem;
+}
+.sidebar-navigation a {
+    color: var(--light-text-color);
+    display: block;
+    font-size: var(--link-font-size);
+    margin-top: var(--indiv-margin);
+    text-decoration: none;
+}
+.sidebar-navigation button {
+    all: unset;
+    font-size: var(--link-font-size);
+    margin-top: var(--indiv-margin);
+}
+.sidebar-navigation button:hover {
+    cursor: pointer;
+}
+.sidebar-navigation button:focus {
+    outline: medium auto currentColor;
+    outline: medium auto invert;
+    outline: 5px auto -webkit-focus-ring-color;
+}
+@media only screen and (max-width: 720px) {
+    .sidebar-navigation {
+        align-items: center;
+        background-color: var(--light-background-color);
+        border-top: 1px solid var(--dark-text-color);
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 0.2rem 0.2rem 2rem 0.2rem;
+        width: 100vw;
+    }
+    .sidebar-navigation a {
+        color: var(--dark-text-color);
+        font-weight: bold;
+    }
+    .sidebar-navigation button {
+        color: var(--dark-text-color);
+        font-weight: bold;
+    }
+}

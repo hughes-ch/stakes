@@ -1,6 +1,6 @@
 /**
  *   Tests for the Content contract
- *
+ *   
  *   :copyright: Copyright (c) 2021 Chris Hughes
  *   :license: MIT License
  */
@@ -10,6 +10,7 @@ const { clearAccounts,
         giveSomeKarmaTo,
         wrapProvider } = require('./utilities');
 const Content = artifacts.require("Content");
+const { ethers } = require("ethers");
 const Karma = artifacts.require("Karma");
 const KarmaPaymaster = artifacts.require("KarmaPaymaster");
 
@@ -195,5 +196,66 @@ contract('Content', (accounts) => {
     
     const balanceAfter = await karmaInstance.balanceOf(account);
     expect(balanceBefore > balanceAfter).to.be.true;
+  });
+
+  it('allows users to buy content', async () => {
+    const publisher = accounts[0];
+    const buyer = accounts[1];
+
+    const contentTxt = 'Hello world!';
+    const contentPrice = web3.utils.toWei('500', 'gwei'); // KARMA === 1 wei
+    const response = await contentInstance.publish(
+      contentTxt,
+      ethers.BigNumber.from(contentPrice),
+      {from: publisher}
+    );
+
+    const tokenId = response.receipt.logs[0].args.tokenId;
+    await karmaInstance.increaseAllowance(
+      contentInstance.address,
+      ethers.BigNumber.from(contentPrice),
+      { from: buyer }
+    );
+
+    const publisherKarmaBefore = await karmaInstance.balanceOf(publisher);
+    const buyerKarmaBefore = await karmaInstance.balanceOf(buyer);
+    await contentInstance.buyContent(tokenId, { from: buyer });
+    const publisherKarmaAfter = await karmaInstance.balanceOf(publisher);
+    const buyerKarmaAfter = await karmaInstance.balanceOf(buyer);
+    
+    expect((await contentInstance.balanceOf(publisher)).toNumber()).to.equal(0);
+    expect((await contentInstance.balanceOf(buyer)).toNumber()).to.equal(1);
+
+    const publisherKarmaIncrease = publisherKarmaAfter.sub(publisherKarmaBefore);
+    expect(
+      publisherKarmaIncrease.gte(contentPrice),
+      `Expected karma to increase by ${contentPrice}. Got ${publisherKarmaIncrease}`
+    ).to.be.true;
+
+    const buyerKarmaDecrease = buyerKarmaBefore.sub(buyerKarmaAfter);
+    expect(
+      buyerKarmaDecrease.gte(contentPrice),
+      `Expected karma to decrease by ${contentPrice}. Got ${buyerKarmaDecrease}`
+    ).to.be.true;
+  });
+
+  it('rejects purchases without enough karma', async () => {
+    const publisher = accounts[0];
+    const buyer = accounts[1];
+    const buyerKarma = await karmaInstance.balanceOf(buyer);
+
+    const contentTxt = 'Hello world!';
+    const contentPrice = buyerKarma * 2;
+    const response = await contentInstance.publish(
+      contentTxt,
+      contentPrice.toString(),
+      {from: publisher}
+    );
+
+    const tokenId = response.receipt.logs[0].args.tokenId;
+
+    expect(await getErrorType(
+      contentInstance.buyContent(tokenId)
+    )).not.to.be.null;
   });
 });

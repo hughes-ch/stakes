@@ -3,10 +3,12 @@
   "packageManager": "yarn@3.1.1",
   "devDependencies": {
     "chai": "^4.3.4",
-    "truffle": "^5.4.26"
+    "truffle": "^5.4.26",
+    "ethers": "^5.5.3"
   },
   "scripts": {
     "build": "yarn run truffle compile",
+    "gsn-start": "bash scripts/gsn-start.sh",
     "test": "bash scripts/test.sh"
   },
   "dependencies": {

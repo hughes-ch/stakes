@@ -1,0 +1,42 @@
+/**
+ *   Style for the PopupForm component
+ *
+ *   :copyright: Copyright (c) 2022 Chris Hughes
+ *   :license: MIT License
+ */
+.popup-form input[type=number], .popup-form input[type=text] {
+    background-color: var(--light-background-color);
+    border: none;
+    border-radius: var(--input-border-radius);
+    color: var(--dark-text-color);
+    font-family: var(--font-family);
+    font-size: var(--link-font-size);
+    margin: 0.5rem;
+    padding: 0.5rem 1rem;
+}
+.popup-form input[type=file] {
+    display: none;
+}
+.popup-form label {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+.popup-form img {
+    border-radius: 50%;
+    height: var(--picture-size-small);
+    object-fit: cover;
+    margin: 0.5rem;
+}
+.popup-form textarea {
+    background-color: var(--light-background-color);
+    border-radius: var(--input-border-radius);
+    color: var(--dark-text-color);
+    font-family: var(--font-family);
+    font-size: var(--content-font-size);
+    height: 6rem;
+    margin-bottom: 2rem;
+    padding: 0.5rem;
+    resize: none;
+    width: 75vw;
+}
