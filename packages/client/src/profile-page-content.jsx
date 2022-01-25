@@ -10,7 +10,7 @@ import ContentCard from './content-card';
 import config from './config';
 import { ethers } from 'ethers';
 import { Link } from "react-router-dom";
-import { getReasonablySizedName, range } from './common';
+import { getReasonablySizedName, ownerPageUrl, range } from './common';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Web3Context from './web3-context';
 
@@ -71,7 +71,7 @@ async function generateContent(setState, web3, props, isMounted) {
     post.html = (
       <div key={ post.tokenId }>
         <div>
-          <Link to={ `${config.URL_STAKE_PAGE}/${post.owner}` }>
+          <Link to={ ownerPageUrl(post.owner, web3) }>
             Shared by { getReasonablySizedName(user) }
           </Link>
         </div>

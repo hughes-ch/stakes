@@ -264,6 +264,19 @@ async function displayError(web3, setPopup) {
   );
 }
 
+/**
+ * Returns the owner's page URL
+ *
+ * @param {String} owner The content owner
+ * @param {Object} web3  Web3 Context
+ * @return {String}
+ */
+function ownerPageUrl(owner, web3) {
+  return owner === web3.activeAccount ?
+    config.TOP_MOVERS_URL :
+    `${config.URL_STAKE_PAGE}/${owner}`;
+}
+
 export { connectContractsToProvider,
          connectToLocalBlockChain,
          displayError,
@@ -271,6 +284,7 @@ export { connectContractsToProvider,
          getFromIpfs,
          getReasonablySizedName,
          initializeGsn,
+         ownerPageUrl,
          range,
          scaleDownKarma,
          scaleUpKarma,
