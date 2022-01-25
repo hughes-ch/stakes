@@ -6,7 +6,7 @@
  *   :license: MIT License
  */
 import config from './config';
-import Popup from './popup';
+import PopupForm from './popup-form';
 import React, { useState } from 'react';
 
 /**
@@ -25,9 +25,9 @@ function SetPricePopup(props) {
   };
   
   return (
-    <Popup onSubmit={ props.onSubmit }
-           onCancel={ props.onCancel }
-           disabled={ error !== ''}>
+    <PopupForm onSubmit={ props.onSubmit }
+               onCancel={ props.onCancel }
+               disabled={ error !== ''}>
       <h2>Set Price</h2>
       <label htmlFor={ config.PRICE_ENTRY_NAME }>
         Resell Value (Karma):
@@ -38,7 +38,7 @@ function SetPricePopup(props) {
              onChange={ validate }
              value={ price }/>
       <span>{ error }</span>
-    </Popup>
+    </PopupForm>
   );
 }
 

@@ -24,7 +24,7 @@ function SearchContentCard(props) {
         <Avatar user={ props.account } flexDirection='row'/>
       </Link>
       <UserStats user={ props.account }/>
-      <StakeButton user={ props.account }/>
+      <StakeButton user={ props.account } onError={ props.onError }/>
     </div>
   );
 }

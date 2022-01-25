@@ -11,7 +11,7 @@ import EditProfilePopup from './edit-profile-popup';
 import IpfsContext from './ipfs-context';
 import PageFrame from './page-frame';
 import React, { useContext, useMemo, useState } from 'react';
-import { scaleUpKarma } from './common';
+import { displayError, scaleUpKarma } from './common';
 import SidebarNavigation from './sidebar-navigation';
 import Web3Context from './web3-context';
 
@@ -31,16 +31,20 @@ async function addKarma(event, web3, setPopup) {
   }
 
   const karmaToAdd = event.target.elements[config.KARMA_ENTRY_NAME].value;
-  await web3.contracts.karmaPaymaster.buyKarma({
-    from: web3.activeAccount,
-    value: scaleUpKarma(karmaToAdd),
-  });
-  
-  await web3.contracts.karma.increaseAllowance(
-    web3.contracts.karmaPaymaster.address,
-    await web3.contracts.karma.balanceOf(web3.activeAccount),
-    { from: web3.activeAccount }
-  );
+  try {
+    await web3.contracts.karmaPaymaster.buyKarma({
+      from: web3.activeAccount,
+      value: scaleUpKarma(karmaToAdd),
+    });
+    
+    await web3.contracts.karma.increaseAllowance(
+      web3.contracts.karmaPaymaster.address,
+      await web3.contracts.karma.balanceOf(web3.activeAccount),
+      { from: web3.activeAccount }
+    );
+  } catch(err) {
+    await displayError(web3, setPopup);
+  }
 }
 
 /**
@@ -72,12 +76,17 @@ async function updateUserData(event, web3, ipfs, setPopup, props) {
     fileLocation = cid.toString();
     filetype = files[0].type;
   } 
-  
-  await web3.contracts.stake.updateUserData(
-    name, fileLocation, filetype, { from: web3.activeAccount }
-  );
 
-  props.triggerRefresh();
+  try {
+    await web3.contracts.stake.updateUserData(
+      name, fileLocation, filetype, { from: web3.activeAccount }
+    );
+
+    props.triggerRefresh();
+    
+  } catch (err) {
+    await displayError(web3, setPopup);
+  }
 }
 
 /**
@@ -101,11 +110,15 @@ async function addNewPost(event, web3, setPopup, props) {
     event.target.elements[config.POST_PRICE_ENTRY].value
   );
   
-  await web3.contracts.content.publish(
-    content, price, { from: web3.activeAccount }
-  );
+  try {
+    await web3.contracts.content.publish(
+      content, price, { from: web3.activeAccount }
+    );
 
-  props.triggerRefresh();
+    props.triggerRefresh();
+  } catch (err) {
+    await displayError(web3, setPopup);
+  }
 }
 
 /**

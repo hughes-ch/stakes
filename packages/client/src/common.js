@@ -8,6 +8,7 @@ import all from 'it-all';
 import { concat as uint8ArrayConcat } from 'uint8arrays/concat';
 import config from './config';
 import contract from '@truffle/contract';
+import ErrorPopup from './error-popup';
 import { RelayProvider } from '@opengsn/provider';
 import { startBlockchain,
          stopBlockchain } from '@stakes/contracts/scripts/local-blockchain';
@@ -243,8 +244,29 @@ function getReasonablySizedName(name) {
   return sizeCheckedName;
 }
 
+/**
+ * Display an error message to the user
+ */
+async function displayError(web3, setPopup) {
+  const karmaBalance = scaleDownKarma(
+    await web3.contracts.karma.balanceOf(web3.activeAccount)
+  );
+
+  const msg = karmaBalance <= config.LOW_KARMA_WARNING ?
+        'Your Karma might be too low for that action' :
+        'Try checking your connection and try again';
+  
+  setPopup(
+    <ErrorPopup
+      msg={ msg }
+      onClick={ () => setPopup(undefined) }
+    />
+  );
+}
+
 export { connectContractsToProvider,
          connectToLocalBlockChain,
+         displayError,
          fitTextWidthToContainer,
          getFromIpfs,
          getReasonablySizedName,

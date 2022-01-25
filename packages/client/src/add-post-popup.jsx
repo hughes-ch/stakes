@@ -5,7 +5,7 @@
  *   :license: MIT License
  */
 import config from './config';
-import Popup from './popup';
+import PopupForm from './popup-form';
 import React, { useState } from 'react';
 
 /**
@@ -34,9 +34,9 @@ function AddPostPopup(props) {
   };
   
   return (
-    <Popup onSubmit={ props.onSubmit }
-           onCancel={ props.onCancel }
-           disabled={ error !== '' }>
+    <PopupForm onSubmit={ props.onSubmit }
+               onCancel={ props.onCancel }
+               disabled={ error !== '' }>
       <h2>New Post</h2>
       <label htmlFor={ config.POST_CONTENT_ENTRY }>
         Post Content: 
@@ -55,7 +55,7 @@ function AddPostPopup(props) {
              onChange={ validatePrice }
              value={ price }/>
       <span>{ error }</span>
-    </Popup>
+    </PopupForm>
   );
 }
 

@@ -10,7 +10,7 @@ import config from './config';
 import { connectToLocalBlockChain, stopLocalBlockChain } from './common';
 import IpfsContext from './ipfs-context';
 import { mockIpfs } from "./mocks";
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import SearchResults from './search-results';
 import userEvent from '@testing-library/user-event';
 import Web3Context from './web3-context';
@@ -86,5 +86,22 @@ describe('The SearchResults component', () => {
     renderSearchResults();
     
     expect(await screen.findByText('No results found')).toBeInTheDocument();
+  });
+
+  it('displays error when user runs out of karma', async () => {
+    mockQuery = userAccounts[0].name;
+    renderSearchResults();
+
+    const origStakeUser = web3Context.contracts.stake.stakeUser;
+    web3Context.contracts.stake.stakeUser = (user, params) => {
+      throw new Error();
+    };
+    
+    const stakeButton = await screen.findByText('Stake');
+    await userEvent.click(stakeButton);
+    web3Context.contracts.stake.stakeUser = origStakeUser;
+
+    expect(await screen.findByText('Unstake')).toBeInTheDocument();
+    expect(await screen.findByText('Something Went Wrong')).toBeInTheDocument();
   });
 });

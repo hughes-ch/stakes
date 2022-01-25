@@ -7,7 +7,7 @@
 import config from './config';
 import { getFromIpfs } from './common';
 import IpfsContext from './ipfs-context';
-import Popup from './popup';
+import PopupForm from './popup-form';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Web3Context from './web3-context';
 
@@ -111,9 +111,9 @@ function EditProfilePopup(props) {
   };
 
   return (
-    <Popup onSubmit={ props.onSubmit }
-           onCancel={ props.onCancel }
-           disabled={ error !== '' }>
+    <PopupForm onSubmit={ props.onSubmit }
+               onCancel={ props.onCancel }
+               disabled={ error !== '' }>
       <h2>Edit Profile</h2>
       <label htmlFor={ config.PROFILE_PIC_ENTRY } style={{ cursor: 'pointer' }}>
         <img ref={ img } alt='Preview'/>
@@ -135,7 +135,7 @@ function EditProfilePopup(props) {
              onChange={ validateName }
              value={ name }/>
       <span>{ error }</span>
-    </Popup>
+    </PopupForm>
   );
 }
 

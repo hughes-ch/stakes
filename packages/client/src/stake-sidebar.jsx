@@ -16,7 +16,7 @@ import StakeButton from './stake-button';
 function StakeSidebar(props) {
   return (
     <div className='stake-sidebar'>
-      <StakeButton user={ props.user }/>
+      <StakeButton user={ props.user } onError={ props.onError }/>
       <Link to={ config.URL_PROFILE }>Trending</Link>      
     </div>
   );

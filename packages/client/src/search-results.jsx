@@ -7,9 +7,9 @@
 import './search-results.css';
 import CenteredContentBox from './centered-content-box';
 import config from './config';
-import { getReasonablySizedName } from './common';
+import { displayError, getReasonablySizedName } from './common';
 import Heading from './heading';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import SearchContentCard from './search-content-card';
 import { useParams } from "react-router-dom";
 import Web3Context from './web3-context';
@@ -25,6 +25,12 @@ function SearchResults() {
   }, [params]);
   
   const web3 = useContext(Web3Context);
+  const [popup, setPopup] = useState(undefined);
+  const onError = useCallback(
+    () => displayError(web3, setPopup),
+    [web3, setPopup]
+  );
+  
   const [searchResults, setSearchResults] = useState('');
   useEffect(() => {
     async function findSearchResults() {
@@ -51,7 +57,7 @@ function SearchResults() {
       if (accounts.length) {
         setSearchResults(accounts.map(account => (
           <div key={ account } className='search-content-container'>
-            <SearchContentCard account={ account }/>
+            <SearchContentCard account={ account } onError={ onError }/>
           </div>
         )));
       } else {
@@ -59,17 +65,20 @@ function SearchResults() {
       }
     }
     findSearchResults();
-  }, [query, web3]);
-  
+  }, [query, web3, onError]);
+
   return (
-    <CenteredContentBox>
-      <div className='search-results'>
-        <Heading
-          title={ `Search Results for "${getReasonablySizedName(query)}"` }
-        />
-        { searchResults }
-      </div>
-    </CenteredContentBox>
+    <React.Fragment>
+      { popup }
+      <CenteredContentBox>
+        <div className='search-results'>
+          <Heading
+            title={ `Search Results for "${getReasonablySizedName(query)}"` }
+          />
+          { searchResults }
+        </div>
+      </CenteredContentBox>
+    </React.Fragment>
   );
 }
 

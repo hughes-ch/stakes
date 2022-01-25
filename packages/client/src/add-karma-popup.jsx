@@ -6,7 +6,7 @@
  */
 import config from './config';
 import { ethers } from 'ethers';
-import Popup from './popup';
+import PopupForm from './popup-form';
 import { scaleUpKarma } from './common';
 import React, { useState } from 'react';
 
@@ -50,9 +50,9 @@ function AddKarmaPopup(props) {
   };
   
   return (
-    <Popup onSubmit={ props.onSubmit }
-           onCancel={ props.onCancel }
-           disabled={ error !== '' }>
+    <PopupForm onSubmit={ props.onSubmit }
+               onCancel={ props.onCancel }
+               disabled={ error !== '' }>
       <h2>Add Karma</h2>
       <label htmlFor={ config.KARMA_ENTRY_NAME }>{ estimatedCost }</label>
       <input type="number"
@@ -61,7 +61,7 @@ function AddKarmaPopup(props) {
              onChange={ validate }
              value={ karma }/>
       <span>{ error }</span>
-    </Popup>
+    </PopupForm>
   );
 }
 

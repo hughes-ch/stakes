@@ -30,34 +30,10 @@
     min-width: 25rem;
     z-index: 6;
 }
-.popup h2 {
+.popup-form h2 {
     font-size: var(--title-font-size);
     margin-block-start: 0.5rem;
     margin-block-end: 2rem;
-}
-.popup input[type=number], .popup input[type=text] {
-    background-color: var(--light-background-color);
-    border: none;
-    border-radius: var(--input-border-radius);
-    color: var(--dark-text-color);
-    font-family: var(--font-family);
-    font-size: var(--link-font-size);
-    margin: 0.5rem;
-    padding: 0.5rem 1rem;
-}
-.popup input[type=file] {
-    display: none;
-}
-.popup label {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-}
-.popup img {
-    border-radius: 50%;
-    height: var(--picture-size-small);
-    object-fit: cover;
-    margin: 0.5rem;
 }
 .popup .buttons {
     margin: 3rem 0.5rem 0.5rem 0.5rem;
@@ -87,15 +63,4 @@
     color: var(--light-grey);
     cursor: not-allowed;
 }
-.popup textarea {
-    background-color: var(--light-background-color);
-    border-radius: var(--input-border-radius);
-    color: var(--dark-text-color);
-    font-family: var(--font-family);
-    font-size: var(--content-font-size);
-    height: 6rem;
-    margin-bottom: 2rem;
-    padding: 0.5rem;
-    resize: none;
-    width: 75vw;
-}
+

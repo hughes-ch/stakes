@@ -6,9 +6,13 @@
  *   :license: MIT License
  */
 import config from './config';
-import { getReasonablySizedName } from './common';
+import { displayError, getReasonablySizedName } from './common';
 import PageFrame from './page-frame';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback,
+                useContext,
+                useEffect,
+                useRef,
+                useState } from 'react';
 import StakeSidebar from './stake-sidebar';
 import TopMoverContent from './top-mover-content';
 import { useParams } from "react-router-dom";
@@ -66,15 +70,27 @@ function StakePage() {
       setName: setName,
     });
   }, [params, web3, setName]);
+
+  const [popup, setPopup] = useState(undefined);
+  const onError = useCallback(
+    () => displayError(web3, setPopup),
+    [web3, setPopup]
+  );
   
   return (
-    <PageFrame title={ `${name}'s Top Movers` }
-               user={ params[config.URL_STAKE_PAGE_PARAM] }
-               sidebar={
-                 <StakeSidebar user={ params[config.URL_STAKE_PAGE_PARAM] }/>
-               }>
-      <TopMoverContent account={ params[config.URL_STAKE_PAGE_PARAM] }/>
-    </PageFrame>
+    <React.Fragment>
+      { popup }
+      <PageFrame title={ `${name}'s Top Movers` }
+                 user={ params[config.URL_STAKE_PAGE_PARAM] }
+                 sidebar={
+                   <StakeSidebar
+                     user={ params[config.URL_STAKE_PAGE_PARAM] }
+                     onError={ onError }
+                   />
+                 }>
+        <TopMoverContent account={ params[config.URL_STAKE_PAGE_PARAM] }/>
+      </PageFrame>
+    </React.Fragment>
   );
 }
 
