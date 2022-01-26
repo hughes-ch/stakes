@@ -7,7 +7,6 @@
 import all from 'it-all';
 import { concat as uint8ArrayConcat } from 'uint8arrays/concat';
 import config from './config';
-import contract from '@truffle/contract';
 import ErrorPopup from './error-popup';
 import { RelayProvider } from '@opengsn/provider';
 import { startBlockchain,
@@ -32,6 +31,8 @@ function toCamelCase(str) {
  * @return {Promise} Resolves to deployed contract instances
  */
 async function connectContractsToProvider(contracts, provider) {
+  const contract = (await import('@truffle/contract')).default;
+
   return Object.fromEntries(
     await Promise.all(
       contracts.map(async name => {
@@ -67,6 +68,12 @@ async function initializeGsn(origProvider, contracts) {
     jsonStringifyRequest: true,
     loggerConfiguration: { logLevel: 'error' },
   };
+
+  if (forwarder.address === config.RINKEBY_FORWARDER_ADDRESS) {
+    providerConfig.relayLookupWindowBlocks = 1e5;
+    providerConfig.relayRegistrationLookupBlocks = 1e5;
+    providerConfig.pastEventsQueryMaxPageSize = 2e4;
+  }
 
   const gsnProvider = await RelayProvider.newProvider({
     provider: origProvider,

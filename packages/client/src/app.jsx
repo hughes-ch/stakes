@@ -4,7 +4,6 @@
  *   :copyright: Copyright (c) 2022 Chris Hughes
  *   :license: MIT License
  */
-import * as IPFS from 'ipfs-core';
 import Authenticator from './authenticator';
 import {
   BrowserRouter as Router,
@@ -14,7 +13,6 @@ import {
 import config from './config';
 import { initializeGsn } from './common';
 import IpfsContext from './ipfs-context';
-import MetaMaskOnboarding from '@metamask/onboarding';
 import ProfilePage from './profile-page';
 import PublicPage from './public-page';
 import React, { useCallback,
@@ -25,7 +23,6 @@ import React, { useCallback,
 import SearchResults from './search-results';
 import StakePage from './stake-page';
 import TopMovers from './top-movers';
-import Web3 from 'web3';
 import Web3Context, { disconnected } from './web3-context';
 
 /**
@@ -64,7 +61,8 @@ function App() {
     if (ipfsNode) {
       return;
     }
-    
+
+    const IPFS = await import('ipfs-core');
     const ipfs = await IPFS.create();
     if (isMounted.current) {
       setIpfsNode(ipfs);
@@ -79,12 +77,14 @@ function App() {
         return;
       }
       
+      const MetaMaskOnboarding = (await import('@metamask/onboarding')).default;
       const onboarding = new MetaMaskOnboarding({
         forwarderOrigin: window.location.href
       });
       onboarding.startOnboarding();
     }
 
+    const Web3 = (await import('web3')).default;
     const web3 = new Web3(provider);
     if (isInitialConnect) {
       await provider.request({ method: 'eth_requestAccounts' });
