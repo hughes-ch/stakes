@@ -6,6 +6,17 @@
  */
 
 /**
+ * Mock IPFS object
+ */
+const mockCid = 1232423;
+const mockIpfs = {
+  add: (file) => { return { cid: mockCid }; },
+  cat: (cid) => [mockCid],
+  lastAssignedCid: mockCid,
+  initialize: () => {},
+};
+
+/**
  * Mock fitTestWidthToContainer (canvas not implemented in Jest)
  */
 jest.mock('./common', () => {
@@ -15,6 +26,13 @@ jest.mock('./common', () => {
     ...originalModule,
     fitTextWidthToContainer: jest.fn(() => {}),
     getFromIpfs: (ipfs, cid) => [cid],
+    pingInfura: (api, args, data) => {
+      return {
+        json: () => {
+          return { Hash: mockCid.toString() };
+        },
+      };
+    },
   };
 });
 
@@ -35,16 +53,5 @@ function createObjectURL() {
   return '';
 }
 window.URL.createObjectURL = createObjectURL;
-
-/**
- * Mock IPFS object
- */
-const mockCid = 1232423;
-const mockIpfs = {
-  add: (file) => { return { cid: mockCid }; },
-  cat: (cid) => [mockCid],
-  lastAssignedCid: mockCid,
-  initialize: () => {},
-};
 
 export { mockIpfs };
