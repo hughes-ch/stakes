@@ -22,3 +22,22 @@ Purchasing content from a user:
 
 https://user-images.githubusercontent.com/17994407/151448984-438f2bc0-18e6-4e9e-a2aa-d8111eb04376.mp4
 
+## Technical Overview
+Stakes uses the yarn package manager to handle installation and workspaces. There are two workspaces, both can be deployed individually:
+1. The React frontend (client package)
+2. The Solidity backend (contracts package)
+
+### React Frontend
+The React frontend is a create-react-app project that's been integrated with [Truffle Contracts](https://github.com/trufflesuite/truffle/tree/develop/packages/contract) and [js-ipfs](https://github.com/ipfs/js-ipfs). Apart from those two modules, it's a pretty standard React app that leverages react-router so it can be used as a single page application. 
+
+Each component is given access to two contexts:
+1. The Web3Context
+2. The IpfsContext
+
+The Web3Context serves as an interface to the web3js provider, contains information about the currently connected Metamask account, and provides an interface to the Solidity contracts through @truffle/contract. This context is setup as soon as a client selects the "Connect" button on the public index page. 
+
+When a client selects "Connect," an IPFS instance is also started in their browser. Stakes uses IPFS to store user pictures. The actual text content of their posts and the IPFS address of their images are stored on the Ethereum blockchain. When the application needs to fetch a user image, it first needs to retrieve the CID from the chain, and then it needs to retrieve the image from the IPFS network. The IpfsContext provides the interface for the second step. As an aside: user image uploads are sent directly to Infura's IPFS interface to prevent images from being pinned on a local IPFS node which then shuts down as soon as the browser is closed. This ensures that images are as readily-available as possible on the IPFS network.
+
+At the top level of the application (in the App component), an Authenticator component verifies that the Web3Context is setup and associated with a valid Metamask account. If this is the case, it allows routing to the "protected" paths (anything that isn't the public page). Otherwise, it routes back to the public page.
+
+Stakes leverages code splitting due to the (sometimes) slow nature of IPFS and the large size of the IPFS and @truffle/contracts
