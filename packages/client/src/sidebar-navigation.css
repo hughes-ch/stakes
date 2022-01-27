@@ -4,6 +4,8 @@
  *   :copyright: Copyright (c) 2022 Chris Hughes
  *   :license: MIT License
  */
+@import './index.css';
+
 .sidebar-navigation {
     --indiv-margin: 0.5rem;
     margin-top: 3rem;
@@ -16,9 +18,15 @@
     text-decoration: none;
 }
 .sidebar-navigation button {
-    all: unset;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background: none;
+    border: none;
+    color: inherit;
+    font-family: var(--font-family);
     font-size: var(--link-font-size);
     margin-top: var(--indiv-margin);
+    padding: 0px;
 }
 .sidebar-navigation button:hover {
     cursor: pointer;

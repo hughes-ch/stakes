@@ -25,7 +25,11 @@
     text-align: center;
 }
 .content > div > button {
-    all: unset;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background: none;
+    border: none;
+    font-family: var(--font-family);
     width: 100%;
 }
 .content > div > button:hover {

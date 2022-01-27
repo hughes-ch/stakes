@@ -44,8 +44,10 @@
     text-transform: uppercase;
 }
 .public-page button {
-    all: unset;
+    -moz-appearance: none;
+    -webkit-appearance: none;
     background-color: var(--dark-background-color);
+    border: none;
     border-radius: 1rem;
     color: var(--light-text-color);
     font-family: var(--font-family);
