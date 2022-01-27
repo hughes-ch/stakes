@@ -59,15 +59,19 @@ function Avatar(props) {
   const [name, setName] = useState('');
   useEffect(() => {
     async function updateUserPic() {
+      if (!props.user) {
+        return;
+      }
+      
       try {
         const { 0: userPic,
                 1: filetype } = await web3.contracts.stake.getUserPic(
                   props.user
                 );
-        
+
         if (userPic) {
           const data = await getFromIpfs(ipfs, userPic);
-          if (data.length > 0) {
+          if (data.length > 0 && window.URL && img.current) {
             const blob = new Blob([data], { type: filetype });
             img.current.src = window.URL.createObjectURL(blob);
           }
@@ -75,6 +79,7 @@ function Avatar(props) {
           setDefaultImg(img, isMounted);
         }
       } catch (err) {
+        console.log(err);
         setDefaultImg(img, isMounted);
       }
     }

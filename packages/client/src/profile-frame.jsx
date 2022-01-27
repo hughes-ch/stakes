@@ -8,10 +8,9 @@ import AddKarmaPopup from './add-karma-popup';
 import AddPostPopup from './add-post-popup';
 import config from './config';
 import EditProfilePopup from './edit-profile-popup';
-import IpfsContext from './ipfs-context';
 import PageFrame from './page-frame';
 import React, { useContext, useMemo, useState } from 'react';
-import { displayError, scaleUpKarma } from './common';
+import { displayError, pingInfura, scaleUpKarma } from './common';
 import SidebarNavigation from './sidebar-navigation';
 import Web3Context from './web3-context';
 
@@ -48,16 +47,30 @@ async function addKarma(event, web3, setPopup) {
 }
 
 /**
+ * Adds file to IPFS by pinning to Infura node
+ *
+ * @param {File} file File to add
+ * @return {Promise}
+ */
+async function addToIpfs(file) {
+  const formData = new FormData();
+  formData.append(file.name, file);
+
+  const response = await pingInfura('/api/v0/add', [], formData);
+  const json = await response.json();
+  return json.Hash;
+}
+
+/**
  * Updates user data on chain and uploads to IPFS
  *
  * @param {Object}   event    submit event
  * @param {Context}  web3     Web3 context
- * @param {Context}  ipfs     IPFS context
  * @param {Function} setPopup Function to set (or clear) popups
  * @param {Object}   props    React properties
  * @return {Promise}
  */
-async function updateUserData(event, web3, ipfs, setPopup, props) {
+async function updateUserData(event, web3, setPopup, props) {
   event.preventDefault();
   setPopup(undefined);
   if (!web3.activeAccount) {
@@ -71,13 +84,12 @@ async function updateUserData(event, web3, ipfs, setPopup, props) {
           web3.activeAccount
         );
   
-  if (files.length > 0) {
-    const { cid } = await ipfs.add(files[0]);
-    fileLocation = cid.toString();
-    filetype = files[0].type;
-  } 
-
   try {
+    if (files.length > 0) {
+      fileLocation = await addToIpfs(files[0]);
+      filetype = files[0].type;
+    } 
+
     await web3.contracts.stake.updateUserData(
       name, fileLocation, filetype, { from: web3.activeAccount }
     );
@@ -117,7 +129,6 @@ async function addNewPost(event, web3, setPopup, props) {
 
     props.triggerRefresh();
   } catch (err) {
-    console.log(err);
     await displayError(web3, setPopup);
   }
 }
@@ -128,7 +139,6 @@ async function addNewPost(event, web3, setPopup, props) {
 function ProfileFrame(props) {
   const [popup, setPopup] = useState(undefined);
   const web3 = useContext(Web3Context);
-  const ipfs = useContext(IpfsContext);
   const sidebar = useMemo(() => (
     <SidebarNavigation
       onAddKarma={ () => {
@@ -159,7 +169,7 @@ function ProfileFrame(props) {
                    setPopup(
                      <EditProfilePopup
                        onSubmit={
-                         async (e) => updateUserData(e, web3, ipfs, setPopup, props)
+                         async (e) => updateUserData(e, web3, setPopup, props)
                        }
                        onCancel={ () => setPopup(undefined) }
                      />

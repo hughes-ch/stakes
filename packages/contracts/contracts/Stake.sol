@@ -28,6 +28,7 @@ contract Stake is BaseRelayRecipient {
     event UserStaked(address from, address to);
     event UserUnstaked(address from, address to);
     event SearchAssociation(bytes key, address to);
+    event UpdateUserData(string name, string picture, string filetype);
 
     /// @notice constructor
     /// @param _trustedForwarder GSN trusted forwarder
@@ -104,6 +105,7 @@ contract Stake is BaseRelayRecipient {
         userData[_msgSender()].name = _name;
         userData[_msgSender()].picture = _picture;
         userData[_msgSender()].filetype = _filetype;
+        emit UpdateUserData(_name, _picture, _filetype);
         
         // Add new name to searchAssociations container
         bytes[] memory newSplitName = _name.split();

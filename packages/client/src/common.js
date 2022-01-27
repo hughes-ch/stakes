@@ -7,7 +7,6 @@
 import all from 'it-all';
 import { concat as uint8ArrayConcat } from 'uint8arrays/concat';
 import config from './config';
-import contract from '@truffle/contract';
 import ErrorPopup from './error-popup';
 import { RelayProvider } from '@opengsn/provider';
 import { startBlockchain,
@@ -32,6 +31,8 @@ function toCamelCase(str) {
  * @return {Promise} Resolves to deployed contract instances
  */
 async function connectContractsToProvider(contracts, provider) {
+  const contract = (await import('@truffle/contract')).default;
+
   return Object.fromEntries(
     await Promise.all(
       contracts.map(async name => {
@@ -67,6 +68,12 @@ async function initializeGsn(origProvider, contracts) {
     jsonStringifyRequest: true,
     loggerConfiguration: { logLevel: 'error' },
   };
+
+  if (forwarder.address === config.RINKEBY_FORWARDER_ADDRESS) {
+    providerConfig.relayLookupWindowBlocks = 1e5;
+    providerConfig.relayRegistrationLookupBlocks = 1e5;
+    providerConfig.pastEventsQueryMaxPageSize = 2e4;
+  }
 
   const gsnProvider = await RelayProvider.newProvider({
     provider: origProvider,
@@ -185,6 +192,32 @@ function stopLocalBlockChain() {
 }
 
 /**
+ * Ping Infura API
+ *
+ * @param {String} api  API endpoint to post
+ * @param {Array}  arg  Arg list
+ * @param {Object} body Body of request
+ * @return {Promise}
+ */
+async function pingInfura(api, arg, body) {
+  const args = arg && arg.length > 0 ? `?${arg.join('&')}` : '';
+  const endpoint = `https://ipfs.infura.io:5001${api}${args}`;
+  const projectId = process.env.REACT_APP_INFURA_PROJECT_ID;
+  const projectSecret = process.env.REACT_APP_INFURA_PROJECT_SECRET;
+  const authToken = btoa(`${projectId}:${projectSecret}`);
+  return fetch(
+    endpoint,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${authToken}`,
+      },
+      body: body,
+    }
+  );
+}
+
+/**
  * Gets data from IPFS
  * 
  * @param {Object} ipfs Instance of IPFS
@@ -192,7 +225,21 @@ function stopLocalBlockChain() {
  * @return {Promise} resolves to Uint8Array
  */
 async function getFromIpfs(ipfs, cid) {
-  return uint8ArrayConcat(await all(ipfs.cat(cid)));
+  try {
+    return uint8ArrayConcat(await all(ipfs.cat(
+      cid, { timeout: config.IPFS_TIMEOUT }
+    )));
+  } catch (err) {
+    console.log(err);
+    const response = await pingInfura('/api/v0/cat', [`arg=${cid}`]);
+    const data = new Uint8Array(await response.arrayBuffer());
+    if (data.length > 0) {
+      const file = new File([data], cid);
+      await ipfs.add(file);
+    }
+    
+    return data;
+  }
 }
 
 /**
@@ -285,6 +332,7 @@ export { connectContractsToProvider,
          getReasonablySizedName,
          initializeGsn,
          ownerPageUrl,
+         pingInfura,
          range,
          scaleDownKarma,
          scaleUpKarma,

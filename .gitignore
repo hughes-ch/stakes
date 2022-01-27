@@ -8,3 +8,6 @@ yarn-error.log
 # Build stuff
 build/
 deployed-contracts/
+
+# Environment stuff
+.env

@@ -12,8 +12,8 @@ module.exports = async function(deployer, network) {
   const karmaInstance = await Karma.deployed();
   await karmaInstance.setMinter(KarmaPaymaster.address);
 
-  const forwarder = network === 'ropsten' ?
-        '0xeB230bF62267E94e657b5cbE74bdcea78EB3a5AB' :
+  const forwarder = network === 'rinkeby' ?
+        '0x83A54884bE4657706785D7309cf46B58FE5f6e8a' :
         require( '../build/gsn/Forwarder.json').address;
   
   await deployer.deploy(Array);
@@ -22,8 +22,8 @@ module.exports = async function(deployer, network) {
   await deployer.link(String, Stake);
   await deployer.deploy(Stake, forwarder);
 
-  const relayHubAddress = network === 'ropsten' ?
-        '0xAa3E82b4c4093b4bA13Cb5714382C99ADBf750cA' :
+  const relayHubAddress = network === 'rinkeby' ?
+        '0x6650d69225CA31049DB7Bd210aE4671c0B1ca132' :
         require('../build/gsn/RelayHub.json').address;
   
   const paymaster = await KarmaPaymaster.deployed();
