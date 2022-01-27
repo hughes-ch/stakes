@@ -12,6 +12,7 @@ module.exports = {
   DEFAULT_USER_PIC_URL: '/default-profile-pic.png',
   EST_ETH_LENGTH: 3,
   GWEI_TO_ETH_SCALE_FACTOR: 9,
+  IPFS_TIMEOUT: 5000,
   KARMA_ENTRY_NAME: 'karma',
   KARMA_ICON: '&#9829;',
   KARMA_SCALE_FACTOR: 15,

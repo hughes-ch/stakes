@@ -64,7 +64,7 @@ function Avatar(props) {
                 1: filetype } = await web3.contracts.stake.getUserPic(
                   props.user
                 );
-        
+
         if (userPic) {
           const data = await getFromIpfs(ipfs, userPic);
           if (data.length > 0) {
@@ -75,6 +75,7 @@ function Avatar(props) {
           setDefaultImg(img, isMounted);
         }
       } catch (err) {
+        console.log(err);
         setDefaultImg(img, isMounted);
       }
     }
