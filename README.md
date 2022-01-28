@@ -40,4 +40,66 @@ When a client selects "Connect," an IPFS instance is also started in their brows
 
 At the top level of the application (in the App component), an Authenticator component verifies that the Web3Context is setup and associated with a valid Metamask account. If this is the case, it allows routing to the "protected" paths (anything that isn't the public page). Otherwise, it routes back to the public page.
 
-Stakes leverages code splitting due to the (sometimes) slow nature of IPFS and the large size of the IPFS and @truffle/contracts
+The React front end is accessed through IPFS. If you have IPFS enabled in your browser, it can be accessed through ipns://stakes.chrishughesdev.com. Otherwise, it is served through a gateway provided by dweb.link. 
+
+To minimize the amount of content that IPFS must send for each URL, Stakes leverages code splitting. This is mostly to break apart the large file sizes of the @truffle/contract and js-ipfs modules. The public page can be delivered (relatively) quickly while the rest of the functionality can be delivered piecemeal once the user actually logs in. 
+
+### Solidity Backend
+As hinted at earlier, the Solidity backend is built with Truffle. 
+
+There are four main contracts keeping state of the application:
+
+#### Karma
+The Karma token is an ERC20 token used for all transactions in the application. On-chain 1 Karma === 1 Wei, though users are shown a scaled (and rounded) amount on the frontend. 
+
+Stakes uses the [OpenGSN](https://opengsn.org/) project to allow paying for transactions in its native token instead of ETH. The method for doing so is fairly straightforward. Whenever a new user joins the application, they must buy Karma with an ETH balance. This ETH then pays for all of the gas fees associated with creating new posts and adding Karma to other pieces of content. Theoretically, one might never have to pay for Karma (or gas) again if enough other users enjoy their content.
+
+The Karma contract is an adaptation of OpenZeppelin's ERC20 token implementation.
+
+#### KarmaPaymaster
+The KarmaPaymaster is the interface between the Karma contract and OpenGSN. It trades Karma for ETH to both users and the OpenGSN network so that the users can interact with the Blockchain and OpenGSN gets its fair share of ETH for providing the transactions. 
+
+#### Content
+The Content contract maintains user content as NFTs using OpenZeppelin's ERC721 standard. 
+
+#### Stake
+The Stake contract maintains connections between different users. It also maintains information about individual users and allows searching based on name and address. 
+
+## Contributing
+This project served as a great learning experience, but is not going to be supported going forward.
+
+However, here are steps to contribute if needed:
+
+### Setting up environment
+The first thing to do is to setup yarn berry (without pnp) and install. 
+
+Two .env files are needed. One at the top of each workspace:
+
+    # contracts
+    INFURA_API_KEY=<key>
+    MNEMONIC=<mnemonic>
+
+    # client
+    REACT_APP_INFURA_PROJECT_ID=<proj_id>
+    REACT_APP_INFURA_PROJECT_SECRET=<secret>
+    
+### Working with @stakes/contracts
+#### Testing
+Testing @stakes/contracts is fairly straightforward. Just type:
+
+    yarn workspace @stakes/contracts test
+    
+Yarn will then run each unit test. Note that unit tests are fairly slow, as the OpenGSN network and the truffle local blockchain need to be restarted between each test suite. Unit tests are written in Mocha and Chai. 
+
+To run a single test, find the test definition in the Javascript test file and change the first line of the test definition to:
+
+    it.only
+    
+The test script will indicate that it will only run the test case containing that test.
+
+#### Deploying
+To deploy the contracts, type 
+
+    yarn workspace @stakes/contracts truffle migrate --network rinkeby
+
+### Testing @stakes/client
