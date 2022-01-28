@@ -103,3 +103,40 @@ To deploy the contracts, type
     yarn workspace @stakes/contracts truffle migrate --network rinkeby
 
 ### Testing @stakes/client
+#### Testing
+Testing @stakes/client is also easy. Just type:
+
+    yarn workspace @stakes/client test
+
+Yarn will then run each unit test. Note that unit tests are fairly slow, as the OpenGSN network and the truffle local blockchain need to be restarted between each test suite. Unit tests are written with Jest.
+
+Before a deployment, it's worthwhile to build the production frontend and test it against a local network. 
+
+To start the production build, type: 
+
+    >> cd packages/client
+    >> yarn build && yarn serve -s build
+
+To start the blockchain, navigate back to the root of the project and type:
+
+    >> yarn workspace @stakes/contracts truffle dev &
+    >> yarn workspace @stakes/contracts gsn-start
+    >> yarn workspace @stakes/contracts truffle migrate --network test
+    
+#### Deploying
+Once the production build has been tested it will need to be added to IPFS. [See here](https://docs.ipfs.io/how-to/command-line-quick-start/) for directions on how to install the IPFS CLI. 
+
+First, start the IPFS daemon:
+
+    >> ipfs daemon &
+    
+Then, add the build directory to the local IPFS node:
+
+    >> cd packages/client
+    >> ipfs add -r build --cid-version 1
+    
+Then, pin the resulting CID to Infura so it's available even when the local node is unavailable:
+
+    >> curl -X POST -u "<proj_id>:<proj_secret>" "https://ipfs.infura.io:5001/api/v0/pin/add?arg=<cid>"
+    
+This curl command may take a few attempts if the ipfs daemon was just started. It will have the most success if it can run for ten minutes or more to locate enough peers to connect with Infura. If that still doesn't work, [see here](https://docs.ipfs.io/how-to/nat-configuration/) for steps on how to troubleshoot IPFS. 
